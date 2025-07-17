@@ -32,7 +32,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 
 **Goal**: Enable users to explore the book catalog using a search interface powered by the Google Books API.
 
-#### [Search for books by title, author, or genre](#6)
+#### [Search for books by title, author](#6)
 
 **Technical Tasks**
 - [Implement search form and view](#19)
@@ -145,3 +145,51 @@ All issues are tracked on the GitHub project board:
 https://github.com/larevolucia/chaptr/projects/12
 
 ---
+## Models
+
+- **Chaptr** does not implement a `Book` model by design, as it leverages the Google Books API to dynamically fetch book data using each book's unique `id`. This approach reduces reduncancy and complexity by separating the internal user data from external metadata, keeping the application lightweigth. 
+- Reading status and rating are kept in separate models to reflect their distinct purposes: __progress tracking__ versus __evaluation__. This separation simplifies logic, allows ratings only when appropriate (after reading), and ensures clean, extendable data design.
+- All core CRUD operations are modeled for authenticated user interactions, demonstration architectural decisions suited to the scope of the MVP.
+
+### User 
+- Django built-in model for user authentication
+
+### ReadingStatus
+Tracks a user's reading status for a specific book.
+
+**Fields:**
+- `user` (FK): `User`
+- `book_id` (Google Books API): `CharField`
+- `status`: `CharField` with choices: "To read", "Reading", "Read"
+- `created_at`, `updated_at`: `DateTimeField`
+
+**Relationships:**
+- One (user) to many (books)
+- Unique constraint: one single status per book
+
+### Rating
+Stores a user's rating for a book.
+
+**Fields:**
+- `user` (FK): `User`
+- `book_id` (Google Books API): `CharField`
+- `rating`: `IntegerField`
+- `created_at`, `updated_at`: `DateTimeField`
+
+**Relationships:**
+- One-to-one with `ReadingStatus` is optional (or use shared key)
+- Unique constraint: one single rating per book (`unique_together`)
+
+### Comment
+Represents user comments on books.
+
+**Fields:**
+- `user` (FK): `User`
+- `book_id` (Google Books API): `CharField`
+- `text`: `TextField`
+- `created_at`, `updated_at`: `DateTimeField`
+- Optional: `is_edited`: `BooleanField` 
+
+**Relationships:**
+- One-to-one with `ReadingStatus` is optional (or use shared key)
+- Unique constraint: one single rating per book (`unique_together`)
