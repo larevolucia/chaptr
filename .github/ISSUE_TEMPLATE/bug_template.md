@@ -22,12 +22,4 @@ assignees: ["larevolucia"]
 [What actually happens.]
 
 ### Affected Page/Feature
-[ ]
-
----
-
-### Status
-- [ ] New
-- [ ] In Progress
-- [ ] Fixed
-- [ ] Verified
+- [ ]

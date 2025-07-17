@@ -20,5 +20,5 @@ assignees: ["larevolucia"]
 - [ ] [Condition or requirement #3]
 
 ### Linked Tasks
-- [ ] #issue_number - [Associated technical task 1]
-- [ ] #issue_number - [Associated technical task 2]
+- [ ] [Associated technical task 1]
+- [ ] [Associated technical task 2]

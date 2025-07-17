@@ -11,9 +11,6 @@ assignees: ["larevolucia"]
 ### Description
 [High‑level goal]
 
-### Related User Stories
-- [ ] #issue_number - [Story Title]
-
 ### MVP or Stretch?
 - [ ] MVP
 - [ ] Stretch Goal
