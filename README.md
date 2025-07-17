@@ -33,26 +33,28 @@ Below is a summary of the planned development scope using Agile epics, user stor
 **Goal**: Enable users to explore the book catalog using a search interface powered by the Google Books API.
 
 #### [Search for books by title, author, or genre](#6)
-#### Technical Tasks
+
+**Technical Tasks**
 - [Implement search form and view](#19)
 - [Integrate Google Books API](#20)
 - [Display search results](#21)
 
 #### [View book details](#7)
-#### Technical Tasks
+
+**Technical Tasks**
 - [Create book detail view](#22)
 - [Style Book Detail Page](#23)
 - [Populate data from API or local cache](#24)
 
 #### [View comments on books](#8)
 
-#### Technical Tasks
+**Technical Tasks**
 - [Create comment model and link to book](#27)
 - [Display comments in detail template](#28)
 
 #### [Prompt login when guests try to interact](#9)
 
-#### Technical Tasks
+**Technical Tasks**
 - [Add Login Checks to Views](#25)
 - [Add Login Prompt Messaging](#26)
 
@@ -62,18 +64,21 @@ Below is a summary of the planned development scope using Agile epics, user stor
 **Goal**: Set up account registration, login/logout, and protect user actions.
 
 #### [Register an account](#10)
+
 **Technical Tasks:**
 - [Create Registration Form and View](#29)
 - [Handle Form Validation and Feedback](#30)
 - [Link Registration in Navbar](#31)
 
 #### [Log in and log out securely](#11)
+
 **Technical Tasks:**
 - [Create login and logout views](#32)
 - [Update navbar based on auth status](#33)
 - [Handle redirection after login/logout](#34)
 
 #### [Restrict book interactions to authenticated users](#12)
+
 **Technical Tasks:**
 - [Add `@login_required` to protected views](#36)
 - [Update templates to show/hide based on login messages](#35)
@@ -85,23 +90,27 @@ Below is a summary of the planned development scope using Agile epics, user stor
 **Goal**: Allow users to track their reading activity, rate books, and comment.
 
 #### [Mark books as To Read, Reading, or Read](#13)
+
 **Technical Tasks:**
 - [Create reading status and comment models](#37)
 - [Add forms for status, rating, and commenting](#38)
 - [Display and update user content](#39)
 
 #### [Rate completed books](#14)
+
 **Technical Tasks:**
 - [Add rating field to reading model or separate model](#40)
 - [Create form and view logic for adding/updating rating](#41)
 - [Show rating summary on book detail](#42)
 
 #### [Leave a comments](#15)
+
 **Technical Tasks:**
 - [Create comment model and form](#43)
 - [Display comments in template](#44)
 
 #### [Edit, and delete comments](#16)
+
 **Technical Tasks:**
 - [Validate comment ownership](#45)
 - [Implement update and delete views for comments](#46)
@@ -115,12 +124,14 @@ Below is a summary of the planned development scope using Agile epics, user stor
 **Goal**: Provide users with a personalized dashboard to manage their reading activity.
 
 #### [View books grouped by reading status](#17)
+
 **Technical Tasks:**
 - [Create dashboard view with user authentication](#49)
 - [Build style dashboard template](#50)
 - [Query and display grouped book data](#51)
 
 #### [Update reading status directly from dashboard](#18)
+
 **Technical Tasks:**
 - [Add inline status update controls](#52)
 - [Implement Status Update Logic in View](#53)
