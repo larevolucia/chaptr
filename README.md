@@ -11,7 +11,6 @@ Unlike feature-heavy platforms, Chaptr focuses on simplicity, allowing users to 
 Chaptr is built for individual readers who want a focused, user-friendly space to log their reading habits without social clutter or complex features.
 
 ---
-
 ## Site Goal
 
 To create a fully functional, database-backed full-stack application that:
@@ -193,3 +192,24 @@ Represents user comments on books.
 **Relationships:**
 - One-to-one with `ReadingStatus` is optional (or use shared key)
 - Unique constraint: one single rating per book (`unique_together`)
+---
+## Django Project Structure
+
+The *Chaptr* project is divided into focused Django applications to ensure clear separation of concerns and maintainable code architecture.
+
+### apps/
+
+| App Name        | Responsibility                                                                 |
+|------------------|-------------------------------------------------------------------------------|
+| `accounts`       | Handles user registration, login, logout, and access control.                |
+| `books`          | Manages integration with the Google Books API and book detail views.         |
+| `interactions`   | Implements core user actions: reading status, ratings, and comments.         |
+| `dashboard`      | Displays user-specific reading activity grouped by status.                   |
+
+### Design Rationale
+
+- **Modular design**: Each app reflects a distinct domain of the system and aligns with a major feature group (search, authentication, interaction, UI).
+- **Separation of concerns**: Each app encapsulates its own models, views, and templates, making it easier to manage and extend.
+- **Maintainability**: Clear boundaries between apps reduce complexity and improve code readability.
+- **Scalability**: Allows future extension, such as adding a social/friendship app, without disrupting the core architecture.
+---
