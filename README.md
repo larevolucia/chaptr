@@ -147,11 +147,14 @@ https://github.com/larevolucia/chaptr/projects/12
 ## Models
 
 - **Chaptr** does not implement a `Book` model by design, as it leverages the Google Books API to dynamically fetch book data using each book's unique `id`. This approach reduces reduncancy and complexity by separating the internal user data from external metadata, keeping the application lightweigth. 
-- Reading status and rating are kept in separate models to reflect their distinct purposes: __progress tracking__ versus __evaluation__. This separation simplifies logic, allows ratings only when appropriate (after reading), and ensures clean, extendable data design.
-- All core CRUD operations are modeled for authenticated user interactions, demonstration architectural decisions suited to the scope of the MVP.
+- `ReadingStatus`, `Rating`, and `Review` are distinct models to handle different aspects of user interaction:
+  - __ReadingStatus__: tracks reading progress
+  - __Rating__: captures quantitative evaluation
+  - __Review__: allows a single detailed textual reflection per book
+- The models are designed to be simple and efficient, focusing on the core functionality required for the MVP.
 
 ### User 
-- Django built-in model for user authentication
+Django built-in model for user authentication
 
 ### ReadingStatus
 Tracks a user's reading status for a specific book.
@@ -164,7 +167,7 @@ Tracks a user's reading status for a specific book.
 
 **Relationships:**
 - One (user) to many (books)
-- Unique constraint: one single status per book
+- Unique combination of `user` and `book_id` (one status per book per user)
 
 ### Rating
 Stores a user's rating for a book.
@@ -176,22 +179,22 @@ Stores a user's rating for a book.
 - `created_at`, `updated_at`: `DateTimeField`
 
 **Relationships:**
-- One-to-one with `ReadingStatus` is optional (or use shared key)
-- Unique constraint: one single rating per book (`unique_together`)
+- One (user) to many (ratings)
+- Unique combination of `user` and `book_id` (one rating per book per user)
 
-### Comment
-Represents user comments on books.
+### Review
+Represents a user's written review of a book.
 
 **Fields:**
 - `user` (FK): `User`
-- `book_id` (Google Books API): `CharField`
+- `book_id`: `CharField` (Google Books API ID)
 - `text`: `TextField`
 - `created_at`, `updated_at`: `DateTimeField`
-- Optional: `is_edited`: `BooleanField` 
 
 **Relationships:**
-- One-to-one with `ReadingStatus` is optional (or use shared key)
-- Unique constraint: one single rating per book (`unique_together`)
+- One (user) to many (reviews)
+-Unique combination of `user` and `book_id` (one review per book per user)
+
 ---
 ## Django Project Structure
 
@@ -203,7 +206,7 @@ The *Chaptr* project is divided into focused Django applications to ensure clear
 |------------------|-------------------------------------------------------------------------------|
 | `accounts`       | Handles user registration, login, logout, and access control.                |
 | `books`          | Manages integration with the Google Books API and book detail views.         |
-| `interactions`   | Implements core user actions: reading status, ratings, and comments.         |
+| `interactions`   | Implements core user actions: reading status, ratings, and reviews.         |
 | `dashboard`      | Displays user-specific reading activity grouped by status.                   |
 
 ### Design Rationale
