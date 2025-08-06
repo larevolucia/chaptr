@@ -144,6 +144,13 @@ All issues are tracked on the GitHub project board:
 https://github.com/larevolucia/chaptr/projects/12
 
 ---
+## Design
+
+### Wireframes
+
+![Mobile Logged-In Wireframes](documentation/Mobile_Logged-In.png)
+![Mobile Vistor Wireframes](documentation\Mobile_Visitor.png)
+---
 ## Models
 
 - **Chaptr** does not implement a `Book` model by design, as it leverages the Google Books API to dynamically fetch book data using each book's unique `id`. This approach reduces reduncancy and complexity by separating the internal user data from external metadata, keeping the application lightweigth. 
