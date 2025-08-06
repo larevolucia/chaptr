@@ -149,7 +149,9 @@ https://github.com/larevolucia/chaptr/projects/12
 ### Wireframes
 
 ![Mobile Logged-In Wireframes](documentation/Mobile_Logged-In.png)
-![Mobile Vistor Wireframes](documentation\Mobile_Visitor.png)
+
+![Mobile Vistor Wireframes](documentation/Mobile_Visitor.png)
+
 ---
 ## Models
 
