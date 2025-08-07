@@ -10,7 +10,8 @@ def home(request):
     return render(request, 'books/home.html')
 
 def book_search(request):
-    query = request.GET.get('q')
+    query = request.GET.get('q', '').strip()
+
     books = []
     if query:
         books = search_google_books(query)  # Call the Google Books API search function
