@@ -1,19 +1,26 @@
-# from django.shortcuts import render
-
-# Create your views here.
+from django.shortcuts import render
 from django.http import JsonResponse
 import os
 import requests
 
 
+# Create your views here.
+
+def home(request):
+    return render(request, 'books/home.html')
+
 def book_search(request):
-    query = request.GET.get("q", "")
-    if not query:
-        return JsonResponse({"error": "No query provided"}, status=400)
-    
+    query = request.GET.get('q')
+    books = []
+    if query:
+        books = search_google_books(query)  # Call the Google Books API search function
+    return render(request, 'books/search_results.html', {'books': books, 'query': query})
+
+
+def search_google_books(query):
     api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
     if not api_key:
-        return JsonResponse({"error": "API key not set"}, status=500)
+        return []
 
     url = "https://www.googleapis.com/books/v1/volumes"
     params = {
@@ -22,34 +29,20 @@ def book_search(request):
         "maxResults": 5,
         "langRestrict": "en"
     }
-    
+
     response = requests.get(url, params=params)
-    
     if response.status_code != 200:
-        return JsonResponse({"error": "Failed to fetch data from Google Books API"}, status=response.status_code)
+        return []
 
     data = response.json()
 
-    # Extract relevant book information
-    # books = []
+    books = []
+    for item in data.get("items", []):
+        volume = item.get("volumeInfo", {})
+        books.append({
+            "title": volume.get("title"),
+            "authors": ', '.join(volume.get("authors", [])),
+            "thumbnail": volume.get("imageLinks", {}).get("thumbnail"),
+        })
 
-    # for item in data.get("items", []):
-    #     volume_info = item.get("volumeInfo", {})
-    #     books.append({
-    #         "title": volume_info.get("title"),
-    #         "authors": volume_info.get("authors"),
-    #         "thumbnail": volume_info.get("imageLinks", {}).get("thumbnail"),
-    #     })
-
-    filtered_items = [
-        item for item in data.get("items", [])
-        if item.get("volumeInfo", {}).get("language") == "en"
-    ]
-
-    return JsonResponse({"results": filtered_items})
-
-
-
-def test_api_key(request):
-    key = os.environ.get("GOOGLE_BOOKS_API_KEY")
-    return JsonResponse({"api_key_loaded": bool(key), "value": key})
+    return books
