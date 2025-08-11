@@ -1,36 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h2>Results for "{{ query }}"</h2>
 
 {% if books %}
-    <!-- List view for mobile -->
-    <div class="d-block d-md-none">
+    <!-- List view -->
+    <div class="d-block">
         {% for book in books %}
-            <div class="mb-3 border rounded p-2 d-flex">
-                <img src="{{ book.thumbnail }}" alt="{{ book.title }}" style="width: 80px; height: auto; margin-right: 15px;" class="img-fluid" loading="lazy">
-                <div>
-                    <h5 class="mb-1">{{ book.title }}</h5>
+            <div class="mb-3 border rounded p-2 d-flex book-item">
+              <!-- <img src="{{ book.thumbnail }}" alt="{{ book.title }}" class="book-cover" loading="lazy">--> 
+                <img src="{% if book.thumbnail %}
+                              {{ book.thumbnail }}
+                           {% else %}
+                               {% static 'img/placeholder_cover.png' %}
+                           {% endif %}"
+                alt="{{ book.title }}">
+                <div class="m-3">
+                    <h5 class="mr-2 mb-1">{{ book.title }}</h5>
                     <p class="mb-0 text-muted">By {{ book.authors }}</p>
                 </div>
             </div>
         {% endfor %}
     </div>
 
-    <!-- Grid view for tablet and up -->
-    <div class="row d-none d-md-flex">
-        {% for book in books %}
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <img src="{{ book.thumbnail }}" class="card-img-top book-thumbnail" alt="{{ book.title }}" loading="lazy">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ book.title }}</h5>
-                        <p class="card-text">By {{ book.authors }}</p>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+
 
 {% else %}
     <p>No results found.</p>
