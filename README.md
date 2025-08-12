@@ -143,7 +143,49 @@ Below is a summary of the planned development scope using Agile epics, user stor
 All issues are tracked on the GitHub project board:  
 https://github.com/larevolucia/chaptr/projects/12
 
+## Sprint Planning
+
+Sprints are organized to deliver features incrementally, with each sprint focusing on specific epics and user stories. The sprint timebox is set to 1 week.
+
+### Sprint 0: Project Setup
+- [x] Create Epics, User Stories, and Tasks in GitHub
+- [x] Set up Django project and apps
+- [x] Configure Google Books API integration
+- [x] Deploy initial version to Heroku
+- [x] Set up Postgres database
+- [x] Set up basic templates and static files
+
+### Sprint Breakdown
+Sprint 1:
+- Epic 1: Book Discovery and Browsing
+   - [ ] [Search for books by title, author](#6)
+   - [ ] [View book details](#7)
+   - [ ] [Homepage](#56)
+   - [ ] [View comments on books](#8)
+   - [ ] [Prompt login when guests try to interact](#9)
+
+- Epic 2: User Authentication and Permissions
+   - [ ] [Register an account](#10)
+   - [ ] [Log in and log out securely](#11)
+
+Sprint 2:
+- Epic 3: Book Interaction and Reading Progress
+   - [ ] [Mark books as To Read, Reading, or Read](#13)
+   - [ ] [Rate completed books](#14)
+   - [ ] [Leave a comments](#15)
+   - [ ] [Edit, and delete comments](#16)
+- Epic 2: User Authentication and Permissions
+   - [ ] [Restrict book interactions to authenticated users](#12)
+
+Sprint 3:
+
+- Epic 4: User Dashboard
+   - [ ] [View books grouped by reading status](#17)
+   - [ ] [Update reading status directly from dashboard](#18)
+- Testing and Bug Fixes
+
 ---
+
 ## Design
 
 ### Wireframes
@@ -225,3 +267,7 @@ The *Chaptr* project is divided into focused Django applications to ensure clear
 - **Maintainability**: Clear boundaries between apps reduce complexity and improve code readability.
 - **Scalability**: Allows future extension, such as adding a social/friendship app, without disrupting the core architecture.
 ---
+## Credits
+
+- Homepage banner image: [Unsplash](https://unsplash.com/photos/iyKVGRu79G4) Photo by [Lilly Rum](https://unsplash.com/@rumandraisin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
+- Google Books API: [Google Developers](https://developers.google.com/books/docs/v1/getting_started)
