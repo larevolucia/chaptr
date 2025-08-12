@@ -158,8 +158,8 @@ Sprints are organized to deliver features incrementally, with each sprint focusi
 ### Sprint Breakdown
 Sprint 1:
 - Epic 1: Book Discovery and Browsing
-   - [ ] [Search for books by title, author](#6)
-   - [ ] [View book details](#7)
+   - [x] [Search for books by title, author, genre](#6)
+   - [x] [View book details](#7)
    - [ ] [Homepage](#56)
    - [ ] [View comments on books](#8)
    - [ ] [Prompt login when guests try to interact](#9)
@@ -271,3 +271,6 @@ The *Chaptr* project is divided into focused Django applications to ensure clear
 
 - Homepage banner image: [Unsplash](https://unsplash.com/photos/iyKVGRu79G4) Photo by [Lilly Rum](https://unsplash.com/@rumandraisin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
 - Google Books API: [Google Developers](https://developers.google.com/books/docs/v1/getting_started)
+- Color palette: [Material Palette](https://www.materialpalette.com/teal/deep-orange)
+- Favicon: [Favicon.io](https://favicon.io/favicon-converter/)
+- Favicon art by [Good Ware](https://www.flaticon.com/authors/good-ware)

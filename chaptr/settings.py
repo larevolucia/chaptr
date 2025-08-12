@@ -35,7 +35,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5tc(nx+h4e^=t^f_eerv&$!o0%(ws_t&q17jxnyr=h+vrra-fr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Production-safe DEBUG
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = ['.herokuapp.com', '.127.0.0.1',]
 
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "whitenoise.runserver_nostatic",
     'books',
 ]
 
@@ -128,11 +130,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',]
+STATICFILES_DIRS = [ BASE_DIR / 'static',]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
