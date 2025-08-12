@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-5tc(nx+h4e^=t^f_eerv&$!o0%(ws_t&q17jxnyr=h+vrra-fr
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Production-safe DEBUG
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+DEBUG = False
 
 ALLOWED_HOSTS = ['.herokuapp.com', '.127.0.0.1',]
 
@@ -130,15 +130,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-STATICFILES_DIRS = [ BASE_DIR / 'static',]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = '/static/'
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
