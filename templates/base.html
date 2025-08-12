@@ -15,8 +15,14 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/">NextChaptr</a>
             <form class="d-flex" method="get" action="{% url 'book-search' %}">
-                <input class="form-control me-2" type="search" name="q" placeholder="Search books..." aria-label="Search">
-                <button class="btn btn-outline-light" type="submit">Search</button>
+            <select class="form-select me-2" name="field" aria-label="Search scope">
+                <option value="all">All</option>
+                <option value="title">Title</option>
+                <option value="author">Author</option>
+                <option value="subject">Genre</option>
+            </select>
+            <input class="form-control me-2" type="search" name="q" placeholder="Search books..." aria-label="Search">
+            <button class="btn btn-outline-light" type="submit">Search</button>
             </form>
         </div>
     </nav>

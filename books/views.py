@@ -1,21 +1,80 @@
 import os
 import requests
+import re
 from django.shortcuts import render
 from django.core.cache import cache
 from django.http import Http404
 
-# Create your views here.
+OPERATOR_RE = re.compile(r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|oclc):', re.I)
 
+# Create your views here.
 def home(request):
     return render(request, 'books/home.html')
 
-def book_search(request):
-    query = request.GET.get('q', '').strip()
 
-    books = []
-    if query:
-        books = search_google_books(query)  # Call the Google Books API search function
-    return render(request, 'books/search_results.html', {'books': books, 'query': query})
+def book_search(request):
+    # read scope and (optional) advanced fields
+    field = request.GET.get('field', 'all').strip().lower()
+    q_raw = request.GET.get('q', '').strip()
+
+    # Optional advanced fields 
+    adv_title = request.GET.get('title', '').strip()
+    adv_author = request.GET.get('author', '').strip()
+    adv_subject = request.GET.get('subject', '').strip()
+
+    # Build the Google Books 'q' string
+    query_for_api = build_q(q_raw, field, adv_title, adv_author, adv_subject)
+
+    books = search_google_books(query_for_api) if query_for_api else []
+
+    # Render the search results
+    return render(
+        request,
+        'books/search_results.html',
+        {
+            'books': books,
+            'query': q_raw,
+            'field': field,
+            'title': adv_title,
+            'author': adv_author,
+            'subject': adv_subject,
+        }
+        )
+
+
+def build_q(q_raw, field, title, author, subject):
+    """
+    Build a Google Books 'q' using documented operators
+    - If user already typed an operator, pass it through
+    - Else apply 'field' to q_raw (intitle/inauthor/subject)
+    - Then layer advanced boxes if provided.
+    Docs: intitle:, inauthor:, subject: etc. 
+    """
+    parts = []
+
+    # If the free-text already uses operators, keep it as-is.
+    if q_raw:
+        if OPERATOR_RE.search(q_raw):
+            parts.append(q_raw)
+        else:
+            if field == 'title':
+                parts.append(f'intitle:{q_raw}')
+            elif field == 'author':
+                parts.append(f'inauthor:{q_raw}')
+            elif field == 'subject':
+                parts.append(f'subject:{q_raw}')
+            else:
+                parts.append(q_raw)
+
+    # Advanced boxes additively constrain the search
+    if title:
+        parts.append(f'intitle:{title}')
+    if author:
+        parts.append(f'inauthor:{author}')
+    if subject:
+        parts.append(f'subject:{subject}')
+
+    return " ".join(parts).strip()
 
 
 def search_google_books(query):
@@ -80,6 +139,7 @@ def book_detail(request, book_id):
     book = cache.get(cache_key)
     if not book:
         book = fetch_book_by_id(book_id)
+        # set cache for 1 hour
         cache.set(cache_key, book, timeout=60*60)
     return render(
         request,
