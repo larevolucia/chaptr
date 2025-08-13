@@ -34,6 +34,13 @@
         </div>
     </nav>
 
+    <!--Banner-->
+    <section class="position-relative text-white" role="banner" aria-label="Main site banner">
+        {% block banner %}
+        {% endblock %}
+    </section>
+
+    <!-- Main content -->
     <main class="container mt-4" tabindex="-1">
         {% block content %}
         {% endblock %}

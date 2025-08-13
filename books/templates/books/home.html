@@ -3,10 +3,7 @@
 
 {% block title %}Home{% endblock %}
 
-{% block content %}
-  <!-- Banner -->
-
-<section class="position-relative text-white" role="banner" aria-label="Main site banner">
+{% block banner %}
   <!-- Background image with dark gradient overlay -->
   <div 
     class="bg-dark position-absolute top-0 start-0 w-100 h-100" 
@@ -28,10 +25,12 @@
       </div>
     </div>
   </div>
-</section>
 
+{% endblock %}
+
+{% block content %}
   <!-- Description -->
-  <section class="py-5" role="region" aria-labelledby="about-section">
+  <section class="py-5" role="region" aria-label="about-section">
     <div class="container">
       <h2 class="h3 mb-3">What is <span class="brand-font">NextChaptr</span>?</h2>
       <p class="mb-0">
@@ -41,7 +40,7 @@
   </section>
 
   <!-- Genres -->
-  <section class="py-5 bg-light" role="region" aria-labelledby="browse-genres">
+  <section class="py-5 bg-light" role="region" aria-label="browse-genres">
     <div class="container">
       <div class="d-flex align-items-center justify-content-between mb-3">
         <h2 class="h3 mb-0">Browse by Genre</h2>
