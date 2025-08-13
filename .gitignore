@@ -3,5 +3,4 @@
 __pycache__
 env.py
 staticfiles/
-static/
 db.sqlite3
