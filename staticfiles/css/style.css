@@ -71,6 +71,10 @@ a {
   text-decoration: none;
 }
 
+a.btn {
+  text-decoration: none;
+}
+
 a:hover {
   color: var(--accent-color);
 }

@@ -4,14 +4,25 @@
 {% block title %}{{ book.title }}{% if book.subtitle %}: {{ book.subtitle }}{% endif %}{% endblock %}
 
 {% block content %}
-  <a href="javascript:history.back()" class="btn btn-link mb-3">&larr; Back</a>
 
   <div class="row g-4">
-    <div class="col-md-3">
+    <div class="col-md-3 d-flex justify-content-center align-items-start">
       {% if book.thumbnail %}
-        <img src="{{ book.thumbnail }}" alt="{{ book.title }} cover" class="img-fluid rounded border">
+          <img 
+          src="{{ book.thumbnail }}" 
+          alt="{{ book.title }} cover" 
+          class="img-fluid rounded border"
+          >
       {% else %}
-           <img src=" {% static 'images/placeholder_cover.png' %}" alt="Placeholder cover" class="img-fluid">
+          <img
+          src=" {% static 'images/placeholder_cover.png' %}"
+          alt="Placeholder cover"
+          class="img-fluid"
+          loading="lazy"
+          decoding="async"
+          width="320"
+          height="480"
+          >
       {% endif %}
     </div>
 
