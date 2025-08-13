@@ -1,0 +1,131 @@
+/* -------------------------------
+   CSS VARIABLES
+---------------------------------- */
+:root {
+  --primary-color-dark: #00796B ; /* Dark Teal Green */
+  --primary-color: #009688 ; /* Teal Green */
+  --primary-color-light: #B2DFDB ; /* Light Teal Green */
+  --accent-color: #FF5722; /* Deep Orange */
+  --divider-color: #BDBDBD; /* Light Gray */
+  --text-color-dark: #212121;  /* Dark Gray */
+  --text-color: #757575;  /* Gray */
+  --background-color-light: #FFFFFF;  /* White */
+  --primary-font: "Bitter", serif;
+  --brand-font: "Roboto", sans-serif;
+  --secondary-font: "Abril Fatface", serif;
+}
+
+/* BRANDING */
+.brand-font {
+    font-family: var(--brand-font);
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: var(--text-color-dark);
+}
+
+/* GENERAL STYLES */
+body {
+  font-family: var(--primary-font);
+  color: var(--text-color-dark);
+  background-color: var(--background-color-light);
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--secondary-font);
+  color: var(--primary-color-dark);
+}
+
+p, span {
+  color: var(--text-color);
+}
+
+nav {
+  background-color: var(--primary-color-light);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* INTERACTIVE ELEMENTS */
+button, .btn {
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+  border: none;
+  padding: 0.6rem 1rem;
+  font-family: var(--brand-font);
+  cursor: pointer;
+}
+
+button:hover, .btn:hover {
+    background-color: var(--primary-color-dark);
+    color: var(--text-color-light);
+}
+
+a {
+  color: var(--secondary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+/* HOME STYLES */
+
+.banner-title {
+  font-family: var(--secondary-font);
+  font-size: 2.5rem;
+  color: var(--text-color-light);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.banner-text {
+  font-family: var(--brand-font);
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  color: var(--text-color-light);
+  margin-top: 1rem;
+}
+
+/* Make genre cards feel clickable */
+.genre-card,
+.genre-card .card {
+  cursor: pointer; 
+}
+
+/* Ensure the element that animates has transitions */
+.genre-card .card,
+.genre-card.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hover effect applied to the card  */
+.genre-card:hover .card,
+.genre-card.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  border: 1px solid var(--accent-color);
+}
+
+/* subtle text color change on hover */
+.genre-card:hover .card h3,
+.genre-card.card:hover h3,
+.genre-card:hover .card p,
+.genre-card.card:hover p {
+  color: var(--accent-color);
+}
+
+/* BOOKS PAGE STYLES */
+/* Make book items on search results page interactive */
+.book-item:hover, .genre-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transition: 0.2s ease;
+}
+
+.book-cover {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+}
