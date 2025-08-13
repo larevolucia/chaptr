@@ -47,6 +47,10 @@ nav {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+footer {
+  text-align: center;
+}
+
 /* INTERACTIVE ELEMENTS */
 button, .btn {
   background-color: var(--primary-color-dark);
