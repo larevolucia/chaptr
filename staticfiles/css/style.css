@@ -76,7 +76,7 @@ a:hover {
 .banner-title {
   font-family: var(--secondary-font);
   font-size: 2.5rem;
-  color: var(--text-color-light);
+  color: var(--background-color-light);
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
@@ -84,7 +84,7 @@ a:hover {
   font-family: var(--brand-font);
   font-size: 1.2rem;
   letter-spacing: 0.5px;
-  color: var(--text-color-light);
+  color: var(--background-color-light);
   margin-top: 1rem;
 }
 
