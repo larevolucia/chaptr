@@ -49,8 +49,8 @@ nav {
 
 /* INTERACTIVE ELEMENTS */
 button, .btn {
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
+  background-color: var(--primary-color-dark);
+  color: var(--background-color-light);
   border: none;
   padding: 0.6rem 1rem;
   font-family: var(--brand-font);
@@ -58,8 +58,8 @@ button, .btn {
 }
 
 button:hover, .btn:hover {
-    background-color: var(--primary-color-dark);
-    color: var(--text-color-light);
+    background-color: var(--primary-color);
+    color: var(--background-color-light);
 }
 
 a {
