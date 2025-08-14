@@ -1,4 +1,8 @@
 {% load static %}
+{% url 'account_login' as login_url %}
+{% url 'account_signup' as signup_url %}
+{% url 'account_logout' as logout_url %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,29 +26,57 @@
     <a class="visually-hidden-focusable position-absolute top-0 start-0 m-2 p-2 bg-body border rounded"
      href="#main-content">Skip to main content</a>
     <!-- Site header -->
-    <header>
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/"><span class="brand-font">NextChaptr</span></a>
-                <form class="d-flex" method="get" action="{% url 'book-search' %}" role="search" aria-label="Site search">
-                <select class="form-select me-2" name="field" aria-label="Search scope">
-                    <option value="all">All</option>
-                    <option value="title">Title</option>
-                    <option value="author">Author</option>
-                    <option value="subject">Genre</option>
-                </select>
-                <input class="form-control me-2" type="search" name="q" placeholder="Search books..." aria-label="Search">
-                <button class="btn btn-outline-light" type="submit">Search</button>
-                </form>
-            </div>
-        </nav>
+    <header class="site-header">
+    <div class="container py-3">
+        <!-- Row 1: logo (left) + auth (right) -->
+        <div class="d-flex align-items-center justify-content-between">
+        <a class="navbar-brand brand-font fs-3 text-dark m-0" href="/">NextChaptr</a>
+
+        <div class="d-flex align-items-center gap-2">
+            {% if user.is_authenticated %}
+            <span class="text-dark small me-1">Hi, {{ user.username }}</span>
+            <a href="{{ logout_url }}" class="btn btn-outline-dark btn-sm">Log out</a>
+            {% else %}
+            <a href="{{ signup_url }}" class="btn btn-outline-dark btn-sm">Sign up</a>
+            <a href="{{ login_url }}" class="btn btn-dark btn-sm">Log in</a>
+            {% endif %}
+        </div>
+        </div>
+
+        <!-- Row 2: search + filters  -->
+        <div class="search-row position-relative">
+        <form class="search-card shadow"
+                method="get" action="{% url 'book-search' %}" role="search" aria-label="Site search">
+            <!-- Scope -->
+            <label class="visually-hidden" for="field">Search scope</label>
+            <select id="field" class="form-select" name="field" aria-label="Search scope">
+            <option value="all">All</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+            <option value="subject">Genre</option>
+            </select>
+
+            <!-- Query -->
+            <label class="visually-hidden" for="q">Search books</label>
+            <input id="q" class="form-control" type="search" name="q"
+                placeholder="Search books, authors, genres…" aria-label="Search">
+            </select>
+
+            <!-- Submit -->
+            <button class="btn btn-accent" type="submit">
+            Search
+            </button>
+        </form>
+        </div>
+    </div>
     </header>
+
 
     <!--Optional Hero-->
     {% block hero %}{% endblock %}
 
     <!-- Main content -->
-    <main id="main-content" class="container mt-4" tabindex="-1">
+    <main id="main-content" class="container" tabindex="-1">
         {% block content %}{% endblock %}
     </main>
 
