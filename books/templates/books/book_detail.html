@@ -1,7 +1,12 @@
 {% extends "base.html" %}
+
 {% load static %}
 
 {% block title %}{{ book.title }}{% if book.subtitle %}: {{ book.subtitle }}{% endif %}{% endblock %}
+
+{% block header_search %}
+  {% include "partials/search_form.html" %}
+{% endblock %}
 
 {% block content %}
 

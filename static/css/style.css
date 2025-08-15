@@ -15,16 +15,9 @@
   --secondary-font: "Abril Fatface", serif;
 }
 
-/* BRANDING */
-.brand-font {
-    font-family: var(--brand-font);
-    font-weight: bold;
-    letter-spacing: 0.05em;
-    text-decoration: none;
-    color: var(--text-color-dark);
-}
-
-/* GENERAL STYLES */
+/* -------------------------------
+GENERAL STYLES
+---------------------------------- */
 body {
   font-family: var(--primary-font);
   color: var(--text-color-dark);
@@ -36,36 +29,46 @@ body {
 h1, h2, h3 {
   font-family: var(--secondary-font);
   color: var(--primary-color-dark);
+  text-align: center;
 }
 
 p, span {
   color: var(--text-color);
 }
 
-/* nav {
-  background-color: var(--primary-color-light);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-} */
-
 main {
-  margin-top: 4rem;
+  margin-top: 6rem;
 }
 
 footer {
   text-align: center;
 }
 
-/* ---------- HEADER  ---------- */
+.brand-font {
+    font-family: var(--brand-font);
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: var(--text-color-dark);
+}
+
+/* -------------------------------
+HEADER
+---------------------------------- */
 
 .site-header{
   background-color: var(--primary-color-light);
   /* small bottom padding so the search card can overlap */
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
   box-shadow: 0 2px 4px rgba(0,0,0,.06);
   position: sticky;
   top: 0;
   z-index: 1030;
 }
+
+/* -------------------------------
+SEARCH FORM
+---------------------------------- */
 
 /* Overlapping search card  */
 .search-card{
@@ -105,35 +108,22 @@ footer {
   height: 40px;
   overflow: visible; /* so the search card can hang over */
 }
-/* Accent action button for search */
-.btn-accent {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: #fff;
-  padding: 0.65rem 1rem;
-  font-family: var(--brand-font);
-  font-weight: 600;
-}
-.btn-accent:hover,
-.btn-accent:focus {
-  filter: brightness(0.95);
-  color: #fff;
-}
 
 .navbar-brand.brand-font {
   letter-spacing: .02em;
 }
 
+/* -------------------------------
+INTERACTIVE ELEMENTS
+---------------------------------- */
 
-
-/* INTERACTIVE ELEMENTS */
 button, .btn {
   background-color: var(--primary-color-dark);
   color: var(--background-color-light);
   border: none;
   padding: 0.6rem 1rem;
-  font-family: var(--brand-font);
   cursor: pointer;
+  font-family: var(--brand-font);
   border-radius: 12px;               
 
 }
@@ -143,38 +133,70 @@ button:hover, .btn:hover {
     color: var(--background-color-light);
 }
 
-a {
-  color: var(--secondary-color);
-  text-decoration: none;
+/* Accent action  */
+.btn-accent {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--text-color-dark);
+  padding: 0.65rem 1rem;
+  font-family: var(--brand-font);
+  font-weight: 600;
 }
 
-a.btn {
-  text-decoration: none;
-  border-radius: 12px;               
+.btn-accent:hover,
+.btn-accent:focus {
+  filter: brightness(1);
+  color: #fff;
+}
 
+a {
+  color: var(--secondary-color);
+  text-decoration: underline;
 }
 
 a:hover {
   color: var(--accent-color);
 }
 
-/* HOME STYLES */
+a.btn {
+  text-decoration: none;
+  border-radius: 12px;               
+}
 
-.banner-title {
+/* -------------------------------
+FORM STYLES
+---------------------------------- */
+
+
+/* Make native checkboxes & radios use the brand accent when checked */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--accent-color);
+}
+
+/* -------------------------------
+HERO STYLES
+---------------------------------- */
+
+.hero-title {
   font-family: var(--secondary-font);
   font-size: 2.5rem;
   color: var(--background-color-light);
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  margin-top: 2rem;
+  margin-top: 3.5rem;
 }
 
-.banner-text {
+.hero-text {
   font-family: var(--brand-font);
   font-size: 1.2rem;
   letter-spacing: 0.5px;
   color: var(--background-color-light);
   margin-top: 1rem;
 }
+
+/* -------------------------------
+GENRE CARDS
+---------------------------------- */
 
 /* Make genre cards feel clickable */
 .genre-card,
@@ -204,7 +226,10 @@ a:hover {
   color: var(--accent-color);
 }
 
-/* BOOKS PAGE STYLES */
+/* -------------------------------
+BOOKS PAGE STYLES
+---------------------------------- */
+
 /* Make book items on search results page interactive */
 .book-item:hover, .genre-card:hover {
     transform: translateY(-3px);
@@ -218,9 +243,104 @@ a:hover {
     border-radius: 5px;
 }
 
+/* -------------------------------
+LOG-IN, SIGN-UP, LOG-OUT STYLES
+---------------------------------- */
 
+/* Auth container */
+.auth-container {
+  font-family: var(--brand-font);
+  max-width: 520px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.06);
+}
 
-/* SMALL SIZE DEVICES */
+/* Title */
+.auth-container h1 {
+margin-bottom: 2rem;
+}
+
+.auth-title {
+  font-family: var(--secondary-font);       
+  color: var(--primary-color-dark);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Small intro text */
+.auth-intro {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  color: var(--text-color);
+}
+
+/* Form spacing inside the container */
+.auth-container form [type="text"],
+.auth-container form [type="email"],
+.auth-container form [type="password"],
+.auth-container form select,
+.auth-container form textarea {
+  width: 100%;
+  padding: .65rem .9rem;
+  border: 1px solid var(--divider-color);
+  border-radius: 12px;
+  font-family: var(--brand-font);
+}
+
+/* Make primary actions fill width by default in the container */
+.auth-container .btn,
+.auth-container [type="submit"] {
+  width: 100%;
+}
+
+/* Space between stacked action buttons */
+.auth-container .btn + .btn,
+.auth-container [type="submit"] + .btn {
+  margin-top: .5rem;
+}
+
+/* Minor helpers for checkboxes + labels */
+.auth-container label {
+  color: var(--text-color-dark);
+}
+
+.auth-container input[type="checkbox"] {
+  margin-right: .5rem;
+  vertical-align: middle;
+}
+
+/* Help text for forms */
+
+.helptext {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  margin-top: 0.5rem;
+  display: block;
+}
+/* lists */
+.auth-container ul {
+  color: var(--text-color);
+  font-size: small;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul.errorlist{
+  color: var(--accent-color);
+}
+
+.auth-container li {
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+}
+
+/* -------------------------------
+SMALL SCREEN
+---------------------------------- */
 @media (max-width: 767px) {
 .search-card{
   grid-template-areas:
@@ -237,18 +357,17 @@ a:hover {
 
 }
 
-/* MEDIUM SIZE DEVICES */
+/* -------------------------------
+MEDIUM SCREEN STYLES
+---------------------------------- */
 @media (min-width: 768px) {
-  main {
-  margin-top: 3rem;
-  }
 
   .search-card{
     /* 4 cols: scope | query | filter | button */
     grid-template-areas: none;              /* stop using named areas */
     grid-template-columns: minmax(130px,170px) 1fr minmax(140px,180px) auto;
     gap:10px;
-    transform: translateY(45%);             /* card dips further */
+    transform: translateY(25%);             /* card dips further */
   }
   .search-row {
     height: 15px;
@@ -256,8 +375,4 @@ a:hover {
 
 }
 
-/* LARGE SIZE DEVICES */
-@media (min-width: 992px) {
-  
 
-}

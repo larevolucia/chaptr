@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block header_search %}
+  {% include "partials/search_form.html" %}
+{% endblock %}
+
 {% block content %}
 <h2>Results for "{{ query }}"</h2>
 
