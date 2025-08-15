@@ -6,6 +6,7 @@
   --primary-color: #009688 ; /* Teal Green */
   --primary-color-light: #B2DFDB ; /* Light Teal Green */
   --accent-color: #FF5722; /* Deep Orange */
+  --secondary-color: #1E88E5;
   --divider-color: #BDBDBD; /* Light Gray */
   --text-color-dark: #212121;  /* Dark Gray */
   --text-color: #757575;  /* Gray */
@@ -263,6 +264,10 @@ LOG-IN, SIGN-UP, LOG-OUT STYLES
 .auth-container h1 {
 margin-bottom: 2rem;
 }
+.auth-container h2 {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
 
 .auth-title {
   font-family: var(--secondary-font);       
@@ -292,15 +297,41 @@ margin-bottom: 2rem;
 }
 
 /* Make primary actions fill width by default in the container */
-.auth-container .btn,
-.auth-container [type="submit"] {
+.auth-actions .btn,
+.auth-actions [type="submit"] {
+  margin-top: 0;
   width: 100%;
 }
 
-/* Space between stacked action buttons */
-.auth-container .btn + .btn,
-.auth-container [type="submit"] + .btn {
-  margin-top: .5rem;
+
+/* Auth actions container */
+.auth-actions {
+  margin-top: 1rem;
+  justify-content: flex-end;  /* or center/space-between to taste */
+  display: flex;
+  gap: .75rem;
+  flex-direction: column;
+  align-items: stretch;
+  }
+
+
+/* Secondary button (outline style) */
+.btn-secondary {
+  background: transparent;
+  color: var(--primary-color-dark);
+  border: 1px solid var(--primary-color-dark);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background: var(--primary-color-light);
+  color: var(--text-color-dark);
+}
+
+/* Accessibility: clear focus ring for keyboard users */
+.auth-actions .btn:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
 }
 
 /* Minor helpers for checkboxes + labels */
@@ -338,6 +369,54 @@ ul.errorlist{
   padding-left: 1.5rem;
 }
 
+/* ---- EMAIL ADDRESSES ---- */
+
+.email-list {
+  margin: 1rem 0 .5rem;
+  padding: 0;
+  border: 0;
+}
+
+.email-item {
+  display: grid;                     
+  grid-template-columns: 24px 1fr;   /* radio | label+badges */
+  gap: .75rem;
+  align-items: start;
+  padding: .75rem 1rem;
+  background: var(--background-color-light, #fff);
+  border: 1px solid var(--divider-color);
+  border-radius: 16px;
+  margin-bottom: .5rem;
+}
+
+/* Make the Allauth radio+label render cleanly */
+.email-item input[type="radio"] {
+  accent-color: var(--accent-color);
+  margin-top: .35rem;
+}
+.email-item label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem .5rem;
+  margin: 0;
+  min-width: 0;             /* allow flex wrapping */
+  overflow-wrap: anywhere;
+}
+.email-text { font-weight: 600; }
+
+/* Badges (compact chips) */
+.badge, .tag, [data-tag] {
+  display: inline-block;
+  padding: .125rem .5rem;
+  border-radius: 999px;
+  font-size: .8125rem;
+  line-height: 1.2;
+}
+.badge[tags*="success"], .badge-success { background: #e6f4ea; color: #0f5132; }
+.badge[tags*="warning"], .badge-warning { background: #fff4e5; color: #664d03; }
+.badge[tags*="primary"] { background: var(--primary-color-light); color: var(--text-color-dark); }
+
+
 /* -------------------------------
 SMALL SCREEN
 ---------------------------------- */
@@ -372,7 +451,34 @@ MEDIUM SCREEN STYLES
   .search-row {
     height: 15px;
   }
-
+  /* Actions row inside auth forms: put primary + secondary side by side */
+  .auth-actions {
+    align-items: center;
+  }
+  .auth-actions .btn,
+  .auth-actions [type="submit"] {
+    width: auto;
+    min-width: 10rem; /* keeps buttons usable */
+  }
+  .auth-actions {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  /* Put action buttons side by side, not full width */
+  .auth-actions {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .auth-actions .btn,
+  .auth-actions [type="submit"] {
+    width: auto;
+    min-width: 10rem;   /* keep buttons usable */
+  }
+  .email-item { padding: 1rem 1.25rem; }
 }
 
 

@@ -1,9 +1,9 @@
-{% extends "account/base_manage_email.html" %}
-{% load static allauth i18n %}
-{% block head_title %}
-    {% trans "Email Addresses" %}
-{% endblock head_title %}
+{% extends "base.html" %}
+{% load static i18n allauth account %}
+{% block title %}{% trans "Email Addresses" %}{% endblock %}   
+
 {% block content %}
+<div class="auth-container">
     {% element h1 %}
         {% trans "Email Addresses" %}
     {% endelement %}
@@ -15,40 +15,46 @@
         {% element form form=form action=email_url method="post" tags="email,list" %}
             {% slot body %}
                 {% csrf_token %}
-                {% for radio in emailaddress_radios %}
-                    {% with emailaddress=radio.emailaddress %}
-                        {% element field type="radio" checked=radio.checked name="email" value=emailaddress.email id=radio.id %}
-                            {% slot label %}
-                                {{ emailaddress.email }}
-                                {% if emailaddress.verified %}
-                                    {% element badge tags="success,email,verified" %}
-                                        {% translate "Verified" %}
-                                    {% endelement %}
-                                {% else %}
-                                    {% element badge tags="warning,email,unverified" %}
-                                        {% translate "Unverified" %}
-                                    {% endelement %}
-                                {% endif %}
-                                {% if emailaddress.primary %}
-                                    {% element badge tags="email,primary" %}
-                                        {% translate "Primary" %}
-                                    {% endelement %}
-                                {% endif %}
-                            {% endslot %}
-                        {% endelement %}
-                    {% endwith %}
-                {% endfor %}
+                {# group radios semantically and visually #}
+                <fieldset class="email-list">
+                    <legend class="visually-hidden">{% trans "Your email addresses" %}</legend>
+                        {% for radio in emailaddress_radios %}
+                            {% with emailaddress=radio.emailaddress %}
+                                {% element field type="radio" checked=radio.checked name="email" value=emailaddress.email id=radio.id %}
+                                    {% slot label %}
+                                        {{ emailaddress.email }}
+                                        {% if emailaddress.verified %}
+                                            {% element badge tags="success,email,verified" %}
+                                                {% translate "Verified" %}
+                                            {% endelement %}
+                                        {% else %}
+                                            {% element badge tags="warning,email,unverified" %}
+                                                {% translate "Unverified" %}
+                                            {% endelement %}
+                                        {% endif %}
+                                        {% if emailaddress.primary %}
+                                            {% element badge tags="email,primary" %}
+                                                {% translate "Primary" %}
+                                            {% endelement %}
+                                        {% endif %}
+                                    {% endslot %}
+                                {% endelement %}
+                            {% endwith %}
+                        {% endfor %}
+                </fieldset>
             {% endslot %}
             {% slot actions %}
-                {% element button type="submit" name="action_primary" %}
-                    {% trans 'Make Primary' %}
-                {% endelement %}
-                {% element button tags="secondary" type="submit" name="action_send" %}
-                    {% trans 'Re-send Verification' %}
-                {% endelement %}
-                {% element button tags="danger,delete" type="submit" name="action_remove" %}
-                    {% trans 'Remove' %}
-                {% endelement %}
+                <div class="auth-actions email-actions">
+                    <button class="btn btn-accent" type="submit" name="action_primary">
+                        {% trans 'Make Primary' %}
+                    </button>
+                    <button class="btn btn-secondary" type="submit" name="action_send">
+                        {% trans 'Re-send Verification' %}
+                    </button>
+                    <button class="btn btn-danger" type="submit" name="action_remove" formnovalidate>
+                        {% trans 'Remove' %}
+                    </button>
+                </div>
             {% endslot %}
         {% endelement %}
     {% else %}
@@ -72,6 +78,7 @@
             {% endslot %}
         {% endelement %}
     {% endif %}
+</div>
 {% endblock content %}
 {% block extra_body %}
     <script src="{% static 'account/js/account.js' %}"></script>

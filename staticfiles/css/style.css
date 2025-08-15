@@ -128,7 +128,7 @@ button, .btn {
 
 }
 
-.btn:hover {
+button:hover, .btn:hover {
     background-color: var(--primary-color);
     color: var(--background-color-light);
 }
@@ -294,13 +294,42 @@ margin-bottom: 2rem;
 /* Make primary actions fill width by default in the container */
 .auth-container .btn,
 .auth-container [type="submit"] {
-  width: 100%;
+  margin-top: 0;
+  width: auto;
 }
 
 /* Space between stacked action buttons */
 .auth-container .btn + .btn,
 .auth-container [type="submit"] + .btn {
   margin-top: .5rem;
+}
+
+/* Actions row inside auth forms: put primary + secondary side by side */
+.auth-actions {
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+  justify-content: flex-end;  /* or center/space-between to taste */
+  margin-top: 1rem;
+}
+
+/* Secondary button (outline style) */
+.btn-secondary {
+  background: transparent;
+  color: var(--primary-color-dark);
+  border: 1px solid var(--primary-color-dark);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background: var(--primary-color-light);
+  color: var(--text-color-dark);
+}
+
+/* Accessibility: clear focus ring for keyboard users */
+.auth-actions .btn:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
 }
 
 /* Minor helpers for checkboxes + labels */
@@ -329,7 +358,7 @@ margin-bottom: 2rem;
   padding: 0;
   margin: 0;
 }
-.auth-container ul .errorlist {
+ul.errorlist{
   color: var(--accent-color);
 }
 

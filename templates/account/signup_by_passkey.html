@@ -1,9 +1,9 @@
-{% extends "account/base_entrance.html" %}
-{% load allauth i18n %}
-{% block head_title %}
-    {% trans "Signup" %}
-{% endblock head_title %}
+{% extends "base.html" %}
+{% load static i18n allauth %}
+{% block title %}{% trans "Sign Up" %}{% endblock %}
+
 {% block content %}
+<div class="auth-container">
     {% element h1 %}
         {% trans "Passkey Sign Up" %}
     {% endelement %}
@@ -35,4 +35,5 @@
     {% element button href=signup_url tags="prominent,signup,outline,primary" %}
         {% trans "Other options" %}
     {% endelement %}
+</div>
 {% endblock content %}
