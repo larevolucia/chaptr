@@ -418,6 +418,15 @@ ul.errorlist{
 
 
 /* -------------------------------
+MESSAGES
+---------------------------------- */
+
+.message-container {
+  position: relative;
+  z-index: 1050;
+}
+
+/* -------------------------------
 SMALL SCREEN
 ---------------------------------- */
 @media (max-width: 767px) {

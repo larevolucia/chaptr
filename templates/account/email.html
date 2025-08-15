@@ -88,3 +88,45 @@
 }
     </script>
 {% endblock extra_body %}
+
+{% block extra_body %}
+  {{ block.super }}
+  <script>
+    (function () {
+      const radios = document.querySelectorAll('input[type="radio"][name="email"]');
+      const btnPrimary = document.querySelector('button[name="action_primary"]');
+      const btnResend  = document.querySelector('button[name="action_send"]');
+
+      // map email -> {primary, verified} using label text badges
+      function getState(radio) {
+        const label = document.querySelector(`label[for="${radio.id}"]`);
+        const text = label ? label.textContent.toLowerCase() : "";
+        return {
+          primary:  text.includes("primary"),
+          verified: text.includes("verified"),
+        };
+      }
+
+      function updateButtons() {
+        const current = document.querySelector('input[name="email"]:checked');
+        if (!current) return;
+        const { primary, verified } = getState(current);
+
+        // disable "Make Primary" if already primary
+        if (btnPrimary) {
+          btnPrimary.disabled = primary;
+          btnPrimary.setAttribute("aria-disabled", String(primary));
+        }
+
+        // hide "Re-send Verification" for verified addresses
+        if (btnResend) {
+          btnResend.style.display = verified ? "none" : "";
+        }
+      }
+
+      radios.forEach(r => r.addEventListener('change', updateButtons));
+      updateButtons();
+    })();
+  </script>
+{% endblock %}
+
