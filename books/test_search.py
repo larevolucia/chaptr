@@ -1,5 +1,9 @@
-from django.test import TestCase
-from books.views import build_q
+from django.test import TestCase, RequestFactory
+from unittest.mock import patch
+from books.views import (
+    build_q,
+    book_search,
+)
 
 
 class BuildQTests(TestCase):
@@ -22,3 +26,18 @@ class BuildQTests(TestCase):
     def test_build_q_empty_returns_empty(self):
         q = build_q("", "author")
         self.assertEqual(q, "")
+
+
+class BookSearchViewTests(TestCase):
+    def setUp(self):
+        self.rf = RequestFactory()
+
+    @patch("books.views.search_google_books")
+    def test_book_search_uses_built_query(self, mock_search):
+        mock_search.return_value = []
+        req = self.rf.get("/books/search", {"field": "author", "q": "emily bronte"})
+        resp = book_search(req)
+        self.assertEqual(resp.status_code, 200)
+        # ensure build_q result was used
+        called_q = mock_search.call_args.args[0]
+        self.assertEqual(called_q, "inauthor:emily bronte")
