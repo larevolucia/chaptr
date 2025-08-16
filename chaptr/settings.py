@@ -70,7 +70,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Email verification
 
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 # ACCOUNT_EMAIL_VERIFICATION = 'none' dev
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # prod
 LOGIN_REDIRECT_URL = "/"
