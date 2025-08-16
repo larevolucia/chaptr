@@ -1,6 +1,7 @@
 import os
 import re
 import requests
+from requests import RequestException
 from django.shortcuts import render
 from django.core.cache import cache
 from django.http import Http404
@@ -79,12 +80,16 @@ def search_google_books(query):
         "langRestrict": "en"
     }
 
-    response = requests.get(url, params=params, timeout=10)
-    if response.status_code != 200:
-        return []
-    data = response.json()
-    print("Google Books API response:", data)  # Debugging line
-
+    try:
+        response = requests.get(url, params=params, timeout=10)
+        response.raise_for_status()  # Raises HTTPError for bad status codes
+        data = response.json()
+    except RequestException as exc:
+        # This catches all requests-related exceptions including HTTPError
+        raise ValueError(f"Google Books search failed: {exc}") from exc
+    except ValueError as exc:
+        # This catches JSON decode errors
+        raise ValueError(f"Google Books response parsing failed: {exc}") from exc  # noqa: E501
     books = []
     for item in data.get("items", []):
         volume = item.get("volumeInfo", {})
