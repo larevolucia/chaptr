@@ -90,6 +90,7 @@ def search_google_books(query):
     except ValueError as exc:
         # This catches JSON decode errors
         raise ValueError(f"Google Books response parsing failed: {exc}") from exc  # noqa: E501
+
     books = []
     for item in data.get("items", []):
         volume = item.get("volumeInfo", {})
@@ -106,10 +107,16 @@ def search_google_books(query):
 def fetch_book_by_id(book_id):
     api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
     url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
-    resp = requests.get(url, params={"key": api_key} if api_key else None, timeout=8)  # noqa: E501
-    if resp.status_code != 200:
-        raise Http404("Book not found.")
-    data = resp.json() or {}
+    params = {"key": api_key} if api_key else None
+
+    try:
+        resp = requests.get(url, params=params, timeout=8)
+        if resp.status_code != 200:
+            raise Http404("Book not found.")
+        data = resp.json() or {}
+    except (RequestException, ValueError) as exc:
+        raise Http404("Book not found.") from exc
+
     vi = data.get("volumeInfo", {}) or {}
     return {
         "id": data.get("id"),
