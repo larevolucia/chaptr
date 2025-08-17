@@ -11,6 +11,7 @@ Unlike feature-heavy platforms, Chaptr focuses on simplicity, allowing users to 
 Chaptr is built for individual readers who want a focused, user-friendly space to log their reading habits without social clutter or complex features.
 
 ---
+
 ## Site Goal
 
 To create a fully functional, database-backed full-stack application that:
@@ -186,6 +187,28 @@ Sprint 3:
 
 ---
 
+
+## Features
+
+### Search for books by title, author, or genre
+
+**NextChaptr**'s search engine provides an intuitive book discovery interface that allows users to search the vast Google Books catalog using either general keywords or field-specific queries targeting titles, authors, or genres (subjects). 
+
+Users can select their preferred search scope from a dropdown menu and enter their query, with the system intelligently detecting whether advanced Google Books operators are already in use or automatically applying the appropriate field-specific operators (``intitle``, ``inauthor``, ``subject``) based on the selected scope.
+
+The search results are displayed in a clean, browsable format showing book thumbnails, titles, and author information, with each result serving as a gateway to more detailed book information, while robust error handling ensures that API failures or network issues gracefully degrade to an empty results state rather than breaking the user experience.
+
+### Book Detail View
+The book detail view offers users comprehensive information about individual books through a dedicated page that displays rich metadata including title, subtitle, authors, publication details, page count, categories, description, and cover thumbnail. 
+
+From a technical standpoint, this feature leverages Django's caching system to store detailed book information for one hour, significantly improving page load times and reducing API calls to Google Books, while maintaining data freshness and ensuring that users always have access to complete book details.
+
+- User authentication and account management
+- Track reading progress with status updates
+- Rate and review books
+- Leave comments on books
+- User dashboard for managing reading activity
+
 ## Design
 
 ### Wireframes
@@ -195,6 +218,7 @@ Sprint 3:
 ![Mobile Vistor Wireframes](documentation/Mobile_Visitor.png)
 
 ---
+
 ## Models
 
 - **Chaptr** does not implement a `Book` model by design, as it leverages the Google Books API to dynamically fetch book data using each book's unique `id`. This approach reduces reduncancy and complexity by separating the internal user data from external metadata, keeping the application lightweigth. 
@@ -247,6 +271,7 @@ Represents a user's written review of a book.
 -Unique combination of `user` and `book_id` (one review per book per user)
 
 ---
+
 ## Django Project Structure
 
 The *Chaptr* project is divided into focused Django applications to ensure clear separation of concerns and maintainable code architecture.
@@ -267,6 +292,7 @@ The *Chaptr* project is divided into focused Django applications to ensure clear
 - **Maintainability**: Clear boundaries between apps reduce complexity and improve code readability.
 - **Scalability**: Allows future extension, such as adding a social/friendship app, without disrupting the core architecture.
 ---
+
 ## Credits
 
 - Homepage banner image: [Unsplash](https://unsplash.com/photos/iyKVGRu79G4) Photo by [Lilly Rum](https://unsplash.com/@rumandraisin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
