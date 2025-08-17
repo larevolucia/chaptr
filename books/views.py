@@ -114,10 +114,13 @@ def fetch_book_by_id(book_id):
 
     try:
         resp = requests.get(url, params=params, timeout=8)
-        if resp.status_code != 200:
-            raise Http404("Book not found.")
+        resp.raise_for_status()
         data = resp.json() or {}
-    except (RequestException, ValueError) as e:
+    except RequestException as e:
+        logger.warning("Google Books fetch failed for book_id %s: %s", book_id, e)  # noqa: E501
+        raise Http404("Book not found.") from e
+    except ValueError as e:
+        logger.warning("Google Books response parsing failed for book_id %s: %s", book_id, e)  # noqa: E501 pylint: disable=line-too-long
         raise Http404("Book not found.") from e
 
     vi = data.get("volumeInfo", {}) or {}

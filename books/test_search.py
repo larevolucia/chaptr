@@ -2,6 +2,7 @@ import os
 from unittest.mock import patch, Mock
 from requests import HTTPError
 from django.core.cache import cache
+from django.http import Http404
 from django.test import TestCase, RequestFactory
 from books.views import (
     build_q,
@@ -136,3 +137,11 @@ class FetchBookByIdTests(TestCase):
         self.assertEqual(data["description"], "Some description.")
         self.assertTrue(data["thumbnail"].startswith("http"))
         self.assertEqual(data["previewLink"], "http://example.test/preview")
+
+    @patch("books.views.requests.get")
+    def test_fetch_book_by_id_404_on_non_200(self, mock_get):
+        mock_resp = Mock()
+        mock_resp.raise_for_status.side_effect = HTTPError("404")
+        mock_get.return_value = mock_resp
+        with self.assertRaises(Http404):
+            fetch_book_by_id("nonexistent")
