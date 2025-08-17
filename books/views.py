@@ -83,23 +83,24 @@ def search_google_books(query):
     try:
         response = requests.get(url, params=params, timeout=10)
         response.raise_for_status()  # Raises HTTPError for bad status codes
-        data = response.json()
-    except RequestException as exc:
+        data = response.json() or {}
+    except RequestException as e:
         # This catches all requests-related exceptions including HTTPError
-        raise ValueError(f"Google Books search failed: {exc}") from exc
-    except ValueError as exc:
+        raise ValueError(f"Google Books search failed: {e}") from e
+    except ValueError as e:
         # This catches JSON decode errors
-        raise ValueError(f"Google Books response parsing failed: {exc}") from exc  # noqa: E501
+        raise ValueError(f"Google Books response parsing failed: {e}") from e  # noqa: E501
 
     books = []
-    for item in data.get("items", []):
-        volume = item.get("volumeInfo", {})
-        books.append({
-            "id": item.get("id"),
-            "title": volume.get("title"),
-            "authors": ', '.join(volume.get("authors", [])),
-            "thumbnail": volume.get("imageLinks", {}).get("thumbnail"),
-        })
+    if response.status_code == 200:
+        for item in data.get("items", []):
+            volume = item.get("volumeInfo", {})
+            books.append({
+                "id": item.get("id"),
+                "title": volume.get("title"),
+                "authors": ', '.join(volume.get("authors", [])),
+                "thumbnail": volume.get("imageLinks", {}).get("thumbnail"),
+            })
 
     return books
 
@@ -114,8 +115,8 @@ def fetch_book_by_id(book_id):
         if resp.status_code != 200:
             raise Http404("Book not found.")
         data = resp.json() or {}
-    except (RequestException, ValueError) as exc:
-        raise Http404("Book not found.") from exc
+    except (RequestException, ValueError) as e:
+        raise Http404("Book not found.") from e
 
     vi = data.get("volumeInfo", {}) or {}
     return {
