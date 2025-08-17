@@ -16,9 +16,9 @@ from books.views import (
 REALISTIC_DETAIL_JSON = {
     "id": "AkVWPbrWKGEC",
     "volumeInfo": {
-        "title": "The Poems of Emily Bronte",
+        "title": "Wuthering heights",
         "subtitle": "A Nice Subtitle",
-        "authors": ["Emily Brontë"],
+        "authors": ["Emily Bronte"],
         "publisher": "Rowman & Littlefield",
         "publishedDate": "1992-01-01",
         "pageCount": 206,
@@ -127,9 +127,9 @@ class FetchBookByIdTests(TestCase):
 
         data = fetch_book_by_id("AkVWPbrWKGEC")
         self.assertEqual(data["id"], "AkVWPbrWKGEC")
-        self.assertEqual(data["title"], "The Poems of Emily Bronte")
+        self.assertEqual(data["title"], "Wuthering heights")
         self.assertEqual(data["subtitle"], "A Nice Subtitle")
-        self.assertEqual(data["authors"], "Emily Brontë")
+        self.assertEqual(data["authors"], "Emily Bronte")
         self.assertEqual(data["publisher"], "Rowman & Littlefield")
         self.assertEqual(data["publishedDate"], "1992-01-01")
         self.assertEqual(data["pageCount"], 206)
@@ -145,3 +145,38 @@ class FetchBookByIdTests(TestCase):
         mock_get.return_value = mock_resp
         with self.assertRaises(Http404):
             fetch_book_by_id("nonexistent")
+
+
+class BookDetailViewTests(TestCase):
+    def setUp(self):
+        self.rf = RequestFactory()
+        cache.clear()
+
+    @patch("books.views.fetch_book_by_id")
+    def test_book_detail_renders_200_and_context(self, mock_fetch):
+        mock_fetch.return_value = {
+            "id": "AkVWPbrWKGEC",
+            "title": "Wuthering heights",
+            "authors": "Emily Bronte",
+            "thumbnail": "http://thumb",
+            "publisher": "Rowman & Littlefield",
+            "publishedDate": "1992-01-01",
+            "pageCount": 206,
+            "categories": ["Poetry"],
+            "description": "Some description.",
+            "previewLink": "http://example.test/preview",
+            "infoLink": "http://example.test/info",
+            "subtitle": "A Nice Subtitle",
+        }
+        req = self.rf.get("/books/AkVWPbrWKGEC")
+        resp = book_detail(req, "AkVWPbrWKGEC")
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn(b"Wuthering heights", resp.content)
+        self.assertIn(b"Emily Bronte", resp.content)
+        self.assertIn(b"http://thumb", resp.content)
+        self.assertIn(b"1992-01-01", resp.content)
+        self.assertIn(b"206", resp.content)
+        self.assertIn(b"Poetry", resp.content)
+        self.assertIn(b"Some description.", resp.content)
+        self.assertIn(b"A Nice Subtitle", resp.content)
+        self.assertIn(b"Rowman &amp; Littlefield", resp.content)
