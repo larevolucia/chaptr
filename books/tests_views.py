@@ -1,0 +1,230 @@
+"""Tests for the books app views and helpers.
+
+Covers:
+- Query building via `build_q`.
+- Search view wiring to `search_google_books`.
+- Google Books list search happy/empty paths.
+- Single volume fetch mapping and 404 behavior.
+- Detail view rendering and caching behavior.
+
+Notes:
+- External HTTP calls are patched.
+- Cache is cleared where needed to avoid cross-test state.
+"""
+import os
+from unittest.mock import patch, Mock
+from requests import HTTPError
+from django.core.cache import cache
+from django.http import Http404
+from django.test import TestCase, RequestFactory
+from books.views import (
+    build_q,
+    book_search,
+    search_google_books,
+    fetch_book_by_id,
+    book_detail
+)
+
+
+REALISTIC_DETAIL_JSON = {
+    "id": "AkVWPbrWKGEC",
+    "volumeInfo": {
+        "title": "Wuthering heights",
+        "subtitle": "A Nice Subtitle",
+        "authors": ["Emily Bronte"],
+        "publisher": "Rowman & Littlefield",
+        "publishedDate": "1992-01-01",
+        "pageCount": 206,
+        "categories": ["Poetry"],
+        "description": "Some description.",
+        "previewLink": "http://example.test/preview",
+        "infoLink": "http://example.test/info",
+        "imageLinks": {"thumbnail": "http://thumb/poems.jpg"},
+    },
+}
+
+
+class BuildQTests(TestCase):
+    """Unit tests for `build_q` query construction."""
+    def test_build_q_with_field_author(self):
+        """Applies `inauthor:` when field is 'author'."""
+        q = build_q("emily bronte", "author")
+        self.assertEqual(q, "inauthor:emily bronte")
+
+    def test_build_q_preserves_existing_operator_even_if_field_differs(self):
+        """Passes through when user already supplied an operator."""
+        q = build_q("intitle:wuthering heights", "author")
+        self.assertEqual(q, "intitle:wuthering heights")
+
+    def test_build_q_all_keeps_plain_text(self):
+        """Leaves query unchanged when field is 'all'."""
+        q = build_q("wuthering heights", "all")
+        self.assertEqual(q, "wuthering heights")
+
+    def test_build_q_subject_applies_operator(self):
+        """Applies `subject:` when field is 'subject'."""
+        q = build_q("poetry", "subject")
+        self.assertEqual(q, "subject:poetry")
+
+    def test_build_q_empty_returns_empty(self):
+        """Returns empty string for empty input."""
+        q = build_q("", "author")
+        self.assertEqual(q, "")
+
+
+class BookSearchViewTests(TestCase):
+    """Integration test for the search view wiring to the helper."""
+    def setUp(self):
+        """Initialize a RequestFactory for view calls."""
+        self.rf = RequestFactory()
+
+    @patch("books.views.search_google_books")
+    def test_book_search_uses_built_query(self, mock_search):
+        """Test that the search view uses the built query."""
+        mock_search.return_value = []
+        req = self.rf.get("/books/search", {"field": "author", "q": "emily bronte"})  # noqa: E501
+        resp = book_search(req)
+        self.assertEqual(resp.status_code, 200)
+        # ensure build_q result was used
+        called_q = mock_search.call_args.args[0]
+        self.assertEqual(called_q, "inauthor:emily bronte")
+
+
+class SearchGoogleBooksTests(TestCase):
+    """Integration tests for the Google Books API search functionality."""
+    @patch.dict(os.environ, {"GOOGLE_BOOKS_API_KEY": "fake-key"}, clear=False)
+    @patch("books.views.requests.get")
+    def test_returns_parsed_list_on_200(self, mock_get):
+        """Test that a successful API call returns a parsed list."""
+        mock_resp = Mock(status_code=200)
+        mock_resp.json.return_value = {
+            "items": [
+                {
+                    "id": "X",
+                    "volumeInfo": {
+                        "title": "T",
+                        "authors": ["A"],
+                        "imageLinks": {"thumbnail": "http://t"}
+                    }
+                },
+                {
+                    "id": "Y",
+                    "volumeInfo": {
+                              "title": "U",
+                              "authors": ["B"],
+                              "imageLinks": {"thumbnail": "http://u"}
+                          }
+                }
+                      ]
+        }
+        mock_get.return_value = mock_resp
+
+        results = search_google_books("inauthor:emily bronte")
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0]["id"], "X")
+        self.assertEqual(results[0]["authors"], "A")
+        self.assertEqual(results[0]["title"], "T")
+        self.assertEqual(results[0]["thumbnail"], "http://t")
+        self.assertEqual(results[1]["id"], "Y")
+        self.assertEqual(results[1]["authors"], "B")
+        self.assertEqual(results[1]["title"], "U")
+        self.assertEqual(results[1]["thumbnail"], "http://u")
+
+    @patch.dict(os.environ, {"GOOGLE_BOOKS_API_KEY": "fake-key"}, clear=False)
+    @patch("books.views.requests.get")
+    def test_non_200_or_exception_returns_empty(self, mock_get):
+        """Test that non-200 responses or exceptions return an empty list."""
+        mock_resp = Mock()
+        mock_resp.raise_for_status.side_effect = HTTPError("500")
+        mock_get.return_value = mock_resp
+        self.assertEqual(search_google_books("X"), [])
+
+
+class FetchBookByIdTests(TestCase):
+    """Integration tests for the fetch_book_by_id function."""
+    def setUp(self):
+        """Clear cache before each test."""
+        cache.clear()
+
+    @patch("books.views.requests.get")
+    def test_fetch_book_by_id_success_maps_fields(self, mock_get):
+        """Test that fetch_book_by_id maps fields correctly."""
+        mock_resp = Mock(status_code=200)
+        mock_resp.json.return_value = REALISTIC_DETAIL_JSON
+        mock_get.return_value = mock_resp
+
+        data = fetch_book_by_id("AkVWPbrWKGEC")
+        self.assertEqual(data["id"], "AkVWPbrWKGEC")
+        self.assertEqual(data["title"], "Wuthering heights")
+        self.assertEqual(data["subtitle"], "A Nice Subtitle")
+        self.assertEqual(data["authors"], "Emily Bronte")
+        self.assertEqual(data["publisher"], "Rowman & Littlefield")
+        self.assertEqual(data["publishedDate"], "1992-01-01")
+        self.assertEqual(data["pageCount"], 206)
+        self.assertIn("Poetry", data["categories"])
+        self.assertEqual(data["description"], "Some description.")
+        self.assertTrue(data["thumbnail"].startswith("http"))
+        self.assertEqual(data["previewLink"], "http://example.test/preview")
+
+    @patch("books.views.requests.get")
+    def test_fetch_book_by_id_404_on_non_200(self, mock_get):
+        """Test that fetch_book_by_id raises Http404 on non-200."""
+        mock_resp = Mock()
+        mock_resp.raise_for_status.side_effect = HTTPError("404")
+        mock_get.return_value = mock_resp
+        with self.assertRaises(Http404):
+            fetch_book_by_id("nonexistent")
+
+
+class BookDetailViewTests(TestCase):
+    """Integration tests for the book detail view."""
+    def setUp(self):
+        """Initialize a RequestFactory for view calls and clears cache."""
+        self.rf = RequestFactory()
+        cache.clear()
+
+    @patch("books.views.fetch_book_by_id")
+    def test_book_detail_renders_200_and_context(self, mock_fetch):
+        """Test that the book detail view renders correctly."""
+        mock_fetch.return_value = {
+            "id": "AkVWPbrWKGEC",
+            "title": "Wuthering heights",
+            "authors": "Emily Bronte",
+            "thumbnail": "http://thumb",
+            "publisher": "Rowman & Littlefield",
+            "publishedDate": "1992-01-01",
+            "pageCount": 206,
+            "categories": ["Poetry"],
+            "description": "Some description.",
+            "previewLink": "http://example.test/preview",
+            "infoLink": "http://example.test/info",
+            "subtitle": "A Nice Subtitle",
+        }
+        req = self.rf.get("/books/AkVWPbrWKGEC")
+        resp = book_detail(req, "AkVWPbrWKGEC")
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn(b"Wuthering heights", resp.content)
+        self.assertIn(b"Emily Bronte", resp.content)
+        self.assertIn(b"http://thumb", resp.content)
+        self.assertIn(b"1992-01-01", resp.content)
+        self.assertIn(b"206", resp.content)
+        self.assertIn(b"Poetry", resp.content)
+        self.assertIn(b"Some description.", resp.content)
+        self.assertIn(b"A Nice Subtitle", resp.content)
+        self.assertIn(b"Rowman &amp; Littlefield", resp.content)
+
+    @patch("books.views.cache")
+    def test_book_detail_caches_volume(self, mock_fetch):
+        """Test that the book detail view caches the fetched volume."""
+        # First hit -> calls fetch and caches
+        mock_fetch.return_value = {"id": "ID1", "title": "T"}
+        req1 = self.rf.get("/books/ID1")
+        resp1 = book_detail(req1, "ID1")
+        self.assertEqual(resp1.status_code, 200)
+        self.assertEqual(mock_fetch.call_count, 1)
+
+        # Second hit -> should be served from cache (no extra fetch)
+        req2 = self.rf.get("/books/ID1")
+        resp2 = book_detail(req2, "ID1")
+        self.assertEqual(resp2.status_code, 200)
+        self.assertEqual(mock_fetch.call_count, 1)  # unchanged => cached

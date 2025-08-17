@@ -1,3 +1,12 @@
+"""
+Views for NextChaptr's Google Books search and detail pages.
+
+This module exposes:
+- Simple home view.
+- Search flow that builds a Google Books query (with basic operators)
+  and renders results.
+- Detail flow that fetches a single volume by ID with low-level caching.
+"""
 import os
 import re
 import logging
@@ -14,6 +23,8 @@ OPERATOR_RE = re.compile(r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|ocl
 
 
 def home(request):
+    """Render the landing page for the books app.
+    """
     return render(request, 'books/home.html')
 
 
@@ -48,6 +59,23 @@ def build_q(q_raw, field, _title_unused="", _author_unused="", _subject_unused="
 
 
 def book_search(request):
+    """Handle the search page:
+       build query, call API helper, render results.
+
+    Reads ``field`` and ``q`` from ``request.GET``,
+    normalizes them via `build_q`,
+    calls `search_google_books` if non-empty,
+    and renders ``books/search_results.html``.
+
+    Args:
+        request: The current request
+
+    Returns:
+        Response: Rendered search results template with context:
+            - ``books`` (list[dict]): Minimal book metadata for display.
+            - ``query`` (str): The original search text.
+            - ``field`` (str): The selected scope (all/title/author/subject).
+    """
     # read scope and basic query only
     field = request.GET.get('field', 'all').strip().lower()
     q_raw = request.GET.get('q', '').strip()
@@ -68,6 +96,21 @@ def book_search(request):
 
 
 def search_google_books(query):
+    """Query the Google Books API and return simplified book results.
+
+    This helper performs a GET request to ``/volumes`` with defaults
+    (``printType=books``, ``orderBy=relevance``, ``langRestrict=en``).
+    Network errors and JSON parsing issues are logged and result in an empty
+    list (the UI then renders a "no results" state).
+
+    Args:
+        query (str): A valid Google Books query string (``"intitle:django"``).
+
+    Returns:
+        list[dict]: A list of lightweight book dicts with keys:
+            ``id``, ``title``, ``authors``, ``thumbnail``.
+            Returns ``[]`` if the API key is missing or an error occurs.
+    """
     api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
     if not api_key:
         return []
@@ -108,6 +151,23 @@ def search_google_books(query):
 
 
 def fetch_book_by_id(book_id):
+    """Fetch full volume details by Google Books volume ID.
+
+    Performs a GET to ``/volumes/{book_id}`` and normalizes the response into a
+    dict for the detail template.
+    Failures are logged and surfaced to Django
+    by raising ``Http404`` (so the standard 404 page is returned).
+
+    Args:
+        book_id (str): Google Books volume identifier.
+
+    Returns:
+        dict: Normalized volume data with keys including:
+            ``id``, ``title``, ``subtitle``, ``authors``, ``thumbnail``,
+            ``publisher``, ``publishedDate``, ``pageCount``, ``categories``,
+            ``description``, ``previewLink``, ``infoLink``
+    """
+
     api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
     url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
     params = {"key": api_key} if api_key else None
@@ -141,6 +201,21 @@ def fetch_book_by_id(book_id):
 
 
 def book_detail(request, book_id):
+    """Render the detail page for a single book with 1-hour caching.
+
+    Checks a low-level cache for the normalized volume dict.
+    If missing, calls :func:`fetch_book_by_id`,
+    stores the result under the key ``"gbooks:vol:{book_id}"``
+    and renders ``books/book_detail.html``.
+
+    Args:
+        request: The current request.
+        book_id (str): Google Books volume identifier.
+
+    Returns:
+        response: The rendered detail template with
+        context ``{"book": <dict>}``.
+    """
     cache_key = f"gbooks:vol:{book_id}"
     book = cache.get(cache_key)
     if not book:
