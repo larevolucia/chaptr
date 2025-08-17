@@ -56,7 +56,7 @@ class SignupBasicsTests(TestCase):
 
     def test_signup_validation_errors(self):
         """Test that signup shows validation errors."""
-        # follow redirects so we land on a page with a bound form in context
+        # follow redirects so we land on a page with a form in context
         User.objects.create_user(
             username="reader2", email="reader2@example.com", password="Xx12345678!"  # noqa: E501 pylint: disable=line-too-long
         )
@@ -78,3 +78,37 @@ class SignupBasicsTests(TestCase):
 
         self.assertContains(resp, "This password is too short. It must contain at least 8 characters.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
         self.assertContains(resp, "A user with that username already exists.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
+
+
+@override_settings(
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    ACCOUNT_EMAIL_VERIFICATION="mandatory",
+    ACCOUNT_EMAIL_REQUIRED=True,
+    ACCOUNT_AUTHENTICATION_METHOD="username_email",
+    ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION=True,
+    SITE_ID=1,
+)
+class LoginLogoutTests(TestCase):
+    """Tests for the login and logout process using allauth."""
+
+    def setUp(self):
+        """Create a test user and e-mail for login tests."""
+        self.user = User.objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="S3curepass!123"
+        )
+        self.user.emailaddress_set.create(
+            email="testuser@example.com",
+            verified=True,
+            primary=True
+        )
+
+    def test_login_page_renders(self):
+        """Test that the login page renders correctly."""
+        url = reverse("account_login")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'name="login"', html=False)
+        self.assertContains(resp, 'name="password"', html=False)
+        self.assertContains(resp, "Log In", html=False)
