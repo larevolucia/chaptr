@@ -213,7 +213,7 @@ class BookDetailViewTests(TestCase):
         self.assertIn(b"A Nice Subtitle", resp.content)
         self.assertIn(b"Rowman &amp; Littlefield", resp.content)
 
-    @patch("books.views.cache")
+    @patch("books.views.fetch_book_by_id")
     def test_book_detail_caches_volume(self, mock_fetch):
         """Test that the book detail view caches the fetched volume."""
         # First hit -> calls fetch and caches
