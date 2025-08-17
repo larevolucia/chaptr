@@ -112,3 +112,17 @@ class LoginLogoutTests(TestCase):
         self.assertContains(resp, 'name="login"', html=False)
         self.assertContains(resp, 'name="password"', html=False)
         self.assertContains(resp, "Log In", html=False)
+
+    def test_successful_login_with_username(self):
+        """Test successful login using username."""
+        login_url = reverse("account_login")
+        data = {
+            "login": "testuser",
+            "password": "S3curepass!123",
+        }
+        resp = self.client.post(login_url, data, follow=True)
+
+        self.assertTrue(resp.context["user"].is_authenticated)
+        self.assertEqual(resp.context["user"].username, "testuser")
+
+        self.assertRedirects(resp, "/")
