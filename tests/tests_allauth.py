@@ -84,7 +84,7 @@ class SignupBasicsTests(TestCase):
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
     ACCOUNT_EMAIL_VERIFICATION="mandatory",
     ACCOUNT_EMAIL_REQUIRED=True,
-    ACCOUNT_AUTHENTICATION_METHOD="username_email",
+    ACCOUNT_AUTHENTICATION_METHOD="username",
     ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION=True,
     SITE_ID=1,
 )
@@ -126,3 +126,31 @@ class LoginLogoutTests(TestCase):
         self.assertEqual(resp.context["user"].username, "testuser")
 
         self.assertRedirects(resp, "/")
+
+
+@override_settings(
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    ACCOUNT_EMAIL_VERIFICATION="none",
+    ACCOUNT_EMAIL_REQUIRED=True,
+    ACCOUNT_AUTHENTICATION_METHOD="username",
+    SITE_ID=1,
+)
+class PasswordResetTests(TestCase):
+    """Test password reset functionality."""
+
+    def setUp(self):
+        """Create a test user with email for password reset tests."""
+        self.user = User.objects.create_user(
+            username="resetuser",
+            email="resetuser@example.com",
+            password="OldPassword123!"
+        )
+
+    def test_password_reset_page_renders(self):
+        """Test that the password reset page renders correctly."""
+        url = reverse("account_reset_password")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Password Reset", html=False)
+        self.assertContains(resp, 'name="email"', html=False)
+        self.assertContains(resp, "Reset My Password", html=False)
