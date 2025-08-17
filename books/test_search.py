@@ -1,12 +1,33 @@
 import os
-from requests import HTTPError
 from unittest.mock import patch, Mock
+from requests import HTTPError
+from django.core.cache import cache
 from django.test import TestCase, RequestFactory
 from books.views import (
     build_q,
     book_search,
-    search_google_books
+    search_google_books,
+    fetch_book_by_id,
+    book_detail
 )
+
+
+REALISTIC_DETAIL_JSON = {
+    "id": "AkVWPbrWKGEC",
+    "volumeInfo": {
+        "title": "The Poems of Emily Bronte",
+        "subtitle": "A Nice Subtitle",
+        "authors": ["Emily Brontë"],
+        "publisher": "Rowman & Littlefield",
+        "publishedDate": "1992-01-01",
+        "pageCount": 206,
+        "categories": ["Poetry"],
+        "description": "Some description.",
+        "previewLink": "http://example.test/preview",
+        "infoLink": "http://example.test/info",
+        "imageLinks": {"thumbnail": "http://thumb/poems.jpg"},
+    },
+}
 
 
 class BuildQTests(TestCase):
@@ -91,3 +112,27 @@ class SearchGoogleBooksTests(TestCase):
         mock_resp.raise_for_status.side_effect = HTTPError("500")
         mock_get.return_value = mock_resp
         self.assertEqual(search_google_books("X"), [])
+
+
+class FetchBookByIdTests(TestCase):
+    def setUp(self):
+        cache.clear()
+
+    @patch("books.views.requests.get")
+    def test_fetch_book_by_id_success_maps_fields(self, mock_get):
+        mock_resp = Mock(status_code=200)
+        mock_resp.json.return_value = REALISTIC_DETAIL_JSON
+        mock_get.return_value = mock_resp
+
+        data = fetch_book_by_id("AkVWPbrWKGEC")
+        self.assertEqual(data["id"], "AkVWPbrWKGEC")
+        self.assertEqual(data["title"], "The Poems of Emily Bronte")
+        self.assertEqual(data["subtitle"], "A Nice Subtitle")
+        self.assertEqual(data["authors"], "Emily Brontë")
+        self.assertEqual(data["publisher"], "Rowman & Littlefield")
+        self.assertEqual(data["publishedDate"], "1992-01-01")
+        self.assertEqual(data["pageCount"], 206)
+        self.assertIn("Poetry", data["categories"])
+        self.assertEqual(data["description"], "Some description.")
+        self.assertTrue(data["thumbnail"].startswith("http"))
+        self.assertEqual(data["previewLink"], "http://example.test/preview")
