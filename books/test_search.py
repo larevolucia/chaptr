@@ -1,4 +1,5 @@
 import os
+from requests import HTTPError
 from unittest.mock import patch, Mock
 from django.test import TestCase, RequestFactory
 from books.views import (
@@ -76,12 +77,17 @@ class SearchGoogleBooksTests(TestCase):
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0]["id"], "X")
         self.assertEqual(results[0]["authors"], "A")
+        self.assertEqual(results[0]["title"], "T")
+        self.assertEqual(results[0]["thumbnail"], "http://t")
         self.assertEqual(results[1]["id"], "Y")
         self.assertEqual(results[1]["authors"], "B")
+        self.assertEqual(results[1]["title"], "U")
+        self.assertEqual(results[1]["thumbnail"], "http://u")
 
     @patch.dict(os.environ, {"GOOGLE_BOOKS_API_KEY": "fake-key"}, clear=False)
     @patch("books.views.requests.get")
     def test_non_200_or_exception_returns_empty(self, mock_get):
-        mock_resp = Mock(status_code=500)
+        mock_resp = Mock()
+        mock_resp.raise_for_status.side_effect = HTTPError("500")
         mock_get.return_value = mock_resp
         self.assertEqual(search_google_books("X"), [])

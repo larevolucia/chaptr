@@ -1,5 +1,6 @@
 import os
 import re
+import logging
 import requests
 from requests import RequestException
 from django.shortcuts import render
@@ -8,7 +9,7 @@ from django.http import Http404
 
 
 # Create your views here.
-
+logger = logging.getLogger(__name__)
 OPERATOR_RE = re.compile(r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|oclc):', re.I)  # noqa: E501  pylint: disable=line-too-long
 
 
@@ -86,21 +87,22 @@ def search_google_books(query):
         data = response.json() or {}
     except RequestException as e:
         # This catches all requests-related exceptions including HTTPError
-        raise ValueError(f"Google Books search failed: {e}") from e
+        logger.warning("Google Books search failed: %s", e)
+        return []
     except ValueError as e:
         # This catches JSON decode errors
-        raise ValueError(f"Google Books response parsing failed: {e}") from e  # noqa: E501
+        logger.warning("Google Books response parsing failed: %s", e)
+        return []
 
     books = []
-    if response.status_code == 200:
-        for item in data.get("items", []):
-            volume = item.get("volumeInfo", {})
-            books.append({
-                "id": item.get("id"),
-                "title": volume.get("title"),
-                "authors": ', '.join(volume.get("authors", [])),
-                "thumbnail": volume.get("imageLinks", {}).get("thumbnail"),
-            })
+    for item in data.get("items", []):
+        volume = item.get("volumeInfo", {})
+        books.append({
+            "id": item.get("id"),
+            "title": volume.get("title"),
+            "authors": ', '.join(volume.get("authors", [])),
+            "thumbnail": volume.get("imageLinks", {}).get("thumbnail"),
+        })
 
     return books
 
