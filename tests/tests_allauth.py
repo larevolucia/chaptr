@@ -154,3 +154,24 @@ class PasswordResetTests(TestCase):
         self.assertContains(resp, "Password Reset", html=False)
         self.assertContains(resp, 'name="email"', html=False)
         self.assertContains(resp, "Reset My Password", html=False)
+
+    def test_password_reset_sends_email(self):
+        """Test that password reset sends an email."""
+        # Clear any existing emails
+        mail.outbox = []
+
+        reset_url = reverse("account_reset_password")
+        data = {
+            "email": "resetuser@example.com",
+        }
+        resp = self.client.post(reset_url, data, follow=True)
+
+        # Should redirect to password reset done page
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "We have sent you an email", html=False)
+
+        # Should send exactly one email
+        self.assertEqual(len(mail.outbox), 1)
+        email = mail.outbox[0]
+        self.assertEqual(email.to, ["resetuser@example.com"])
+        self.assertIn("password", email.subject.lower())
