@@ -180,3 +180,18 @@ class BookDetailViewTests(TestCase):
         self.assertIn(b"Some description.", resp.content)
         self.assertIn(b"A Nice Subtitle", resp.content)
         self.assertIn(b"Rowman &amp; Littlefield", resp.content)
+
+    @patch("books.views.cache")
+    def test_book_detail_caches_volume(self, mock_fetch):
+        # First hit -> calls fetch and caches
+        mock_fetch.return_value = {"id": "ID1", "title": "T"}
+        req1 = self.rf.get("/books/ID1")
+        resp1 = book_detail(req1, "ID1")
+        self.assertEqual(resp1.status_code, 200)
+        self.assertEqual(mock_fetch.call_count, 1)
+
+        # Second hit -> should be served from cache (no extra fetch)
+        req2 = self.rf.get("/books/ID1")
+        resp2 = book_detail(req2, "ID1")
+        self.assertEqual(resp2.status_code, 200)
+        self.assertEqual(mock_fetch.call_count, 1)  # unchanged => cached
