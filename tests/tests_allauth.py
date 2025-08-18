@@ -65,7 +65,7 @@ class SignupBasicsTests(TestCase):
             "username": "reader2",                 # already taken
             "email": "reader2@example.com",        # already taken
             "password1": "short",                  # too short
-            "password2": "different",              # mismatch (no output)
+            "password2": "short",
         }
         resp = self.client.post(signup_url, bad_data, follow=True)
         self.assertEqual(resp.status_code, 200)
@@ -78,6 +78,28 @@ class SignupBasicsTests(TestCase):
 
         self.assertContains(resp, "This password is too short. It must contain at least 8 characters.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
         self.assertContains(resp, "A user with that username already exists.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
+
+    def test_signup_password_mismatch(self):
+        """
+        Test that signup shows validation error
+        for password mismatch.
+        """
+        signup_url = reverse("account_signup")
+        bad_data = {
+            "username": "reader",
+            "email": "reader@example.com",
+            "password1": "P@ssW0rd1!",
+            "password2": "P@ssW0rd1!different",  # mismatch
+        }
+        resp = self.client.post(signup_url, bad_data, follow=True)
+        self.assertEqual(resp.status_code, 200)
+
+        form = resp.context.get("form")
+        self.assertIsNotNone(form, "Expected 'form' in template context after invalid signup")  # noqa: E501 pylint: disable=line-too-long
+
+        self.assertIn("password2", form.errors)
+
+        self.assertContains(resp, "You must type the same password each time.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
 
 
 @override_settings(
