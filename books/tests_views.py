@@ -18,6 +18,7 @@ from django.urls import reverse
 from django.core.cache import cache
 from django.http import Http404
 from django.test import TestCase, RequestFactory
+from django.contrib.auth import get_user_model
 from books.views import (
     build_q,
     book_search,
@@ -26,6 +27,7 @@ from books.views import (
     book_detail
 )
 
+User = get_user_model()
 
 REALISTIC_DETAIL_JSON = {
     "id": "AkVWPbrWKGEC",
@@ -273,3 +275,36 @@ class BookDetailViewTests(TestCase):
         self.assertContains(resp, '<option value="title">Title</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
         self.assertContains(resp, '<option value="author">Author</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
         self.assertContains(resp, '<option value="subject">Genre</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+
+
+class HomeViewTests(TestCase):
+    """Tests for the home page view and template."""
+    def setUp(self):
+        # Create a test user for authentication tests.
+        self.user = User.objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="S3curepass!123"
+        )
+
+    def test_home_view_renders(self):
+        """Test that the home page loads without errors."""
+        url = reverse("home")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_home_page_uses_correct_template(self):
+        """Test that home view uses the correct template."""
+        url = reverse("home")
+        resp = self.client.get(url)
+        self.assertTemplateUsed(resp, 'books/home.html')
+
+    def test_home_page_extends_base_template(self):
+        """Test that essential base template elements are present."""
+        url = reverse("home")
+        resp = self.client.get(url)
+
+        # Check for base template elements
+        self.assertContains(resp, "NextChaptr", html=False)  # Brand name
+        self.assertContains(resp, "© 2025 NextChaptr", html=False)  # Footer
+        self.assertContains(resp, "Skip to main content", html=False)  # A11y
