@@ -14,6 +14,7 @@ Notes:
 import os
 from unittest.mock import patch, Mock
 from requests import HTTPError
+from django.urls import reverse
 from django.core.cache import cache
 from django.http import Http404
 from django.test import TestCase, RequestFactory
@@ -183,6 +184,21 @@ class BookDetailViewTests(TestCase):
         self.rf = RequestFactory()
         cache.clear()
 
+        self.sample_book_data = {
+            "id": "test_book_id_123",
+            "title": "Test Book Title",
+            "subtitle": "A Test Subtitle",
+            "authors": "Test Author, Another Author",
+            "thumbnail": "https://example.com/thumbnail.jpg",
+            "publisher": "Test Publisher",
+            "publishedDate": "2023-01-01",
+            "pageCount": 250,
+            "categories": ["Fiction", "Adventure"],
+            "description": "This is a test book description.",
+            "previewLink": "https://example.com/preview",
+            "infoLink": "https://example.com/info",
+        }
+
     @patch("books.views.fetch_book_by_id")
     def test_book_detail_renders_200_and_context(self, mock_fetch):
         """Test that the book detail view renders correctly."""
@@ -228,3 +244,32 @@ class BookDetailViewTests(TestCase):
         resp2 = book_detail(req2, "ID1")
         self.assertEqual(resp2.status_code, 200)
         self.assertEqual(mock_fetch.call_count, 1)  # unchanged => cached
+
+    @patch('books.views.fetch_book_by_id')
+    def test_book_detail_search_form_inclusion(self, mock_fetch):
+        """Test that the book detail page includes the search form."""
+        # Mock the API call
+        mock_fetch.return_value = self.sample_book_data
+
+        url = reverse("book_detail", kwargs={"book_id": "test_book_id_123"})
+        resp = self.client.get(url)
+
+        # Check for search form elements based on search_form.html
+        self.assertContains(resp, 'name="q"', html=False)
+        self.assertContains(resp, 'name="field"', html=False)
+        self.assertContains(resp, 'role="search"', html=False)
+        self.assertContains(resp, 'aria-label="Site search"', html=False)
+
+        # Check for specific form action
+        book_search_url = reverse("book-search")
+        self.assertContains(resp, f'action="{book_search_url}"', html=False)
+
+        # Check for search form structure
+        self.assertContains(resp, 'placeholder="Search books, authors, genres', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, 'class="search-card shadow"', html=False)
+
+        # Check dropdown options
+        self.assertContains(resp, '<option value="all">All</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, '<option value="title">Title</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, '<option value="author">Author</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, '<option value="subject">Genre</option>', html=False)  # noqa: E501 pylint: disable=line-too-long

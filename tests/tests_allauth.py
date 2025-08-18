@@ -2,12 +2,12 @@
     Tests for the signup process using allauth.
 
     Covers:
-    - Rendering of the signup page
-    - Successful signup process
-    - Validation errors during signup and login
-    - Login and logout process
-    - Authentication during login
-    - Reset password process
+    - Rendering of the login page
+    - Successful login process
+    - Failed login attempts
+    - Logout functionality
+    - Password reset flow
+    - Redirect behavior
 """
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -36,6 +36,20 @@ class SignupBasicsTests(TestCase):
         self.assertContains(resp, 'name="email"', html=False)
         self.assertContains(resp, 'name="password1"', html=False)
         self.assertContains(resp, 'name="password2"', html=False)
+
+    def test_signup_page_excludes_search_form(self):
+        """Test that the signup page does NOT include the search form."""
+        url = reverse("account_signup")
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+
+        # Search form elements should NOT be present
+        self.assertNotContains(resp, 'name="q"', html=False)
+        self.assertNotContains(resp, 'name="field"', html=False)
+        self.assertNotContains(resp, 'role="search"', html=False)
+        self.assertNotContains(resp, 'class="search-card shadow"', html=False)
+        self.assertNotContains(resp, 'placeholder="Search books, authors, genres"', html=False)  # noqa: E501 pylint: disable=line-too-long
 
     def test_signup_success_shows_feedback_and_sends_confirmation(self):
         """
@@ -164,6 +178,19 @@ class LoginLogoutTests(TestCase):
         self.assertContains(resp, 'name="password"', html=False)
         self.assertContains(resp, "Log In", html=False)
 
+    def test_login_page_excludes_search_form(self):
+        """Test that the login page does NOT include the search form."""
+        url = reverse("account_login")
+        resp = self.client.get(url)
+
+        # Search form elements should NOT be present
+        self.assertNotContains(resp, 'name="q"', html=False)
+        self.assertNotContains(resp, 'name="field"', html=False)
+        self.assertNotContains(resp, 'role="search"', html=False)
+        self.assertNotContains(resp, 'aria-label="Site search"', html=False)
+        self.assertNotContains(resp, 'class="search-card shadow"', html=False)
+        self.assertNotContains(resp, 'placeholder="Search books, authors, genres', html=False)  # noqa: E501 pylint: disable=line-too-long
+
     def test_successful_login_with_username(self):
         """Test successful login using username."""
         login_url = reverse("account_login")
@@ -249,6 +276,29 @@ class LoginLogoutTests(TestCase):
             f"Expected a generic auth error, got: {form.errors}"
         )
 
+    def test_logout_page_renders(self):
+        """Test that the logout confirmation page renders."""
+        self.client.force_login(self.user)
+
+        logout_url = reverse("account_logout")
+        resp = self.client.get(logout_url)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Sign Out", html=False)
+
+    def test_logout_page_excludes_search_form(self):
+        """Test that the logout page does NOT include the search form."""
+        self.client.force_login(self.user)
+
+        logout_url = reverse("account_logout")
+        resp = self.client.get(logout_url)
+
+        # Search form elements should NOT be present
+        self.assertNotContains(resp, 'name="q"', html=False)
+        self.assertNotContains(resp, 'name="field"', html=False)
+        self.assertNotContains(resp, 'role="search"', html=False)
+        self.assertNotContains(resp, 'class="search-card shadow"', html=False)
+
     def test_logout_when_logged_in(self):
         """Test successful logout when user is logged in."""
         # Simulate loging
@@ -264,16 +314,6 @@ class LoginLogoutTests(TestCase):
 
         # User should no longer be authenticated
         self.assertFalse(resp.context["user"].is_authenticated)
-
-    def test_logout_page_renders(self):
-        """Test that the logout confirmation page renders."""
-        self.client.force_login(self.user)
-
-        logout_url = reverse("account_logout")
-        resp = self.client.get(logout_url)
-
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, "Sign Out", html=False)
 
     def test_logout_when_not_logged_in(self):
         """Test logout behavior when user is not logged in."""
@@ -330,3 +370,16 @@ class PasswordResetTests(TestCase):
         email = mail.outbox[0]
         self.assertEqual(email.to, ["resetuser@example.com"])
         self.assertIn("password", email.subject.lower())
+
+    def test_password_reset_page_excludes_search_form(self):
+        """
+        Test that the password reset page does NOT include the search form.
+        """
+        url = reverse("account_reset_password")
+        resp = self.client.get(url)
+
+        # Search form elements should NOT be present
+        self.assertNotContains(resp, 'name="q"', html=False)
+        self.assertNotContains(resp, 'name="field"', html=False)
+        self.assertNotContains(resp, 'role="search"', html=False)
+        self.assertNotContains(resp, 'class="search-card shadow"', html=False)
