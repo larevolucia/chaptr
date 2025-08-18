@@ -5,6 +5,8 @@
     - Rendering of the signup page
     - Successful signup process
     - Validation errors during signup
+    - Username and password validation errors
+    - Reset password page and e-mail trigger
 """
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -54,9 +56,11 @@ class SignupBasicsTests(TestCase):
         # A confirmation email MUST be sent
         self.assertGreaterEqual(len(mail.outbox), 1, f"Outbox empty. Settings in test may not be applied. Current outbox: {mail.outbox}")  # noqa: E501 pylint: disable=line-too-long
 
-    def test_signup_validation_errors(self):
-        """Test that signup shows validation errors."""
-        # follow redirects so we land on a page with a form in context
+    def test_signup_username_taken(self):
+        """
+        Test that signup shows validation error
+        for taken username.
+        """
         User.objects.create_user(
             username="reader2", email="reader2@example.com", password="Xx12345678!"  # noqa: E501 pylint: disable=line-too-long
         )
@@ -64,6 +68,32 @@ class SignupBasicsTests(TestCase):
         bad_data = {
             "username": "reader2",                 # already taken
             "email": "reader2@example.com",        # already taken
+            "password1": "T3stPassword!",
+            "password2": "T3stPassword!",
+        }
+        resp = self.client.post(signup_url, bad_data, follow=True)
+        self.assertEqual(resp.status_code, 200)
+
+        form = resp.context.get("form")
+        self.assertIsNotNone(form, "Expected 'form' in template context after invalid signup")  # noqa: E501 pylint: disable=line-too-long
+
+        self.assertIn("username", form.errors)
+
+        self.assertContains(resp, "A user with that username already exists.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
+
+    def test_signup_password_too_short(self):
+        """
+        Test that signup shows validation error
+        for password too short.
+        """
+        # follow redirects so we land on a page with a form in context
+        User.objects.create_user(
+            username="reader1", email="reader1@example.com", password="Xx12345678!"  # noqa: E501 pylint: disable=line-too-long
+        )
+        signup_url = reverse("account_signup")
+        bad_data = {
+            "username": "reader2",
+            "email": "reader2@example.com",
             "password1": "short",                  # too short
             "password2": "short",
         }
@@ -73,11 +103,9 @@ class SignupBasicsTests(TestCase):
         form = resp.context.get("form")
         self.assertIsNotNone(form, "Expected 'form' in template context after invalid signup")  # noqa: E501 pylint: disable=line-too-long
 
-        self.assertIn("username", form.errors)
         self.assertIn("password1", form.errors)
 
         self.assertContains(resp, "This password is too short. It must contain at least 8 characters.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
-        self.assertContains(resp, "A user with that username already exists.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
 
     def test_signup_password_mismatch(self):
         """
@@ -148,6 +176,77 @@ class LoginLogoutTests(TestCase):
         self.assertEqual(resp.context["user"].username, "testuser")
 
         self.assertRedirects(resp, "/")
+
+    def test_login_empty_username_validation(self):
+        """Test login form username validation error."""
+        login_url = reverse("account_login")
+        data = {
+            "login": "",  # Empty username
+            "password": "Password!123",  # Valid password
+        }
+        resp = self.client.post(login_url, data, follow=True)
+
+        form = resp.context.get("form")
+        self.assertIsNotNone(form, "Expected 'form' in template context after invalid login")  # noqa: E501 pylint: disable=line-too-long
+
+        # Check that form has errors
+        self.assertTrue(form.errors)
+        self.assertIn("login", form.errors)
+
+    def test_login_empty_password_validation(self):
+        """Test login form password validation error."""
+        login_url = reverse("account_login")
+        data = {
+            "login": "testuser",
+            "password": "",  # Empty password
+        }
+        resp = self.client.post(login_url, data, follow=True)
+
+        form = resp.context.get("form")
+        self.assertIsNotNone(form, "Expected 'form' in template context after invalid login")  # noqa: E501 pylint: disable=line-too-long
+
+        # Check that form has errors
+        self.assertTrue(form.errors)
+        self.assertIn("password", form.errors)
+
+    def test_login_with_nonexistent_user_fails(self):
+        """Authentication should fail with a non-existent username."""
+        login_url = reverse("account_login")
+        data = {
+            "login": "reader2",  # Non-existent username
+            "password": "Password!123",
+        }
+        resp = self.client.post(login_url, data, follow=True)
+
+        form = resp.context.get("form")
+        self.assertTrue(
+            any("username" in e.lower() or "password" in e.lower() for e in form.errors["__all__"]),  # noqa: E501 pylint: disable=line-too-long
+            f"Expected a generic auth error, got: {form.errors}"
+            )
+
+        self.assertContains(resp, "The username and/or password you specified are not correct.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
+
+    def test_login_with_invalid_password_fails(self):
+        """Test that login fails with an invalid password."""
+        User.objects.create_user(
+            username="reader2", email="reader2@example.com", password="Xx12345678!"  # noqa: E501 pylint: disable=line-too-long
+        )
+        login_url = reverse("account_login")
+        data = {
+            "login": "reader2",
+            "password": "NOTXx12345678!",  # Invalid password
+        }
+        resp = self.client.post(login_url, data, follow=True)
+
+        form = resp.context.get("form")
+        self.assertIsNotNone(form)
+        self.assertTrue(form.errors)
+
+        self.assertIn("__all__", form.errors)
+        self.assertTrue(
+            any("username" in e.lower() or "password" in e.lower() for e in form.errors["__all__"]),  # noqa: E501 pylint: disable=line-too-long
+            f"Expected a generic auth error, got: {form.errors}"
+        )
 
 
 @override_settings(
