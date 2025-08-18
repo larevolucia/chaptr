@@ -4,9 +4,10 @@
     Covers:
     - Rendering of the signup page
     - Successful signup process
-    - Validation errors during signup
-    - Username and password validation errors
-    - Reset password page and e-mail trigger
+    - Validation errors during signup and login
+    - Login and logout process
+    - Authentication during login
+    - Reset password process
 """
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -247,6 +248,39 @@ class LoginLogoutTests(TestCase):
             any("username" in e.lower() or "password" in e.lower() for e in form.errors["__all__"]),  # noqa: E501 pylint: disable=line-too-long
             f"Expected a generic auth error, got: {form.errors}"
         )
+
+    def test_logout_when_logged_in(self):
+        """Test successful logout when user is logged in."""
+        # Simulate loging
+        self.client.force_login(self.user)
+
+        # Verify user is logged in
+        resp = self.client.get("/")
+        self.assertTrue(resp.context["user"].is_authenticated)
+
+        # Now logout
+        logout_url = reverse("account_logout")
+        resp = self.client.post(logout_url, follow=True)
+
+        # User should no longer be authenticated
+        self.assertFalse(resp.context["user"].is_authenticated)
+
+    def test_logout_page_renders(self):
+        """Test that the logout confirmation page renders."""
+        self.client.force_login(self.user)
+
+        logout_url = reverse("account_logout")
+        resp = self.client.get(logout_url)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "Sign Out", html=False)
+
+    def test_logout_when_not_logged_in(self):
+        """Test logout behavior when user is not logged in."""
+        logout_url = reverse("account_logout")
+        resp = self.client.get(logout_url, follow=True)
+
+        self.assertEqual(resp.status_code, 200)
 
 
 @override_settings(
