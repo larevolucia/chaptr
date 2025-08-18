@@ -1,8 +1,8 @@
-# Chaptr
+# NextChaptr
 
-**Chaptr** is a minimalist book-tracking web app built to help readers organize and reflect on their reading journey. Developed as a full-stack project, it highlights key features such as book categorization, rating, and commenting using modern web technologies.
+**NextChaptr** is a minimalist book-tracking web app built to help readers organize and reflect on their reading journey. Developed as a full-stack project, it highlights key features such as book categorization, rating, and commenting using modern web technologies.
 
-Unlike feature-heavy platforms, Chaptr focuses on simplicity, allowing users to manage their reading lists (To Read, Reading, Read), rate completed books, and engage through comments in a clean, distraction-free interface.
+Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users to manage their reading lists (To Read, Reading, Read), rate completed books, and engage through comments in a clean, distraction-free interface.
 
 ---
 
@@ -190,20 +190,30 @@ Sprint 3:
 
 ## Features
 
-### Search for books by title, author, or genre
+### Search (Title, Author, Genre)
 
-**NextChaptr**'s search engine provides an intuitive book discovery interface that allows users to search the vast Google Books catalog using either general keywords or field-specific queries targeting titles, authors, or genres (subjects). 
+Book discovery is powered by the Google Books API, allowing users to explore a vast catalog with flexible search options.
 
-Users can select their preferred search scope from a dropdown menu and enter their query, with the system intelligently detecting whether advanced Google Books operators are already in use or automatically applying the appropriate field-specific operators (``intitle``, ``inauthor``, ``subject``) based on the selected scope.
-
-The search results are displayed in a clean, browsable format showing book thumbnails, titles, and author information, with each result serving as a gateway to more detailed book information, while robust error handling ensures that API failures or network issues gracefully degrade to an empty results state rather than breaking the user experience.
+- **Keyword or Field-Specific Search**: Search by general keywords or refine by title, author, or genre.
+- **Smart Query Handling**: The system applies the correct Google Books operators automatically.
+- **Clean Results**: Results display thumbnails, titles, and authors in a browsable layout.
+- **Resilient Design**: Handles API or network errors gracefully without breaking the user experience.
 
 ### Book Detail View
-The book detail view offers users comprehensive information about individual books through a dedicated page that displays rich metadata including title, subtitle, authors, publication details, page count, categories, description, and cover thumbnail. 
+Each book has a dedicated detail page with enriched information for readers.
 
-From a technical standpoint, this feature leverages Django's caching system to store detailed book information for one hour, significantly improving page load times and reducing API calls to Google Books, while maintaining data freshness and ensuring that users always have access to complete book details.
+- **Comprehensive Metadata**: Includes title, subtitle, authors, publisher, publication date, page count, categories, description, and cover image.
+- **Performance Boost**: Uses Django caching to store details for one hour, reducing API calls while keeping data fresh.
+- **Seamless Access**: Directly linked from search results for a smooth browsing experience
 
-- User authentication and account management
+### Authentication (Login, Logout & Sign-Up)
+
+User authentication is powered by **Django Allauth**, providing a secure and reliable way to manage accounts.
+
+- **Sign-Up**: New users can easily create an account. The sign-up template has been customized to match the site’s brand style.
+- **Login / Logout**: Users can log in to access their personal features and log out securely when finished.
+- **Consistent UI**: Allauth templates have been adapted to the project’s design system, ensuring a seamless experience across authentication pages.
+
 - Track reading progress with status updates
 - Rate and review books
 - Leave comments on books
@@ -274,7 +284,7 @@ Represents a user's written review of a book.
 
 ## Django Project Structure
 
-The *Chaptr* project is divided into focused Django applications to ensure clear separation of concerns and maintainable code architecture.
+The *NextChaptr* project is divided into focused Django applications to ensure clear separation of concerns and maintainable code architecture.
 
 ### apps/
 
@@ -292,6 +302,51 @@ The *Chaptr* project is divided into focused Django applications to ensure clear
 - **Maintainability**: Clear boundaries between apps reduce complexity and improve code readability.
 - **Scalability**: Allows future extension, such as adding a social/friendship app, without disrupting the core architecture.
 ---
+
+## Testing
+
+Great — I’ve reviewed your `tests_allauth.py`, `tests_views.py`, and your existing `README.md` style. The README uses a **narrative tone in Features** and a **short, explanatory tone in other sections**, so the test documentation should be a **new top-level section**, concise but clear about scope.
+
+Here’s a draft you can add as a new section in your README:
+
+---
+
+## Testing
+
+***NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s TestCase** framework with mocking for external dependenciess, such as Google Books API.
+
+### Coverage
+
+* **Authentication Tests (Allauth)**
+
+  * __Sign-up flow__: page rendering, successful account creation, and validation errors (duplicate username, short passwords, mismatches).
+  * __Login flow__: correct credentials, invalid credentials, and required validation checks.
+  * __Logout flow__: proper behavior when logged in or out.
+  * __Password reset__: form rendering and email delivery.
+
+* **Books App Tests**
+
+  * __Query building__: correct application of search operators (`intitle`, `inauthor`, `subject`).
+  * __Search view__: integration with `search_google_books`, correct rendering of results.
+  * __Google Books API integration__: parsing of valid responses, handling of failed requests.
+  * __Book detail view__: correct mapping of metadata fields, 404 behavior for missing books, and caching to reduce API calls.
+
+### Approach
+
+* **Isolation**: External API calls are mocked to ensure tests run quickly and deterministically.
+* **Resilience**: Cache is cleared between tests to avoid cross-test interference.
+* **Realism**: Sample JSON payloads (e.g.`REALISTIC_DETAIL_JSON`) simulate real Google Books responses for reliable field mapping tests.
+
+These tests run automatically with:
+
+```bash
+python manage.py test
+```
+
+and provide confidence that both authentication flows and book-related features behave as expected under different conditions.
+
+---
+
 
 ## Credits
 
