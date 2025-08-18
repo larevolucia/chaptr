@@ -161,25 +161,27 @@ Sprint 1:
 - Epic 1: Book Discovery and Browsing
    - [x] [Search for books by title, author, genre](#6)
    - [x] [View book details](#7)
-   - [ ] [Homepage](#56)
-   - [ ] [View comments on books](#8)
-   - [ ] [Prompt login when guests try to interact](#9)
 
 - Epic 2: User Authentication and Permissions
-   - [ ] [Register an account](#10)
-   - [ ] [Log in and log out securely](#11)
+   - [x] [Register an account](#10)
+   - [x] [Log in and log out securely](#11)
 
 Sprint 2:
+- Epic 1: Book Discovery and Browsing
+   - [ ] [Prompt login when guests try to interact](#9)
+   - [ ] [Homepage](#56)
+- Epic 2: User Authentication and Permissions
+   - [ ] [Restrict book interactions to authenticated users](#12)
 - Epic 3: Book Interaction and Reading Progress
    - [ ] [Mark books as To Read, Reading, or Read](#13)
    - [ ] [Rate completed books](#14)
-   - [ ] [Leave a comments](#15)
-   - [ ] [Edit, and delete comments](#16)
-- Epic 2: User Authentication and Permissions
-   - [ ] [Restrict book interactions to authenticated users](#12)
 
 Sprint 3:
-
+- Epic 1: Book Discovery and Browsing
+   - [ ] [View comments on books](#8)
+- Epic 3: Book Interaction and Reading Progress
+   - [ ] [Leave a comments](#15)
+   - [ ] [Edit, and delete comments](#16)
 - Epic 4: User Dashboard
    - [ ] [View books grouped by reading status](#17)
    - [ ] [Update reading status directly from dashboard](#18)
