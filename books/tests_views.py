@@ -308,3 +308,53 @@ class HomeViewTests(TestCase):
         self.assertContains(resp, "NextChaptr", html=False)  # Brand name
         self.assertContains(resp, "© 2025 NextChaptr", html=False)  # Footer
         self.assertContains(resp, "Skip to main content", html=False)  # A11y
+
+    def test_search_form_inclusion(self):
+        """Test that the search form is included in the header."""
+        url = reverse("home")
+        resp = self.client.get(url)
+
+        # Check for search form elements based on search_form.html
+        self.assertContains(resp, 'name="q"', html=False)
+        self.assertContains(resp, 'name="field"', html=False)
+        self.assertContains(resp, 'role="search"', html=False)
+        self.assertContains(resp, 'aria-label="Site search"', html=False)
+
+        # Check for specific form action
+        self.assertContains(resp, 'action="/search/"', html=False)
+
+        # Check for search form structure
+        self.assertContains(resp, 'placeholder="Search books, authors, genres', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, 'class="search-card shadow"', html=False)
+
+        # Check dropdown options
+        self.assertContains(resp, '<option value="all">All</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, '<option value="title">Title</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, '<option value="author">Author</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, '<option value="subject">Genre</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+
+    def test_anonymous_user_sees_auth_links(self):
+        """Test that anonymous users see sign up and log in links."""
+        url = reverse("home")
+        resp = self.client.get(url)
+
+        self.assertContains(resp, "Sign up", html=False)
+        self.assertContains(resp, "Log in", html=False)
+
+        self.assertContains(resp, reverse("account_signup"), html=False)
+        self.assertContains(resp, reverse("account_login"), html=False)
+
+    def test_authenticated_user_sees_welcome_and_logout(self):
+        """Test that logged-in users see welcome message and logout link."""
+        self.client.force_login(self.user)
+
+        url = reverse("home")
+        resp = self.client.get(url)
+
+        self.assertContains(resp, "Hi, testuser", html=False)
+
+        self.assertContains(resp, "Log out", html=False)
+        self.assertContains(resp, reverse("account_logout"), html=False)
+
+        self.assertNotContains(resp, "Sign up", html=False)
+        self.assertNotContains(resp, "Log in", html=False)
