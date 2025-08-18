@@ -12,7 +12,9 @@ import re
 import logging
 import requests
 from requests import RequestException
-from django.shortcuts import render
+from django.shortcuts import render,  redirect
+from django.urls import reverse
+from django.utils.http import urlencode
 from django.core.cache import cache
 from django.http import Http404
 
@@ -23,9 +25,45 @@ OPERATOR_RE = re.compile(r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|ocl
 
 
 def home(request):
-    """Render the landing page for the books app.
     """
-    return render(request, 'books/home.html')
+    Render the landing page for the books app.
+    """
+    genres = [
+        ("Sci-Fi", "science fiction"),
+        ("Mystery", "mystery"),
+        ("Non-Fiction", "nonfiction"),
+        ("Fantasy", "fantasy"),
+        ("Horror", "horror"),
+        ("Romance", "romance"),
+        ("Thriller", "thriller"),
+        ("Biography", "biography"),
+        ("Self-Help", "self-help"),
+        ("Children", "children"),
+        ("Cookbooks", "cookbooks"),
+        ("Graphic Novels", "graphic novels"),
+        ("Poetry", "poetry"),
+        ("Classics", "classics"),
+        ("Comics", "comics"),
+        ("Business", "business"),
+        ("Science", "science"),
+        ("History", "history"),
+        ("Travel", "travel"),
+        ("Sports", "sports"),
+        ("Memoir", "memoir"),
+        ("Religion", "religion"),
+        ("Spirituality", "spirituality"),
+        ("Technology", "technology"),
+    ]
+    return render(request, "books/home.html", {"genres": genres})
+
+
+def browse(request):
+    """Redirect genre tiles to the subject-based search."""
+    genre = (request.GET.get("genre") or "").strip()
+    if not genre:
+        return redirect("book_search")  # or home
+    params = {"field": "subject", "q": genre}
+    return redirect(f"{reverse('book_search')}?{urlencode(params)}")
 
 
 def build_q(q_raw, field, _title_unused="", _author_unused="", _subject_unused=""):  # noqa: E501 pylint: disable=line-too-long

@@ -1,10 +1,10 @@
-{% url 'book-search' as _default_action %}
+{% url 'book_earch' as _default_action %}
 
 <!-- Row 2: search + filters  -->
 
 <div class="search-row position-relative">
     <form class="search-card shadow"
-        method="get" action="{% url 'book-search' %}" role="search" aria-label="Site search">
+        method="get" action="{% url 'book_search' %}" role="search" aria-label="Site search">
         <!-- Scope -->
         <label class="visually-hidden" for="field">Search scope</label>
         <select id="field" class="form-select" name="field" aria-label="Search scope">
