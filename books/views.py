@@ -17,6 +17,9 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.core.cache import cache
 from django.http import Http404
+from activity.models import ReadingStatus
+from django.db.utils import ProgrammingError, OperationalError
+
 
 # Create your views here.
 logger = logging.getLogger(__name__)
@@ -259,8 +262,17 @@ def book_detail(request, book_id):
         book = fetch_book_by_id(book_id)
         # set cache for 1 hour
         cache.set(cache_key, book, timeout=60*60)
+    
+    user_status = None
+    if request.user.is_authenticated:
+        try:
+            rs = ReadingStatus.objects.filter(user=request.user, book_id=book_id).first()
+            user_status = rs.status if rs else None
+        except (ProgrammingError, OperationalError):
+            user_status = None  # table not ready; ignore
+
     return render(
         request,
         "books/book_detail.html",
-        {"book": book}
+        {"book": book, "user_status": user_status}
     )

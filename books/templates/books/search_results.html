@@ -1,38 +1,57 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block header_search %}
-  {% include "partials/search_form.html" %}
-{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block header_search %} {% include
+"partials/search_form.html" %} {% endblock %} {% block content %}
 <h2>Results for "{{ query }}"</h2>
 
 {% if books %}
-    <!-- List view -->
-    <div class="d-block">
-        {% for book in books %}
-            <a href="{% url 'book_detail' book.id %}">
-                <div class="mb-3 border rounded p-2 d-flex book-item">
-                    <img src="{% if book.thumbnail %}
-                                {{ book.thumbnail }}
-                            {% else %}
-                                {% static 'images/placeholder_cover.png' %}
-                            {% endif %}"
-                    alt="{{ book.title }}" loading="lazy" class="book-cover mr-3">
-                    <div class="m-3">
-                        <h5 class="mr-2 mb-1">{{ book.title }}</h5>
-                        <p class="mb-0 text-muted">By {{ book.authors }}</p>
-                    </div>
-                </div>
+<!-- List view -->
+<div class="d-block">
+  {% for book in books %}
+  <a href="{% url 'book_detail' book.id %}">
+    <div class="mb-3 border rounded p-2 d-flex book-item">
+      <div
+        class="d-flex flex-column align-items-center me-3"
+        style="width: 120px"
+      >
+        <img
+          src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+          alt="{{ book.title }}"
+          loading="lazy"
+          class="img-fluid rounded border mb-2"
+        />
+
+        {% if request.user.is_authenticated %}
+        <form
+          action="{% url 'set_reading_status' book.id %}"
+          method="post"
+          class="w-100"
+        >
+          {% csrf_token %}
+          <input type="hidden" name="status" value="TO_READ" />
+          <button class="btn btn-sm btn-outline-primary w-100" type="submit">
+            + To read
+          </button>
+        </form>
+        {% else %}
+            <a href="{{ login_url }}?next={% url 'book_detail' book.id %}" class="btn btn-sm btn-outline-primary w-100">
+                Log in to add
             </a>
-        {% endfor %}
+        {% endif %}
+      </div>
+
+      <div class="flex-grow-1">
+        <a
+          href="{% url 'book_detail' book.id %}"
+          class="text-decoration-none text-body"
+        >
+          <h5 class="mb-1">{{ book.title }}</h5>
+          <p class="mb-0 text-muted">By {{ book.authors }}</p>
+        </a>
+      </div>
     </div>
-
-
+  </a>
+  {% endfor %}
+</div>
 
 {% else %}
-    <p>No results found.</p>
-{% endif %}
-
-{% endblock %}
+<p>No results found.</p>
+{% endif %} {% endblock %}

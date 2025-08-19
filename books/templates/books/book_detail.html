@@ -11,23 +11,39 @@
 {% block content %}
 
   <div class="row g-4">
-    <div class="col-md-3 d-flex justify-content-center align-items-start">
+    <div class="col-md-3 d-flex flex-column justify-content-start align-items-center">
       {% if book.thumbnail %}
           <img 
           src="{{ book.thumbnail }}" 
           alt="{{ book.title }} cover" 
-          class="img-fluid rounded border"
+          class="img-fluid rounded border mb-3"
           >
       {% else %}
           <img
-          src=" {% static 'images/placeholder_cover.png' %}"
+          src="{% static 'images/placeholder_cover.png' %}"
           alt="Placeholder cover"
-          class="img-fluid"
+          class="img-fluid mb-3"
           loading="lazy"
           decoding="async"
           width="320"
           height="480"
           >
+      {% endif %}
+
+      {% if request.user.is_authenticated %}
+        <form action="{% url 'set_reading_status' book.id %}" method="post" class="w-100">
+          {% csrf_token %}
+          <select name="status" class="form-select mb-2">
+            <option value="TO_READ">To read</option>
+            <option value="READING">Reading</option>
+            <option value="READ">Read</option>
+          </select>
+          <button class="btn btn-primary" type="submit">Save</button>
+        </form>
+      {% else %}
+        <a href="{{ login_url }}?next={{ request.path }}" class="btn btn-outline-primary">
+          Log in to save
+        </a>
       {% endif %}
     </div>
 
