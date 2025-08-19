@@ -23,3 +23,5 @@ class ReadingStatus(models.Model):
         """Meta options for the ReadingStatus model."""
         unique_together = ("user", "book")
         indexes = [models.Index(fields=["user", "status"]), models.Index(fields=["book"])]  # noqa: E501 pylint: disable=line-too-long
+        verbose_name = "Reading status"
+        verbose_name_plural = "Reading statuses"

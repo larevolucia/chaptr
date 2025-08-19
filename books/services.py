@@ -1,70 +1,53 @@
 """
-Helper functions for managing book data.
+Helper functions for interacting with the Google Books API.
 """
-from email.utils import parsedate_to_datetime
-from typing import Optional
+import os
 import requests
 from django.utils import timezone
 from .models import Book
 
-BOOKS_API_BASE = "https://www.googleapis.com/books/v1/volumes/"
+GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes/{}"
 
 
-def fetch_or_refresh_book(volume_id, force=False, session: Optional[requests.Session] = None) -> Book:  # noqa: E501 pylint: disable=line-too-long
+def fetch_or_refresh_book(volume_id: str, *, force: bool = False, ttl_minutes: int = 1440) -> Book:  # noqa: E501 pylint: disable=line-too-long
     """
-    Ensure a Book row exists and is fresh(ish).
-    - Creates the row if missing.
-    - Sends conditional headers (ETag / If-Modified-Since) when possible.
-    - Saves only when Google returns updated data.
+    Ensure a Book row exists and is hydrated from Google Books.
+    force=True skips TTL checks and fetches now.
     """
-    # Check database for existing book
-    # Creates one if missing
-    book, _ = Book.objects.get_or_create(pk=volume_id)
+    book, _ = Book.objects.get_or_create(pk=volume_id)  # noqa: E501 pylint: disable=no-member
 
-    # If book is fresh, return it
-    if not force and not book.needs_refresh():
+    # Decide whether to fetch
+    must_fetch = force or book.needs_refresh(ttl_minutes) or not (book.title or book.authors or book.thumbnail_url)  # noqa: E501 pylint: disable=line-too-long
+    if not must_fetch:
         return book
 
-    # Prepare headers for conditional GET
-    headers = {}
-    if book.etag:
-        headers["If-None-Match"] = book.etag
-    if book.last_modified:
-        headers["If-Modified-Since"] = book.last_modified.strftime("%a, %d %b %Y %H:%M:%S GMT")  # noqa: E501 pylint: disable=line-too-long
+    params = {}
+    api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
+    if api_key:
+        params["key"] = api_key
 
-    # If book is not fresh, fetch from Google Books API
-    # https://requests.readthedocs.io/en/latest/user/advanced/#conditional-requests
-    s = session or requests.Session()
-    r = s.get(f"{BOOKS_API_BASE}{volume_id}", headers=headers, timeout=10)
+    resp = requests.get(GOOGLE_BOOKS_API_URL.format(volume_id), params=params, timeout=8)  # noqa: E501 pylint: disable=line-too-long
+    resp.raise_for_status()
+    data = resp.json() or {}
+    vi = data.get("volumeInfo", {}) or {}
+    links = vi.get("imageLinks", {}) or {}
 
-    # Handle 304 response: not modified
-    if r.status_code == 304:
-        book.last_fetched_at = timezone.now()
-        book.save(update_fields=["last_fetched_at"])
-        return book
-
-    # handle other responses
-    r.raise_for_status()
-    book_data = r.json()
-    vi = book_data.get("volumeInfo", {}) or {}
-    images = vi.get("imageLinks", {}) or {}
-
-    # Map minimal fields
+    # Populate model fields
     book.title = vi.get("title") or ""
-    book.authors = vi.get("authors") or None
-    book.thumbnail_url = images.get("thumbnail") or images.get("smallThumbnail") or ""  # noqa: E501
+    book.authors = vi.get("authors") or None  # JSON list or None
+    book.thumbnail_url = links.get("thumbnail") or links.get("smallThumbnail") or ""  # noqa: E501 pylint: disable=line-too-long
     book.language = vi.get("language") or ""
     book.published_date_raw = vi.get("publishedDate") or ""
 
-    # Try to read the ETag header from the HTTP response
-    etag = r.headers.get("ETag") or book_data.get("etag") or ""
-    book.etag = etag.strip('"')
-    # Try to read the Last-Modified HTTP header, if present
-    lm = r.headers.get("Last-Modified")
-    # Convert from string
-    book.last_modified = parsedate_to_datetime(lm) if lm else None
-    # Record NextChaptr last fetched timestamp
-    book.last_fetched_at = timezone.now()
+    # Cache markers (Google also returns a JSON "etag")
+    book.etag = data.get("etag") or resp.headers.get("ETag") or ""
+    lm = resp.headers.get("Last-Modified")
+    if lm:
+        try:
+            book.last_modified = timezone.now()
+        except Exception:
+            pass
 
+    book.last_fetched_at = timezone.now()
     book.save()
     return book
