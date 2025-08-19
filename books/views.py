@@ -18,7 +18,6 @@ from django.utils.http import urlencode
 from django.core.cache import cache
 from django.http import Http404
 
-
 # Create your views here.
 logger = logging.getLogger(__name__)
 OPERATOR_RE = re.compile(r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|oclc):', re.I)  # noqa: E501  pylint: disable=line-too-long

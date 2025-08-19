@@ -354,13 +354,15 @@ and provide confidence that both authentication flows and book-related features 
 ---
 
 
-## Credits
+## Credits & References
 
 - Homepage banner image: [Unsplash](https://unsplash.com/photos/iyKVGRu79G4) Photo by [Lilly Rum](https://unsplash.com/@rumandraisin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
 - Google Books API: [Google Developers](https://developers.google.com/books/docs/v1/getting_started)
-- Django Allauth: [Django Allauth](https://django-allauth.readthedocs.io/en/latest/)
 - Color palette: [Material Palette](https://www.materialpalette.com/teal/deep-orange)
 - Favicon: [Favicon.io](https://favicon.io/favicon-converter/)
 - Favicon art by [Good Ware](https://www.flaticon.com/authors/good-ware)
 - ChatGPT: [OpenAI](https://openai.com/chatgpt) for documentation improvement
 - Copilot: [GitHub Copilot](https://github.com/features/copilot) for code completion and docstring generation
+- Django Allauth: [Django Allauth](https://django-allauth.readthedocs.io/en/latest/)
+- Conditional Requests: [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Conditional_requests)
+- Session Objects: [Requests Documentation](https://requests.readthedocs.io/en/latest/user/advanced/#conditional-requests)
