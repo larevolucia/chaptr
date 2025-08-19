@@ -263,7 +263,7 @@ class BookDetailViewTests(TestCase):
         self.assertContains(resp, 'aria-label="Site search"', html=False)
 
         # Check for specific form action
-        book_search_url = reverse("book-search")
+        book_search_url = reverse("book_search")
         self.assertContains(resp, f'action="{book_search_url}"', html=False)
 
         # Check for search form structure
@@ -358,3 +358,54 @@ class HomeViewTests(TestCase):
 
         self.assertNotContains(resp, "Sign up", html=False)
         self.assertNotContains(resp, "Log in", html=False)
+
+    def test_hero_section_content(self):
+        """Test that hero section contains expected content."""
+        url = reverse("home")
+        resp = self.client.get(url)
+
+        # Hero title and description
+        self.assertContains(resp, "Your Next Chapter Awaits", html=False)
+        self.assertContains(resp, "Discover new stories", html=False)
+
+        # Hero background image
+        self.assertContains(resp, "home_banner.jpg", html=False)
+        self.assertContains(resp, "background:", html=False)
+        self.assertContains(resp, "linear-gradient", html=False)
+
+    def test_about_section_content(self):
+        """Test that the about section renders correctly."""
+        url = reverse("home")
+        resp = self.client.get(url)
+
+        self.assertContains(resp, "What is NextChaptr?", html=False)
+        self.assertContains(resp, "cozy corner of the internet", html=False)
+
+    def test_hero_section_accessibility(self):
+        """Test that hero section has accessibility attributes."""
+        url = reverse("home")
+        resp = self.client.get(url)
+
+        content = resp.content.decode()
+
+        self.assertIn('role="banner"', content)
+
+        self.assertIn('aria-label=', content)
+
+    def test_genre_section_content(self):
+        """Test that genre browsing section renders correctly."""
+        url = reverse("home")
+        resp = self.client.get(url)
+
+        # Genre section header
+        self.assertContains(resp, "Browse by Genre", html=False)
+
+        # Individual genre cards
+        self.assertContains(resp, "Sci-Fi", html=False)
+        self.assertContains(resp, "Mystery", html=False)
+        self.assertContains(resp, "Non-Fiction", html=False)
+
+        # Genre links
+        self.assertContains(resp, "/search/?field=subject&q=science%20fiction", html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(resp, "/search/?field=subject&q=mystery", html=False)  # noqa: E501
+        self.assertContains(resp, "/search/?field=subject&q=nonfiction", html=False)  # noqa: E501
