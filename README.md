@@ -202,7 +202,7 @@ A welcoming, responsive landing experience that introduces CHAPTR and funnels vi
 * **Primary Actions Up Front**: Prominent entry points to start searching books or sign up/log in, keeping the first‑run path obvious.
 * **Browse by Genre**: Category tiles allow users to jump straight to a filtered browse view for a given genre.
 
-### Search (Title, Author, Genre)
+### Search & Browse (API First)
 
 Book discovery is powered by the Google Books API, allowing users to explore a vast catalog with flexible search options.
 
@@ -210,6 +210,7 @@ Book discovery is powered by the Google Books API, allowing users to explore a v
 - **Smart Query Handling**: The system applies the correct Google Books operators automatically.
 - **Clean Results**: Results display thumbnails, titles, and authors in a browsable layout.
 - **Resilient Design**: Handles API or network errors gracefully without breaking the user experience.
+* **Caching:** details are cached for \~1h to reduce API calls.
 
 ### Book Detail View
 Each book has a dedicated detail page with enriched information for readers.
@@ -217,6 +218,14 @@ Each book has a dedicated detail page with enriched information for readers.
 - **Comprehensive Metadata**: Includes title, subtitle, authors, publisher, publication date, page count, categories, description, and cover image.
 - **Performance Boost**: Uses Django caching to store details for one hour, reducing API calls while keeping data fresh.
 - **Seamless Access**: Directly linked from search results for a smooth browsing experience
+
+### Reading Status
+
+Authenticated users can mark a book as **To read / Reading / Read**.
+- Buttons are shown **under the cover art** on:
+  - search results (quick “+ To read”)
+  - book detail (dropdown + Save)
+First time a user saves, a minimal `Book` row is created/updated so Admin & future “My Library” views render without more API calls.
 
 ### Authentication (Login, Logout & Sign-Up)
 
@@ -231,6 +240,12 @@ User authentication is powered by **Django Allauth**, providing a secure and rel
 - Leave comments on books
 - User dashboard for managing reading activity
 
+### Admin Panel
+
+- **Books** admin shows minimal cached metadata (id, title, authors, thumb, language, published date, fetch markers).
+- **Reading statuses** admin shows `(user, book_id, title, status)` with a link to the Google Books page.
+
+
 ## Design
 
 ### Wireframes
@@ -243,15 +258,32 @@ User authentication is powered by **Django Allauth**, providing a secure and rel
 
 ## Models
 
-- **Chaptr** does not implement a `Book` model by design, as it leverages the Google Books API to dynamically fetch book data using each book's unique `id`. This approach reduces reduncancy and complexity by separating the internal user data from external metadata, keeping the application lightweigth. 
+- The searching and browsing experience is streamlined by design, as it leverages the Google Books API to dynamically fetch book data using each book's unique `id`. A lightweight `Book` model is used only in context of users' personal libraries. This approach reduces redundancy and complexity by separating the internal user data from external metadata, keeping the application lightweight.
+  - __Book__: lightweight representation of book metadata
 - `ReadingStatus`, `Rating`, and `Review` are distinct models to handle different aspects of user interaction:
-  - __ReadingStatus__: tracks reading progress
+  - __ReadingStatus__: tracks reading status
   - __Rating__: captures quantitative evaluation
   - __Review__: allows a single detailed textual reflection per book
 - The models are designed to be simple and efficient, focusing on the core functionality required for the MVP.
 
 ### User 
 Django built-in model for user authentication
+
+### Book
+Represents a book marked for reading, storing essential metadata for user interaction.
+
+**Fields:**
+
+* `id`: `CharField`, `PK` (Google volumeId)
+* `title`: `CharField`
+* `authors`: `TextField` (list of author names)
+* `thumbnail_url`: `URLField`
+* `language`: `CharField`
+* `published_date_raw`: `CharField`
+* `etag`: `CharField`
+* `last_modified`: `DateTimeField`
+* `last_fetched_at`: `DateTimeField`
+
 
 ### ReadingStatus
 Tracks a user's reading status for a specific book.
@@ -300,12 +332,12 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 
 ### apps/
 
-| App Name        | Responsibility                                                                 |
+| App Name         | Responsibility                                                                |
 |------------------|-------------------------------------------------------------------------------|
-| `accounts`       | Handles user registration, login, logout, and access control.                |
-| `books`          | Manages integration with the Google Books API and book detail views.         |
-| `interactions`   | Implements core user actions: reading status, ratings, and reviews.         |
-| `dashboard`      | Displays user-specific reading activity grouped by status.                   |
+| `books`          | Google Books search/detail, minimal cached `Book`, admin, service             |
+| `activity`       | Per-user `ReadingStatus` persistence + admin                                  |
+| `dashboard`      | Displays user-specific reading activity grouped by status.                    |
+
 
 ### Design Rationale
 
