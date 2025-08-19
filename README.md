@@ -193,8 +193,6 @@ Sprint 3:
 
 ## Features
 
-## Features
-
 ### Homepage (Banner, Intro & Quick Browse)
 
 A welcoming, responsive landing experience that introduces CHAPTR and funnels visitors into core actions.
@@ -319,14 +317,6 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 
 ## Testing
 
-Great — I’ve reviewed your `tests_allauth.py`, `tests_views.py`, and your existing `README.md` style. The README uses a **narrative tone in Features** and a **short, explanatory tone in other sections**, so the test documentation should be a **new top-level section**, concise but clear about scope.
-
-Here’s a draft you can add as a new section in your README:
-
----
-
-## Testing
-
 ***NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s TestCase** framework with mocking for external dependenciess, such as Google Books API.
 
 ### Coverage
@@ -368,6 +358,9 @@ and provide confidence that both authentication flows and book-related features 
 
 - Homepage banner image: [Unsplash](https://unsplash.com/photos/iyKVGRu79G4) Photo by [Lilly Rum](https://unsplash.com/@rumandraisin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
 - Google Books API: [Google Developers](https://developers.google.com/books/docs/v1/getting_started)
+- Django Allauth: [Django Allauth](https://django-allauth.readthedocs.io/en/latest/)
 - Color palette: [Material Palette](https://www.materialpalette.com/teal/deep-orange)
 - Favicon: [Favicon.io](https://favicon.io/favicon-converter/)
 - Favicon art by [Good Ware](https://www.flaticon.com/authors/good-ware)
+- ChatGPT: [OpenAI](https://openai.com/chatgpt) for documentation improvement
+- Copilot: [GitHub Copilot](https://github.com/features/copilot) for code completion and docstring generation
