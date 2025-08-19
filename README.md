@@ -161,6 +161,7 @@ Sprint 1:
 - Epic 1: Book Discovery and Browsing
    - [x] [Search for books by title, author, genre](#6)
    - [x] [View book details](#7)
+   - [x] [Homepage - MVP](#56)
 
 - Epic 2: User Authentication and Permissions
    - [x] [Register an account](#10)
@@ -169,7 +170,7 @@ Sprint 1:
 Sprint 2:
 - Epic 1: Book Discovery and Browsing
    - [ ] [Prompt login when guests try to interact](#9)
-   - [ ] [Homepage](#56)
+   - [X] [Homepage - Stretch](#56)
 - Epic 2: User Authentication and Permissions
    - [ ] [Restrict book interactions to authenticated users](#12)
 - Epic 3: Book Interaction and Reading Progress
@@ -191,6 +192,17 @@ Sprint 3:
 
 
 ## Features
+
+## Features
+
+### Homepage (Banner, Intro & Quick Browse)
+
+A welcoming, responsive landing experience that introduces CHAPTR and funnels visitors into core actions.
+
+* **Responsive Hero Banner**: A full‑width banner at the top establishes brand tone and provides instant visual context.
+* **Clear Purpose Blurb**: A short, centered description directly beneath the banner explains what NextChaptr does and who it’s for.
+* **Primary Actions Up Front**: Prominent entry points to start searching books or sign up/log in, keeping the first‑run path obvious.
+* **Browse by Genre**: Category tiles allow users to jump straight to a filtered browse view for a given genre.
 
 ### Search (Title, Author, Genre)
 
@@ -326,12 +338,14 @@ Here’s a draft you can add as a new section in your README:
   * __Logout flow__: proper behavior when logged in or out.
   * __Password reset__: form rendering and email delivery.
 
+
 * **Books App Tests**
 
   * __Query building__: correct application of search operators (`intitle`, `inauthor`, `subject`).
   * __Search view__: integration with `search_google_books`, correct rendering of results.
   * __Google Books API integration__: parsing of valid responses, handling of failed requests.
   * __Book detail view__: correct mapping of metadata fields, 404 behavior for missing books, and caching to reduce API calls.
+  * __Home page__: correct rendering of template, hero, about area, featured genres and search functionality.
 
 ### Approach
 
