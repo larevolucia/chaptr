@@ -319,14 +319,6 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 
 ## Testing
 
-Great — I’ve reviewed your `tests_allauth.py`, `tests_views.py`, and your existing `README.md` style. The README uses a **narrative tone in Features** and a **short, explanatory tone in other sections**, so the test documentation should be a **new top-level section**, concise but clear about scope.
-
-Here’s a draft you can add as a new section in your README:
-
----
-
-## Testing
-
 ***NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s TestCase** framework with mocking for external dependenciess, such as Google Books API.
 
 ### Coverage
@@ -371,3 +363,5 @@ and provide confidence that both authentication flows and book-related features 
 - Color palette: [Material Palette](https://www.materialpalette.com/teal/deep-orange)
 - Favicon: [Favicon.io](https://favicon.io/favicon-converter/)
 - Favicon art by [Good Ware](https://www.flaticon.com/authors/good-ware)
+- ChatGPT: [OpenAI](https://openai.com/chatgpt) used to help with documentation
+- Copilot: [GitHub](https://github.com/features/copilot) used to assist with code suggestions and docstring generation
