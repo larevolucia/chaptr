@@ -90,3 +90,58 @@ class ReadingStatusUITests(TestCase):
         self.assertFalse(
             ReadingStatus.objects.filter(book=self.book).exists()
         )
+
+    def test_remove_status_redirects_back_when_next_is_safe(self):
+        """
+        status=NONE deletes the row and redirects to the provided `next`
+        (same-site URL).
+        """
+        self.client.force_login(self.user)
+        # seed a status to remove
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book, status=ReadingStatus.Status.READING
+        )
+
+        next_url = reverse("book_search") + "?q=django"
+        resp = self.client.post(self.add_status_url, {"status": "NONE", "next": next_url})
+
+        # redirect back to `next`
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, next_url)
+
+        # row removed, book remains
+        self.assertFalse(ReadingStatus.objects.filter(user=self.user, book=self.book).exists())
+        self.assertTrue(Book.objects.filter(id=self.book.id).exists())
+
+    def test_remove_status_redirects_to_detail_when_next_missing(self):
+        """
+        Without `next`, redirect should fall back to book_detail.
+        """
+        self.client.force_login(self.user)
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book, status=ReadingStatus.Status.TO_READ
+        )
+
+        resp = self.client.post(self.add_status_url, {"status": "NONE"})  # no next
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, reverse("book_detail", args=[self.book.pk]))
+        self.assertFalse(ReadingStatus.objects.filter(user=self.user, book=self.book).exists())
+        self.assertTrue(Book.objects.filter(id=self.book.id).exists())
+
+    def test_remove_status_ignores_unsafe_next_and_uses_fallback(self):
+        """
+        If `next` is off-site, it must be ignored and redirect to fallback (detail).
+        """
+        self.client.force_login(self.user)
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book, status=ReadingStatus.Status.READ
+        )
+
+        unsafe_next = "https://evil.example.com/phish"
+        resp = self.client.post(self.add_status_url, {"status": "NONE", "next": unsafe_next})
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, reverse("book_detail", args=[self.book.pk]))
+        self.assertFalse(ReadingStatus.objects.filter(user=self.user, book=self.book).exists())
+        self.assertTrue(Book.objects.filter(id=self.book.id).exists())
