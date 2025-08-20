@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from books.services import fetch_or_refresh_book
+from books.services import fetch_or_refresh_book, safe_redirect_back
 from .models import ReadingStatus
 
 
@@ -25,12 +25,12 @@ def set_reading_status(request, book_id: str):
     if status == "NONE":
         ReadingStatus.objects.filter(user=request.user, book_id=book_id).delete()
         messages.success(request, "Removed your reading status.")
-        return redirect("book_detail", book_id=book_id)
+        return safe_redirect_back(request, reverse("book_detail", args=[book_id]))
 
     valid = {c for c, _ in ReadingStatus.Status.choices}
     if status not in valid:
         messages.error(request, "Invalid status.")
-        return redirect(reverse("book_detail", args=[book_id]))
+        return safe_redirect_back(request, reverse("book_detail", args=[book_id]))
 
     # Ensure a Book row exists for FK (uses Google Books API under the hood)
     fetch_or_refresh_book(book_id)  # creates/refreshes books.Book
@@ -44,4 +44,4 @@ def set_reading_status(request, book_id: str):
         obj.save(update_fields=["status", "updated_at"])
 
     messages.success(request, "Saved to your list.")
-    return redirect(reverse("book_detail", args=[book_id]))
+    return safe_redirect_back(request, reverse("book_detail", args=[book_id]))

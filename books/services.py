@@ -4,10 +4,20 @@ Helper functions for interacting with the Google Books API.
 import os
 import requests
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.shortcuts import redirect
 from requests.exceptions import RequestException, HTTPError, Timeout
 from .models import Book
 
 GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes/{}"
+
+
+def safe_redirect_back(request, fallback_url):
+    """Redirect to the 'next' URL if it's safe, otherwise to the fallback URL."""
+    nxt = request.POST.get("next")
+    if nxt and url_has_allowed_host_and_scheme(nxt, allowed_hosts={request.get_host()}):
+        return redirect(nxt)
+    return redirect(fallback_url)
 
 
 def fetch_or_refresh_book(volume_id: str, *, force: bool = False, ttl_minutes: int = 1440) -> Book:  # noqa: E501 pylint: disable=line-too-long
