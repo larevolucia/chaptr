@@ -37,5 +37,5 @@
             </div>
     </form>
 {% else %}
-    <a href="{{ login_url }}?next={{ request.path }}" class="btn btn-outline-primary">Log in to add</a>
+    <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-primary">Log in to add</a>
 {% endif %}
