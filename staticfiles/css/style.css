@@ -154,6 +154,22 @@ button,
   color: #fff;
 }
 
+/* Muted Status Button */
+.btn-status-muted {
+  background: #f2f4f7;         /* light grey background */
+  color: #344054;              /* dark grey text */
+  border: 1px solid #d0d5dd;   /* subtle grey border */
+  border-radius: 12px;
+  font-family: var(--brand-font);
+  font-weight: 600;
+}
+
+.btn-status-muted:hover,
+.btn-status-muted:focus {
+  background: #e4e7ec;         /* slightly darker on hover */
+  color: #1d2939;
+}
+
 a {
   color: var(--secondary-color);
   text-decoration: underline;
