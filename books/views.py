@@ -277,15 +277,18 @@ def book_detail(request, book_id):
 
     if request.user.is_authenticated:
         try:
-            rs = ReadingStatus.objects.filter(
-                user=request.user,
-                book_id=book_id
-            ).first()
-            book["user_status"] = rs.status
-            book["user_status_label"] = rs.get_status_display()
+            rs = (
+                ReadingStatus.objects
+                .filter(user=request.user, book_id=book_id)
+                .only("status")
+                .first()
+            )
+            status = rs.status if rs else None
+            labels = dict(ReadingStatus.Status.choices)
+            book["user_status"] = status
+            book["user_status_label"] = labels.get(status)
         except (ProgrammingError, OperationalError):
-            book["user_status"] = None
-            book["user_status_label"] = None
+            pass
 
     return render(
         request,

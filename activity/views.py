@@ -21,6 +21,12 @@ def set_reading_status(request, book_id: str):
     Expects POST 'status' in {TO_READ, READING, READ}.
     """
     status = (request.POST.get("status") or "").upper()
+
+    if status == "NONE":
+        ReadingStatus.objects.filter(user=request.user, book_id=book_id).delete()
+        messages.success(request, "Removed your reading status.")
+        return redirect("book_detail", book_id=book_id)
+
     valid = {c for c, _ in ReadingStatus.Status.choices}
     if status not in valid:
         messages.error(request, "Invalid status.")
