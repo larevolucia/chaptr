@@ -29,22 +29,7 @@
           height="480"
           >
       {% endif %}
-
-      {% if request.user.is_authenticated %}
-        <form action="{% url 'set_reading_status' book.id %}" method="post" class="w-100">
-          {% csrf_token %}
-          <select name="status" class="form-select mb-2">
-            <option value="TO_READ">To read</option>
-            <option value="READING">Reading</option>
-            <option value="READ">Read</option>
-          </select>
-          <button class="btn btn-primary" type="submit">Save</button>
-        </form>
-      {% else %}
-        <a href="{{ login_url }}?next={{ request.path }}" class="btn btn-outline-primary">
-          Log in to save
-        </a>
-      {% endif %}
+      {% include "partials/reading_status_button.html" %}
     </div>
 
     <div class="col-md-9">

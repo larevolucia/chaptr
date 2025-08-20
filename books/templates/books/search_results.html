@@ -1,5 +1,7 @@
-{% extends 'base.html' %} {% load static %} {% block header_search %} {% include
-"partials/search_form.html" %} {% endblock %} {% block content %}
+{% extends 'base.html' %} {% load static %} 
+
+{% block header_search %} {% include "partials/search_form.html" %} {% endblock %} 
+{% block content %}
 <h2>Results for "{{ query }}"</h2>
 
 {% if books %}
@@ -10,7 +12,7 @@
     <div class="mb-3 border rounded p-2 d-flex book-item">
       <div
         class="d-flex flex-column align-items-center me-3"
-        style="width: 120px"
+        style="width: 150px"
       >
         <img
           src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
@@ -18,24 +20,7 @@
           loading="lazy"
           class="img-fluid rounded border mb-2"
         />
-
-        {% if request.user.is_authenticated %}
-        <form
-          action="{% url 'set_reading_status' book.id %}"
-          method="post"
-          class="w-100"
-        >
-          {% csrf_token %}
-          <input type="hidden" name="status" value="TO_READ" />
-          <button class="btn btn-sm btn-outline-primary w-100" type="submit">
-            + To read
-          </button>
-        </form>
-        {% else %}
-            <a href="{{ login_url }}?next={% url 'book_detail' book.id %}" class="btn btn-sm btn-outline-primary w-100">
-                Log in to add
-            </a>
-        {% endif %}
+        {% include "partials/reading_status_button.html" %}
       </div>
 
       <div class="flex-grow-1">

@@ -249,6 +249,23 @@ BOOKS PAGE STYLES
   border-radius: 5px;
 }
 
+
+/* -------------------------------
+DROPDOWN
+---------------------------------- */
+/* open the dropdown when the caret area is hovered or focused */
+  .hover-dropdown:hover .dropdown-menu,
+  .hover-dropdown:focus-within .dropdown-menu {
+    display: block;
+  }
+
+  /* make dropdown items look tidy */
+  .dropdown-menu .dropdown-item { width: 100%; }
+
+  .btn-group .dropdown-toggle-split {
+  border-left: 1px solid var(--divider-color, #dee2e6);
+}
+
 /* -------------------------------
 LOG-IN, SIGN-UP, LOG-OUT STYLES
 ---------------------------------- */
@@ -372,7 +389,9 @@ ul.errorlist {
   padding-left: 1.5rem;
 }
 
-/* ---- EMAIL ADDRESSES ---- */
+/* -------------------------------
+EMAIL ADDRESSES
+---------------------------------- */
 
 .email-list {
   margin: 1rem 0 0.5rem;

@@ -1,0 +1,39 @@
+ {% if request.user.is_authenticated %}
+    <form action="{% url 'set_reading_status' book.id %}" method="post" class="align-items-center">
+          {% csrf_token %}
+
+          {% with current_label="To Read" current_btn="btn-outline-primary" %}
+            {% if book.user_status == "READING" %}
+              {% with current_label="Reading" current_btn="btn-warning" %}{% endwith %}
+            {% elif book.user_status == "READ" %}
+              {% with current_label="Read" current_btn="btn-success" %}{% endwith %}
+            {% endif %}
+
+            <div class="btn-group" role="group" aria-label="Reading status">
+              <!-- main button submits the default/current status -->
+              <button type="submit"
+                      name="status"
+                      value="{% if book.user_status %}{{ book.user_status }}{% else %}TO_READ{% endif %}"
+                      class="btn {{ current_btn }} px-3">
+                {{ current_label }}
+              </button>
+
+              <!-- reveals the options on hover -->
+              <div class="btn-group hover-dropdown" role="group">
+                <button type="button"
+                        class="btn {{ current_btn }} dropdown-toggle dropdown-toggle-split rounded-end border-start"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        aria-label="Change status">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><button type="submit" name="status" value="TO_READ"  class="dropdown-item">To Read</button></li>
+                  <li><button type="submit" name="status" value="READING"  class="dropdown-item">Reading</button></li>
+                  <li><button type="submit" name="status" value="READ"     class="dropdown-item">Read</button></li>
+                </ul>
+              </div>
+            </div>
+          {% endwith %}
+    </form>
+{% else %}
+    <a href="{{ login_url }}?next={{ request.path }}" class="btn btn-outline-primary">Log in to add</a>
+{% endif %}
