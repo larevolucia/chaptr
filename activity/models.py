@@ -2,6 +2,10 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from books.models import Book
+
+User = get_user_model()
 
 
 # Create your models here.
@@ -13,15 +17,36 @@ class ReadingStatus(models.Model):
         READING = "READING", "Reading"
         READ = "READ", "Read"
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # noqa: E501 pylint: disable=line-too-long
-    book = models.ForeignKey("books.Book", to_field="id", on_delete=models.CASCADE, related_name="reading_statuses")  # noqa: E501 pylint: disable=line-too-long
-    status = models.CharField(max_length=16, choices=Status.choices, default=Status.TO_READ)  # noqa: E501 pylint: disable=line-too-long
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="reading_statuses"
+    )
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+        related_name="reading_statuses"
+    )
+    status = models.CharField(
+        max_length=16, 
+        choices=Status.choices, 
+        default=Status.TO_READ
+    )
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         """Meta options for the ReadingStatus model."""
-        unique_together = ("user", "book")
-        indexes = [models.Index(fields=["user", "status"]), models.Index(fields=["book"])]  # noqa: E501 pylint: disable=line-too-long
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'book'],
+                name='unique_user_book_status'
+            ),
+        ]
+        indexes = [
+            models.Index(fields=['user', 'status']),
+            models.Index(fields=['user', 'book']),
+            models.Index(fields=['status']),
+        ]
         verbose_name = "Reading status"
         verbose_name_plural = "Reading statuses"

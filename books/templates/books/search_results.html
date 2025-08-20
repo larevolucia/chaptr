@@ -8,32 +8,30 @@
 <!-- List view -->
 <div class="d-block">
   {% for book in books %}
-  <a href="{% url 'book_detail' book.id %}">
     <div class="mb-3 border rounded p-2 d-flex book-item">
       <div
         class="d-flex flex-column align-items-center me-3"
         style="width: 150px"
-      >
-        <img
-          src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-          alt="{{ book.title }}"
-          loading="lazy"
-          class="img-fluid rounded border mb-2"
-        />
+      >  
+          <img
+            src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+            alt="{{ book.title }}"
+            loading="lazy"
+            class="img-fluid rounded border mb-2"
+          />
         {% include "partials/reading_status_button.html" %}
       </div>
 
-      <div class="flex-grow-1">
         <a
           href="{% url 'book_detail' book.id %}"
           class="text-decoration-none text-body"
         >
+      <div class="flex-grow-1">
           <h5 class="mb-1">{{ book.title }}</h5>
           <p class="mb-0 text-muted">By {{ book.authors }}</p>
-        </a>
-      </div>
+        </div>
+      </a>
     </div>
-  </a>
   {% endfor %}
 </div>
 

@@ -17,9 +17,9 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.core.cache import cache
 from django.http import Http404
-from activity.models import ReadingStatus
 from django.db.utils import ProgrammingError, OperationalError
-
+from activity.models import ReadingStatus
+from activity.services import statuses_map_for
 
 # Create your views here.
 logger = logging.getLogger(__name__)
@@ -122,6 +122,16 @@ def book_search(request):
 
     query_for_api = build_q(q_raw, field)
     books = search_google_books(query_for_api) if query_for_api else []
+
+    ids = [r["id"] for r in books]
+    status_map = statuses_map_for(request.user, ids)
+
+    labels = dict(ReadingStatus.Status.choices)
+
+    for b in books:
+        status = (status_map.get(b["id"]) or {}).get("status")
+        b["user_status"] = status
+        b["user_status_label"] = labels.get(status)
 
     # Render the search results
     return render(
@@ -260,19 +270,25 @@ def book_detail(request, book_id):
     book = cache.get(cache_key)
     if not book:
         book = fetch_book_by_id(book_id)
-        # set cache for 1 hour
         cache.set(cache_key, book, timeout=60*60)
-    
-    user_status = None
+
+    book["user_status"] = None
+    book["user_status_label"] = None
+
     if request.user.is_authenticated:
         try:
-            rs = ReadingStatus.objects.filter(user=request.user, book_id=book_id).first()
-            user_status = rs.status if rs else None
+            rs = ReadingStatus.objects.filter(
+                user=request.user,
+                book_id=book_id
+            ).first()
+            book["user_status"] = rs.status
+            book["user_status_label"] = rs.get_status_display()
         except (ProgrammingError, OperationalError):
-            user_status = None  # table not ready; ignore
+            book["user_status"] = None
+            book["user_status_label"] = None
 
     return render(
         request,
         "books/book_detail.html",
-        {"book": book, "user_status": user_status}
+        {"book": book}
     )
