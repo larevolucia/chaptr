@@ -73,6 +73,11 @@ class Rating(models.Model):
 
     class Meta:
         """Meta options for the Rating model."""
-        unique_together = ('user', 'book')
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "book"],
+                name="uniq_user_book_rating"
+                ),
+        ]
         verbose_name = "Rating"
         verbose_name_plural = "Ratings"

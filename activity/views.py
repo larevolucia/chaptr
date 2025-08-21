@@ -48,20 +48,22 @@ def set_reading_status(request, book_id: str):
         obj.save(update_fields=["status", "updated_at"])
 
     messages.success(request, "Saved to your list.")
-    return safe_redirect_back(request, reverse("book_detail", args=[book_id]))
+    return safe_redirect_back(
+        request, reverse("book_detail", args=[book_id])
+    )
 
 
 @login_required
 @require_POST
 def set_rating(request, book_id: str):
-    """Set the current user's rating for a Google Books volume."""
+    """Set the current user's rating for specific book."""
     rating = request.POST.get("rating")
 
     if rating is None:
         messages.error(request, "Invalid rating.")
         return safe_redirect_back(
             request, reverse("book_detail", args=[book_id])
-            )
+        )
 
     try:
         rating = int(rating)
@@ -69,24 +71,38 @@ def set_rating(request, book_id: str):
         messages.error(request, "Invalid rating.")
         return safe_redirect_back(
             request, reverse("book_detail", args=[book_id])
-            )
+        )
 
-    if rating < 0 or rating > 5:
-        messages.error(request, "Rating must be between 0 and 5.")
+    # Handle rating removal (when rating is 0)
+    if rating == 0:
+        Rating.objects.filter(user=request.user, book_id=book_id).delete()
+        messages.info(request, "Removed your rating.")
         return safe_redirect_back(
             request, reverse("book_detail", args=[book_id])
-            )
+        )
 
-    # Ensure a Book row exists for FK (uses Google Books API under the hood)
-    fetch_or_refresh_book(book_id)  # creates/refreshes books.Book
+    # Validate rating range
+    if rating < 1 or rating > 5:
+        messages.error(request, "Rating must be between 1 and 5.")
+        return safe_redirect_back(
+            request, reverse("book_detail", args=[book_id])
+        )
 
-    # Set the Rating row
-    obj, created = Rating.objects.get_or_create(
-        user=request.user, book_id=book_id, defaults={"rating": rating}
+    # Ensure a Book row exists for FK
+    fetch_or_refresh_book(book_id)
+
+    # Create or update the rating
+    rating_obj, created = Rating.objects.get_or_create(
+        user=request.user,
+        book_id=book_id,
+        defaults={"rating": rating}
     )
-    if not created:
-        obj.rating = rating
-        obj.save(update_fields=["rating", "updated_at"])
 
-    messages.success(request, "Saved your rating.")
+    if not created:
+        rating_obj.rating = rating
+        rating_obj.save(update_fields=["rating", "updated_at"])
+        messages.success(request, "Updated your rating.")
+    else:
+        messages.success(request, "Saved your rating.")
+
     return safe_redirect_back(request, reverse("book_detail", args=[book_id]))

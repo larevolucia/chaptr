@@ -155,7 +155,7 @@ button,
 }
 
 /* Muted Status Button */
-.btn-status-muted {
+.btn-muted {
   background: #f2f4f7;         /* light grey background */
   color: #344054;              /* dark grey text */
   border: 1px solid #d0d5dd;   /* subtle grey border */
@@ -164,8 +164,8 @@ button,
   font-weight: 600;
 }
 
-.btn-status-muted:hover,
-.btn-status-muted:focus {
+.btn-muted:hover,
+.btn-muted:focus {
   background: #e4e7ec;         /* slightly darker on hover */
   color: #1d2939;
 }
@@ -182,6 +182,57 @@ a:hover {
 a.btn {
   text-decoration: none;
   border-radius: 12px;
+}
+
+/* -------------------------------
+RATING STYLES
+---------------------------------- */
+
+.rating-widget .stars {
+  cursor: pointer;
+}
+
+.rating-widget .star {
+  font-size: 1.6rem;
+  color: #ddd;          /* empty star */
+  transition: color 0.2s;
+  padding: 0 0.1rem;
+}
+
+.rating-widget .star:hover,
+.rating-widget .star:hover ~ .star {
+  color: #f2b01e;       /* highlight on hover */
+}
+
+.btn-no-decoration {
+  text-decoration: none;
+}
+.stars label {
+  cursor: pointer;
+}
+
+.stars input[type="radio"] {
+  display:none
+}
+
+.stars input[type="radio"]:checked ~ label {
+  color: #f2b01e;       /* highlight checked star */
+}
+
+.btn-remove-rating {
+  background: transparent;
+  color: var(--text-color-dark);
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s, font-size 0.2s;  
+}
+.btn-remove-rating:hover, .btn-remove-rating:focus {
+  background: transparent;
+  font-size: 1.3rem;
+  color: #1d2939;
+  font-weight: bold;
 }
 
 /* -------------------------------

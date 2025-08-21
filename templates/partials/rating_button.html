@@ -8,6 +8,11 @@
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
             <div class="btn-group stars d-flex flex-row-reverse" role="group" aria-label="Rating">
+                {% if current_rating > 0 %}
+                    <button type="button" class="btn btn-sm rounded btn-remove-rating" onclick="removeRating('{{ book.id }}')" title="Remove rating">
+                            ✕
+                    </button>
+                {% endif %}
                 <input type="radio" name="rating" id="star-{{ book.id }}-5" value="5" {% if current_rating == 5 %}checked{% endif %}>
                 <label class="star" title="5 stars" for="star-{{ book.id }}-5">★</label>
                 <input type="radio" name="rating" id="star-{{ book.id }}-4" value="4" {% if current_rating == 4 %}checked{% endif %}>

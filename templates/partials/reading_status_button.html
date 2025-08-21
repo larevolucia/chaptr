@@ -8,7 +8,7 @@
               <button type="submit"
                       name="status"
                       value="{% if book.user_status %}{{ book.user_status }}{% else %}TO_READ{% endif %}"
-                      class="btn {% if book.user_status %}btn-status-muted{% else %}{{ current_btn }}{% endif %} rounded-start px-3">
+                      class="btn {% if book.user_status %}btn-muted{% else %}{{ current_btn }}{% endif %} rounded-start px-3">
                       {{ book.user_status_label|default:"To Read" }}
               </button>
 
