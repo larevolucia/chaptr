@@ -398,6 +398,15 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
   * __Removing a status without `next`__: falls back to redirecting to the book detail page (book remains).
   * __Unsafe `next` is ignored__: off‑site `next` URLs are rejected; redirect falls back to the detail page.
 
+* **Rating Tests**
+
+  * **Unauthenticated redirects**: posting a rating without logging in redirects to the login page and does **not** create a record.
+  * **Creating a rating**: authenticated users can post a rating, which creates a `Rating` row and redirects to the book detail view.
+  * **Updating a rating**: posting a new value overwrites the existing `Rating` (no duplicates).
+  * **Removing a rating**: posting `rating=0` deletes the existing row and redirects back to the book detail page.
+  * **Auto-create status**: if a user rates a book without an existing `ReadingStatus`, the `post_save` signal ensures a new `READ` status is created.
+  * **Respect existing status**: if the user already has a `ReadingStatus` (`TO_READ`, `READING`, `READ`), rating succeeds without changing it.
+
 ### Approach
 
 * **Isolation**: External API calls are mocked to ensure tests run quickly and deterministically.
