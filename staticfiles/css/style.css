@@ -234,6 +234,9 @@ RATING STYLES
   color: #1d2939;
   font-weight: bold;
 }
+.book-rating-info {
+  font-size: 0.875rem;
+}
 
 /* -------------------------------
 FORM STYLES
@@ -316,6 +319,9 @@ BOOKS PAGE STYLES
   border-radius: 5px;
 }
 
+.book-title, .book-description {
+  text-align: left;
+}
 
 /* -------------------------------
 DROPDOWN

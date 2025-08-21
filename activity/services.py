@@ -2,6 +2,7 @@
 Service for managing reading statuses and rating.
 """
 from .models import ReadingStatus, Rating
+from django.db.models import Avg
 
 
 def statuses_map_for(user, book_ids):
@@ -28,3 +29,16 @@ def ratings_map_for(user, ids):
         .only("book_id", "rating")
     )
     return {r.book_id: r.rating for r in qs}
+
+
+def get_average_rating(book_id: str) -> float:
+    """Calculate the average rating for a specific book."""
+    ratings = Rating.objects.filter(book_id=book_id)
+    if not ratings.exists():
+        return 0.0
+    return ratings.aggregate(Avg("rating"))["rating__avg"] or 0.0
+
+
+def get_number_of_ratings(book_id: str) -> int:
+    """Get the number of ratings for a specific book."""
+    return Rating.objects.filter(book_id=book_id).count() or 0

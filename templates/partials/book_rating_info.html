@@ -1,0 +1,8 @@
+{% if book.num_ratings > 0 %}
+<div class="mb-3 pt-2 pb-2 book-rating-info">
+    <p class="mb-0 text-muted"><strong>Average Rating:</strong> {{ book.avg_rating|floatformat:1 }}</p>
+    <p class="mb-0 text-muted"><strong>Number of Ratings:</strong> {{ book.num_ratings }}</p>
+</div>
+{% else %}
+    <p class="mb-2 text-muted">No ratings yet.</p>
+{% endif %}

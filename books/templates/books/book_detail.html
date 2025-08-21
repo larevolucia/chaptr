@@ -36,7 +36,8 @@
     </div>
 
     <div class="col-md-9">
-      <h1 class="h3 mb-1">{{ book.title }}</h1>
+      <h1 class="h3 mb-1 book-title">{{ book.title }}</h1>
+      {% include "partials/book_rating_info.html" %}
       {% if book.subtitle %}<p class="text-muted mb-2">{{ book.subtitle }}</p>{% endif %}
       {% if book.authors %}
         <p class="mb-1"><strong>Author{% if book.authors|length > 1 %}s{% endif %}:</strong> {{ book.authors }}</p>
@@ -49,7 +50,7 @@
       {% if book.categories %}<p class="mb-3"><strong>Categories:</strong> {{ book.categories|join:", " }}</p>{% endif %}
 
       {% if book.description %}
-        <h2 class="h5 mt-4">Description</h2>
+        <h2 class="h5 mt-4 book-description">Description</h2>
         <p>{{ book.description|safe }}</p>
       {% endif %}
     </div>

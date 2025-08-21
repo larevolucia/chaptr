@@ -20,7 +20,7 @@ from django.core.cache import cache
 from django.http import Http404
 from django.db.utils import ProgrammingError, OperationalError
 from activity.models import Rating, ReadingStatus
-from activity.services import statuses_map_for, ratings_map_for
+from activity.services import statuses_map_for, ratings_map_for, get_average_rating, get_number_of_ratings
 
 # Create your views here.
 logger = logging.getLogger(__name__)
@@ -144,6 +144,8 @@ def book_search(request):
         b["user_status"] = status
         b["user_status_label"] = labels.get(status)
         b["user_rating"] = rating_map.get(b["id"], 0)
+        b["avg_rating"] = get_average_rating(b["id"])
+        b["num_ratings"] = get_number_of_ratings(b["id"])
 
     # Render the search results
     return render(
@@ -309,6 +311,10 @@ def book_detail(request, book_id):
                 .first()
             )
             book["user_rating"] = r.rating if r else 0
+            # avg rating
+            book["avg_rating"] = get_average_rating(book_id)
+            book["num_ratings"] = get_number_of_ratings(book_id)
+
         except (ProgrammingError, OperationalError):
             # db not ready
             pass
