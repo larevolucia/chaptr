@@ -312,13 +312,13 @@ Stores a user's rating for a book.
 
 **Fields:**
 - `user` (FK): `User`
-- `book_id` (Google Books API): `CharField`
-- `rating`: `IntegerField`
-- `created_at`, `updated_at`: `DateTimeField`
+- `book` (FK): `Book`
+- `rating`: `PositiveSmallIntegerField` (0-5)
+- `created_at`: `DateTimeField`
+- `updated_at`: `DateTimeField` (auto_now=True)
 
-**Relationships:**
-- One (user) to many (ratings)
-- Unique combination of `user` and `book_id` (one rating per book per user)
+**Meta:**
+- Unique combination of `user` and `book` (one rating per book per user)
 
 ### Review
 Represents a user's written review of a book.

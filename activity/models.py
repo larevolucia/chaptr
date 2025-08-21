@@ -28,8 +28,8 @@ class ReadingStatus(models.Model):
         related_name="reading_statuses"
     )
     status = models.CharField(
-        max_length=16, 
-        choices=Status.choices, 
+        max_length=16,
+        choices=Status.choices,
         default=Status.TO_READ
     )
     created_at = models.DateTimeField(default=timezone.now)
@@ -50,3 +50,29 @@ class ReadingStatus(models.Model):
         ]
         verbose_name = "Reading status"
         verbose_name_plural = "Reading statuses"
+
+
+class Rating(models.Model):
+    """Stores a user's rating for a book."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="ratings"
+    )
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+        related_name="ratings"
+    )
+    rating = models.PositiveSmallIntegerField(
+        default=0,
+        help_text="Rating from 0 to 5"
+    )
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        """Meta options for the Rating model."""
+        unique_together = ('user', 'book')
+        verbose_name = "Rating"
+        verbose_name_plural = "Ratings"
