@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from books.models import Book
-from .models import Rating
+from .models import Rating, ReadingStatus
 
 User = get_user_model()
 
@@ -103,3 +103,66 @@ class RatingViewTests(TestCase):
                 book=self.book
             ).exists()
         )
+
+    def test_user_can_rate_book_with_no_reading_status(self):
+        """
+        Test that authenticated users can rate a book
+        with no reading status.
+        """
+        self.client.force_login(self.user)
+        # Ensure no reading status exists
+        self.assertFalse(
+            ReadingStatus.objects.filter(
+                user=self.user,
+                book=self.book
+            ).exists()
+        )
+
+        # post rating
+        response = self.client.post(self.url, data={"rating": 5}, follow=False)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.detail_url)
+
+        # created?
+        self.assertTrue(
+            Rating.objects.filter(
+                user=self.user, book=self.book, rating=5
+                ).exists()
+        )
+
+        rs = ReadingStatus.objects.get(user=self.user, book=self.book)
+        self.assertEqual(rs.status, ReadingStatus.Status.READ)
+
+    def test_can_rate_regardless_of_existing_reading_status_and_preserve_it(self):
+        """
+        If the user already has any reading status (TO_READ/READING/READ),
+        rating should still succeed and the existing status should remain unchanged.
+        """
+        self.client.force_login(self.user)
+        # Start with TO_READ
+        ReadingStatus.objects.create(
+            user=self.user,
+            book=self.book,
+            status=ReadingStatus.Status.TO_READ
+        )
+
+        response = self.client.post(self.url, data={"rating": 3}, follow=False)
+
+        # Check response
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.detail_url)
+        # Rating exists
+        self.assertTrue(
+            Rating.objects.filter(
+                user=self.user,
+                book=self.book,
+                rating=3
+            ).exists()
+        )
+        # Status unchanged (signal should NOT override an existing status)
+        rs = ReadingStatus.objects.get(
+            user=self.user,
+            book=self.book
+            )
+        self.assertEqual(rs.status, ReadingStatus.Status.TO_READ)
