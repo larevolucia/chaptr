@@ -50,3 +50,56 @@ class RatingViewTests(TestCase):
         # redirected where expected, without fetching the target
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, self.detail_url)
+
+    def test_authenticated_users_can_update_a_book_rating(self):
+        """Test that authenticated users can update their book rating."""
+        self.client.force_login(self.user)
+        Rating.objects.create(
+            user=self.user,
+            book=self.book,
+            rating=2
+        )
+
+        response = self.client.post(
+            self.url,
+            data={"rating": 5},
+            follow=False
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.detail_url)
+
+        r = Rating.objects.get(user=self.user, book=self.book)
+        self.assertEqual(r.rating, 5)  # updated, not duplicated
+        self.assertEqual(
+            Rating.objects.filter(
+                user=self.user,
+                book=self.book
+            ).count(),
+            1
+        )
+
+    def test_authenticated_users_can_remove_a_book_rating(self):
+        """Test that authenticated users can remove their book rating."""
+        self.client.force_login(self.user)
+        Rating.objects.create(
+            user=self.user,
+            book=self.book,
+            rating=2
+        )
+
+        response = self.client.post(
+            self.url,
+            data={"rating": 0},
+            follow=False
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, self.detail_url)
+
+        self.assertFalse(
+            Rating.objects.filter(
+                user=self.user,
+                book=self.book
+            ).exists()
+        )
