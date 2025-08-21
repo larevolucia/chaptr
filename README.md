@@ -174,7 +174,7 @@ Sprint 2:
 - Epic 2: User Authentication and Permissions
    - [ ] [Restrict book interactions to authenticated users](#12)
 - Epic 3: Book Interaction and Reading Progress
-   - [ ] [Mark books as To Read, Reading, or Read](#13)
+   - [x] [Mark books as To Read, Reading, or Read](#13)
    - [ ] [Rate completed books](#14)
 
 Sprint 3:
@@ -223,8 +223,8 @@ Each book has a dedicated detail page with enriched information for readers.
 
 Authenticated users can mark a book as **To read / Reading / Read**.
 - Buttons are shown **under the cover art** on:
-  - search results (quick “+ To read”)
-  - book detail (dropdown + Save)
+  - search results
+  - book detail
 First time a user saves, a minimal `Book` row is created/updated so Admin & future “My Library” views render without more API calls.
 
 ### Authentication (Login, Logout & Sign-Up)
@@ -258,19 +258,15 @@ User authentication is powered by **Django Allauth**, providing a secure and rel
 
 ## Models
 
-- The searching and browsing experience is streamlined by design, as it leverages the Google Books API to dynamically fetch book data using each book's unique `id`. A lightweight `Book` model is used only in context of users' personal libraries. This approach reduces redundancy and complexity by separating the internal user data from external metadata, keeping the application lightweight.
-  - __Book__: lightweight representation of book metadata
-- `ReadingStatus`, `Rating`, and `Review` are distinct models to handle different aspects of user interaction:
-  - __ReadingStatus__: tracks reading status
-  - __Rating__: captures quantitative evaluation
-  - __Review__: allows a single detailed textual reflection per book
-- The models are designed to be simple and efficient, focusing on the core functionality required for the MVP.
+The data model balances **external metadata** (from Google Books) with **internal user interactions**.
+Books are only stored locally if a user explicitly saves or interacts with them, keeping the database lightweight.
 
 ### User 
-Django built-in model for user authentication
+Uses Django’s built-in `User` model for authentication and ownership of records.
 
 ### Book
-Represents a book marked for reading, storing essential metadata for user interaction.
+Represents a book saved in the system (created only when a user adds it to a shelf or sets a reading status).
+Primary key is the Google Books `volumeId`.
 
 **Fields:**
 
@@ -281,22 +277,35 @@ Represents a book marked for reading, storing essential metadata for user intera
 * `language`: `CharField`
 * `published_date_raw`: `CharField`
 * `etag`: `CharField`
-* `last_modified`: `DateTimeField`
-* `last_fetched_at`: `DateTimeField`
+* `last_modified`: `DateTimeField` (HTTP cache header)
+* `last_fetched_at`: `DateTimeField` (defaults to now)
+* `created_at`: `DateTimeField` (record creation timestamp)
+* `updated_at`: `DateTimeField` (auto-updated timestamp)
+
+**Meta:**
+* Index on `title` for faster search.
+
+**Methods:**
+* `needs_refresh(ttl_minutes=1440)`: checks if book metadata is stale.
 
 
 ### ReadingStatus
 Tracks a user's reading status for a specific book.
 
 **Fields:**
-- `user` (FK): `User`
-- `book_id` (Google Books API): `CharField`
-- `status`: `CharField` with choices: "To read", "Reading", "Read"
-- `created_at`, `updated_at`: `DateTimeField`
 
-**Relationships:**
-- One (user) to many (books)
-- Unique combination of `user` and `book_id` (one status per book per user)
+* `user`: `ForeignKey` → `User`
+* `book`: `ForeignKey` → `Book`
+* `status`: `CharField` with choices:
+  * `"TO_READ"` → "To read"
+  * `"READING"` → "Reading"
+  * `"READ"` → "Read"
+* `created_at`: `DateTimeField`
+* `updated_at`: `DateTimeField`
+
+**Meta:**
+* Unique constraint on `(user, book)` → one status per book per user.
+* Indexes on `(user, status)`, `(user, book)`, and `status`.
 
 ### Rating
 Stores a user's rating for a book.
@@ -368,6 +377,16 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
   * __Google Books API integration__: parsing of valid responses, handling of failed requests.
   * __Book detail view__: correct mapping of metadata fields, 404 behavior for missing books, and caching to reduce API calls.
   * __Home page__: correct rendering of template, hero, about area, featured genres and search functionality.
+
+* **ReadingStatus Tests**
+
+  * __Anonymous users see login CTA__: detail view renders a “Log in to add” prompt and links to the login page when not authenticated.
+  * __Valid choices can be set__: authenticated users can set any of `"TO_READ"`, `"READING"`, or `"READ"` and the value is persisted.
+  * __Creating a status__: posting a valid status while authenticated creates a `ReadingStatus` row for the `(user, book)` pair.
+  * __Unauthenticated redirects__: posting without authentication redirects to the login page and does **not** create a status.
+  * __Removing a status with safe `next`__: sending `status=NONE` deletes the row and safely redirects to a same‑site `next` URL (book remains).
+  * __Removing a status without `next`__: falls back to redirecting to the book detail page (book remains).
+  * __Unsafe `next` is ignored__: off‑site `next` URLs are rejected; redirect falls back to the detail page.
 
 ### Approach
 
