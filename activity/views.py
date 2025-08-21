@@ -4,17 +4,19 @@ This view expects a POST request with 'status' in {TO_READ, READING, READ}.
 """
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.urls import reverse
 
 from books.services import fetch_or_refresh_book, safe_redirect_back
+from books.models import Book
 from .models import ReadingStatus, Rating
-
+from .forms import ReviewForm
 
 # Create your views here
 @login_required
 @require_POST
-def set_reading_status(request, book_id: str):
+def add_reading_status(request, book_id: str):
     """
     Set the current user's reading status for a Google Books volume.
     Expects POST 'status' in {TO_READ, READING, READ}.
@@ -55,7 +57,7 @@ def set_reading_status(request, book_id: str):
 
 @login_required
 @require_POST
-def set_rating(request, book_id: str):
+def add_rating(request, book_id: str):
     """Set the current user's rating for specific book."""
     rating = request.POST.get("rating")
 
@@ -106,3 +108,24 @@ def set_rating(request, book_id: str):
         messages.success(request, "Saved your rating.")
 
     return safe_redirect_back(request, reverse("book_detail", args=[book_id]))
+
+
+@login_required
+def add_review(request, book_id):
+    """Add a review for a book."""
+    book = get_object_or_404(Book, id=book_id)
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST, user=request.user, book=book)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your review has been posted.")
+            return redirect("book_detail", book_id=book_id)
+    else:
+        form = ReviewForm(user=request.user, book=book)
+
+    return render(
+        request,
+        "activity/review_form.html",
+        {"form": form, "book": book}
+    )

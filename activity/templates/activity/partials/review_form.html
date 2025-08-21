@@ -1,0 +1,10 @@
+<form method="post" action="{% url 'add_review' book.id %}">
+  {% csrf_token %}
+  <div class="mb-3">
+    {{ form.content }}
+    {% if form.content.errors %}
+      <div class="text-danger">{{ form.content.errors }}</div>
+    {% endif %}
+  </div>
+  <button type="submit" class="btn btn-primary">Post Review</button>
+</form>

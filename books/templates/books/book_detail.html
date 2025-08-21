@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-
+  <!-- Book Details -->
   <div class="row g-4">
     <div class="col-md-3 d-flex flex-column justify-content-start align-items-center">
       {% if book.thumbnail %}
@@ -29,15 +29,15 @@
           height="480"
           >
       {% endif %}
-      {% include "partials/reading_status_button.html" %}
+      {% include "activity/partials/reading_status_button.html" %}
       <div class="rating-widget d-flex flex-column align-items-center gap-2 mt-2">
-        {% include "partials/rating_button.html" %}
+        {% include "activity/partials/rating_button.html" %}
       </div>
     </div>
 
     <div class="col-md-9">
       <h1 class="h3 mb-1 book-title">{{ book.title }}</h1>
-      {% include "partials/book_rating_info.html" %}
+      {% include "activity/partials/book_rating_info.html" %}
       {% if book.subtitle %}<p class="text-muted mb-2">{{ book.subtitle }}</p>{% endif %}
       {% if book.authors %}
         <p class="mb-1"><strong>Author{% if book.authors|length > 1 %}s{% endif %}:</strong> {{ book.authors }}</p>
@@ -54,5 +54,27 @@
         <p>{{ book.description|safe }}</p>
       {% endif %}
     </div>
+    <!-- User Reviews  -->
+    <h3>User Reviews</h3>
+
+    {% if user.is_authenticated %}
+      {% include "activity/partials/review_form.html" %}
+    {% else %}
+      <p><a href="{% url 'account_login' %}">Log in</a> to write a review.</p>
+    {% endif %}
+
+    <ul class="list-unstyled mt-3">
+      {% for review in book.reviews.all %}
+        <li class="mb-3">
+          <strong>{{ review.user.username }}</strong><br>
+          <p>{{ review.content }}</p>
+          <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+        </li>
+      {% empty %}
+        <li>No reviews yet.</li>
+      {% endfor %}
+    </ul>
+
   </div>
+  
 {% endblock %}
