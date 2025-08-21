@@ -20,7 +20,12 @@ from django.core.cache import cache
 from django.http import Http404
 from django.db.utils import ProgrammingError, OperationalError
 from activity.models import Rating, ReadingStatus
-from activity.services import statuses_map_for, ratings_map_for, get_average_rating, get_number_of_ratings
+from activity.services import (
+    statuses_map_for,
+    ratings_map_for,
+    get_average_rating,
+    get_number_of_ratings
+)
 
 # Create your views here.
 logger = logging.getLogger(__name__)
@@ -61,7 +66,7 @@ def home(request):
     Render the landing page for the books app.
     """
     genres = _genres()
-    return render(request, "books/home.html", {"genres": genres})   
+    return render(request, "books/home.html", {"genres": genres})
 
 
 def browse(request):
