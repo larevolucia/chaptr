@@ -1,0 +1,41 @@
+ {% if request.user.is_authenticated %}
+    <form action="{% url 'set_reading_status' book.id %}" method="post" class="align-items-center">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+          {% csrf_token %}
+            <div class="btn-group" role="group" aria-label="Reading status">
+              <!-- main button submits the default/current status -->
+              <button type="submit"
+                      name="status"
+                      value="{% if book.user_status %}{{ book.user_status }}{% else %}TO_READ{% endif %}"
+                      class="btn {% if book.user_status %}btn-muted{% else %}{{ current_btn }}{% endif %} rounded-start px-3">
+                      {{ book.user_status_label|default:"To Read" }}
+              </button>
+
+              <!-- reveals the options on hover -->
+              <div class="btn-group hover-dropdown" role="group">
+                <button type="button"
+                        class="btn {{ current_btn }} dropdown-toggle dropdown-toggle-split rounded-end border-start"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                        aria-label="Change status">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><button type="submit" name="status" value="TO_READ"  class="dropdown-item">To Read</button></li>
+                  <li><button type="submit" name="status" value="READING"  class="dropdown-item">Reading</button></li>
+                  <li><button type="submit" name="status" value="READ"     class="dropdown-item">Read</button></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <button type="submit"
+                            name="status"
+                            value="NONE"
+                            class="dropdown-item text-danger">
+                      Remove from List
+                    </button>
+                 </li> 
+                </ul>
+              </div>
+            </div>
+    </form>
+{% else %}
+    <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-primary">Log in to add</a>
+{% endif %}

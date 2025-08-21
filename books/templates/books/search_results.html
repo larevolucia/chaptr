@@ -23,8 +23,8 @@
               loading="lazy"
               class="img-fluid rounded border mb-2"
             />
-        </a>
-        {% include "partials/reading_status_button.html" %}
+      </a>
+        {% include "activity/partials/reading_status_button.html" %}
       </div>
       
       <div class="flex-grow-1">
@@ -35,10 +35,10 @@
             <h5 class="mb-1">{{ book.title }}</h5>
             <p class="mb-0 text-muted">By {{ book.authors }}</p>
           </a>
-            {% include "partials/book_rating_info.html" %}
+            {% include "activity/partials/book_rating_info.html" %}
             
             <div class="rating-widget d-flex flex-column align-items-start gap-2 mt-2">
-              {% include "partials/rating_button.html" %}
+              {% include "activity/partials/rating_button.html" %}
             </div>
         </div>
    
