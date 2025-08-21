@@ -81,3 +81,31 @@ class Rating(models.Model):
         ]
         verbose_name = "Rating"
         verbose_name_plural = "Ratings"
+
+
+class Review(models.Model):
+    """Stores a user's review for a book."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="reviews"
+    )
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+        related_name="reviews"
+    )
+    content = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        """Meta options for the Review model."""
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "book"],
+                name="uniq_user_book_review"
+            ),
+        ]
+        verbose_name = "Review"
+        verbose_name_plural = "Reviews"

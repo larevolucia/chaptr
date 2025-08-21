@@ -321,27 +321,27 @@ Tracks a user's reading status for a specific book.
 Stores a user's rating for a book.
 
 **Fields:**
-- `user` (FK): `User`
-- `book` (FK): `Book`
-- `rating`: `PositiveSmallIntegerField` (0-5)
-- `created_at`: `DateTimeField`
-- `updated_at`: `DateTimeField` (auto_now=True)
+* `user`: `ForeignKey` → `User`
+* `book`: `ForeignKey` → `Book`
+* `rating`: `PositiveSmallIntegerField` (0-5)
+* `created_at`: `DateTimeField`
+* `updated_at`: `DateTimeField` (auto_now=True)
 
 **Meta:**
-- Unique combination of `user` and `book` (one rating per book per user)
+* Unique constraint on `(user, book)` → one rating per book per user.
 
 ### Review
-Represents a user's written review of a book.
+ Represents a user's written review of a book.
 
-**Fields:**
-- `user` (FK): `User`
-- `book_id`: `CharField` (Google Books API ID)
-- `text`: `TextField`
-- `created_at`, `updated_at`: `DateTimeField`
+ **Fields:**
+ * `user` (FK): `User`
+ * `book` (FK): `Book`
+ * `content`: `TextField`
+ * `created_at`: `DateTimeField`
+ * `updated_at`: `DateTimeField` (auto_now=True)
 
-**Relationships:**
-- One (user) to many (reviews)
--Unique combination of `user` and `book_id` (one review per book per user)
+ **Meta:** 
+* Unique constraint on `(user, book)` → one review per book per user.
 
 ---
 
