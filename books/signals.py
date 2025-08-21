@@ -11,11 +11,11 @@ def ensure_read_status_on_rating(sender, instance: Rating, created: bool, **kwar
     create a new ReadingStatus with status=READ.
     """
     user = instance.user
-    book = instance.book  # FK per README model
+    book = instance.book
     # Only act when there is no status yet
     if not ReadingStatus.objects.filter(user=user, book=book).exists():
         ReadingStatus.objects.create(
             user=user,
             book=book,
-            status=ReadingStatus.Status.READ  # enum/choices
+            status=ReadingStatus.Status.READ
         )
