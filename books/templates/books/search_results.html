@@ -12,31 +12,36 @@
       <div
         class="d-flex flex-column align-items-center me-3"
         style="width: 150px"
-      >  
-          <img
-            src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-            alt="{{ book.title }}"
-            loading="lazy"
-            class="img-fluid rounded border mb-2"
-          />
+      >   
+        <a
+          href="{% url 'book_detail' book.id %}"
+          class="text-decoration-none text-body"
+          >
+            <img
+              src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+              alt="{{ book.title }}"
+              loading="lazy"
+              class="img-fluid rounded border mb-2"
+            />
+        </a>
         {% include "partials/reading_status_button.html" %}
       </div>
       
-      <a
-      href="{% url 'book_detail' book.id %}"
-      class="text-decoration-none text-body"
-      >
-        <div class="flex-grow-1">
+      <div class="flex-grow-1">
+          <a
+          href="{% url 'book_detail' book.id %}"
+          class="text-decoration-none text-body"
+          >
             <h5 class="mb-1">{{ book.title }}</h5>
             <p class="mb-0 text-muted">By {{ book.authors }}</p>
-
+          </a>
             {% include "partials/book_rating_info.html" %}
             
             <div class="rating-widget d-flex flex-column align-items-start gap-2 mt-2">
               {% include "partials/rating_button.html" %}
             </div>
         </div>
-        </a>
+   
     </div>
   {% endfor %}
 </div>
