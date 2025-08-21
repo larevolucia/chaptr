@@ -185,6 +185,41 @@ a.btn {
 }
 
 /* -------------------------------
+RATING STYLES
+---------------------------------- */
+
+.rating-widget .stars {
+  cursor: pointer;
+}
+
+.rating-widget .star {
+  font-size: 1.6rem;
+  color: #ddd;          /* empty star */
+  transition: color 0.2s;
+  padding: 0 0.1rem;
+}
+
+.rating-widget .star:hover,
+.rating-widget .star:hover ~ .star {
+  color: #f2b01e;       /* highlight on hover */
+}
+
+.btn-no-decoration {
+  text-decoration: none;
+}
+.stars label {
+  cursor: pointer;
+}
+
+.stars input[type="radio"] {
+  display:none
+}
+
+.stars input[type="radio"]:checked ~ label {
+  color: #f2b01e;       /* highlight checked star */
+}
+
+/* -------------------------------
 FORM STYLES
 ---------------------------------- */
 

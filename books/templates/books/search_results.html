@@ -21,16 +21,19 @@
           />
         {% include "partials/reading_status_button.html" %}
       </div>
-
-        <a
-          href="{% url 'book_detail' book.id %}"
-          class="text-decoration-none text-body"
-        >
-      <div class="flex-grow-1">
-          <h5 class="mb-1">{{ book.title }}</h5>
-          <p class="mb-0 text-muted">By {{ book.authors }}</p>
+      
+      <a
+      href="{% url 'book_detail' book.id %}"
+      class="text-decoration-none text-body"
+      >
+        <div class="flex-grow-1">
+            <h5 class="mb-1">{{ book.title }}</h5>
+            <p class="mb-0 text-muted">By {{ book.authors }}</p>
+            <div class="rating-widget d-flex flex-column align-items-start gap-2 mt-2">
+              {% include "partials/rating_button.html" %}
+            </div>
         </div>
-      </a>
+        </a>
     </div>
   {% endfor %}
 </div>

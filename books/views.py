@@ -19,8 +19,8 @@ from django.contrib import messages
 from django.core.cache import cache
 from django.http import Http404
 from django.db.utils import ProgrammingError, OperationalError
-from activity.models import ReadingStatus
-from activity.services import statuses_map_for
+from activity.models import Rating, ReadingStatus
+from activity.services import statuses_map_for, ratings_map_for
 
 # Create your views here.
 logger = logging.getLogger(__name__)
@@ -62,7 +62,6 @@ def home(request):
     """
     genres = _genres()
     return render(request, "books/home.html", {"genres": genres})   
-
 
 
 def browse(request):
@@ -136,6 +135,7 @@ def book_search(request):
 
     ids = [r["id"] for r in books]
     status_map = statuses_map_for(request.user, ids)
+    rating_map = ratings_map_for(request.user, ids)
 
     labels = dict(ReadingStatus.Status.choices)
 
@@ -143,6 +143,7 @@ def book_search(request):
         status = (status_map.get(b["id"]) or {}).get("status")
         b["user_status"] = status
         b["user_status_label"] = labels.get(status)
+        b["user_rating"] = rating_map.get(b["id"], 0)
 
     # Render the search results
     return render(
@@ -285,9 +286,11 @@ def book_detail(request, book_id):
 
     book["user_status"] = None
     book["user_status_label"] = None
+    book["user_rating"] = 0
 
     if request.user.is_authenticated:
         try:
+            # reading status
             rs = (
                 ReadingStatus.objects
                 .filter(user=request.user, book_id=book_id)
@@ -298,7 +301,16 @@ def book_detail(request, book_id):
             labels = dict(ReadingStatus.Status.choices)
             book["user_status"] = status
             book["user_status_label"] = labels.get(status)
+            # rating
+            r = (
+                Rating.objects
+                .filter(user=request.user, book_id=book_id)
+                .only("rating")
+                .first()
+            )
+            book["user_rating"] = r.rating if r else 0
         except (ProgrammingError, OperationalError):
+            # db not ready
             pass
 
     return render(
