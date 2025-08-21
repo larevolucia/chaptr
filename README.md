@@ -221,11 +221,21 @@ Each book has a dedicated detail page with enriched information for readers.
 
 ### Reading Status
 
-Authenticated users can mark a book as **To read / Reading / Read**.
-- Buttons are shown **under the cover art** on:
-  - search results
-  - book detail
-First time a user saves, a minimal `Book` row is created/updated so Admin & future “My Library” views render without more API calls.
+Lets users track their progress with any book, directly from search results or detail pages.
+
+* **Simple Progress Tracking**: Mark books as *To Read*, *Reading*, or *Read*.
+* **Integrated Placement**: Status buttons are shown beneath the cover art on both search results and book detail views, by implementing a template partial.
+* **Lightweight Persistence**: Saving a status automatically creates/updates a minimal `Book` record, ensuring it appears in Admin and future *My Library* views without extra API calls.
+
+### Rating System
+
+Provides a quick way for readers to rate books and share feedback with the community.
+
+* **Star-Based Ratings**: Authenticated users can assign a rating from 0–5 stars.
+* **Automatic Sync**: Rating a book without a status sets it to *Read* by default, achieved by using `post_save` signals.
+* **User Feedback**: Notifications confirm when a rating is saved or updated.
+* **Flexible Control**: Ratings can be removed at any time.
+
 
 ### Authentication (Login, Logout & Sign-Up)
 
