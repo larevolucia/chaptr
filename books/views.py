@@ -15,6 +15,7 @@ from requests import RequestException
 from django.shortcuts import render,  redirect
 from django.urls import reverse
 from django.utils.http import urlencode
+from django.contrib import messages
 from django.core.cache import cache
 from django.http import Http404
 from django.db.utils import ProgrammingError, OperationalError
@@ -26,11 +27,8 @@ logger = logging.getLogger(__name__)
 OPERATOR_RE = re.compile(r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|oclc):', re.I)  # noqa: E501  pylint: disable=line-too-long
 
 
-def home(request):
-    """
-    Render the landing page for the books app.
-    """
-    genres = [
+def _genres():
+    return [
         ("Sci-Fi", "science fiction"),
         ("Mystery", "mystery"),
         ("Non-Fiction", "nonfiction"),
@@ -56,7 +54,15 @@ def home(request):
         ("Spirituality", "spirituality"),
         ("Technology", "technology"),
     ]
-    return render(request, "books/home.html", {"genres": genres})
+
+
+def home(request):
+    """
+    Render the landing page for the books app.
+    """
+    genres = _genres()
+    return render(request, "books/home.html", {"genres": genres})   
+
 
 
 def browse(request):
@@ -119,6 +125,11 @@ def book_search(request):
     # read scope and basic query only
     field = request.GET.get('field', 'all').strip().lower()
     q_raw = request.GET.get('q', '').strip()
+
+    if not q_raw:
+        if request.GET:
+            messages.info(request, "Type something to search.")
+        return render(request, "books/home.html", {"genres": _genres()})
 
     query_for_api = build_q(q_raw, field)
     books = search_google_books(query_for_api) if query_for_api else []
