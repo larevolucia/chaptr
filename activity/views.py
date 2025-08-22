@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.urls import reverse
 
 from books.services import fetch_or_refresh_book, safe_redirect_back
-from .models import ReadingStatus, Rating
+from .models import ReadingStatus, Rating, Review
 from .forms import ReviewForm
 
 
@@ -122,18 +122,25 @@ def add_review(request, book_id):
         HttpResponse: The response object.
     """
     fetch_or_refresh_book(book_id)
+    existing = Review.objects.filter(user=request.user, book_id=book_id).first()
 
     if request.method == "POST":
-        form = ReviewForm(request.POST, user=request.user, book_id=book_id)
+        form = ReviewForm(request.POST, user=request.user, book_id=book_id, instance=existing)
         if form.is_valid():
             form.save()
-            messages.success(request, "Your review has been posted.")
+            messages.success(
+                request, "Updated your review." if existing
+                else "Your review has been posted."
+                )
             return redirect("book_detail", book_id=book_id)
     else:
-        form = ReviewForm(user=request.user, book_id=book_id)
+        instance = existing if request.GET.get("edit") and existing else None
+        form = ReviewForm(
+            user=request.user,
+            book_id=book_id,
+            instance=instance
+            )
 
-    return render(
-        request,
-        "activity/review_form.html",
-        {"form": form, "book_id": book_id}
+    return redirect(
+        "book_detail", book_id=book_id
     )

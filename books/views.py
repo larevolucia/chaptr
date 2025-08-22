@@ -296,8 +296,10 @@ def book_detail(request, book_id):
     book["user_status"] = None
     book["user_status_label"] = None
     book["user_rating"] = 0
+
     form = None
     reviews = []
+    my_review = None
 
     if request.user.is_authenticated:
         try:
@@ -323,17 +325,41 @@ def book_detail(request, book_id):
             # avg rating
             book["avg_rating"] = get_average_rating(book_id)
             book["num_ratings"] = get_number_of_ratings(book_id)
-            # review
-            form = ReviewForm(
-                user=request.user,
-                book_id=book_id
-                )
+            # book reviews
             reviews = (
                 Review.objects
                 .select_related("user")
                 .filter(book_id=book_id)
                 .order_by("-created_at")
             )
+            # check if user has already written a review
+            # user’s review (if any)
+            my_review = (
+                Review.objects
+                .filter(user=request.user, book_id=book_id)
+                .first()
+            )
+
+            # only build a blank form if the user has not reviewed yet
+            form = (
+                None if my_review
+                else ReviewForm(user=request.user, book_id=book_id)
+            )
+
+            if my_review:
+                reviews = reviews.exclude(pk=my_review.pk)
+
+            # Determine if we are in edit mode
+            edit_mode = request.GET.get("edit") == "1" and my_review is not None
+
+            if edit_mode:
+                # show a prefilled form to edit
+                form = ReviewForm(user=request.user, book_id=book_id, instance=my_review)
+                # optionally hide the “your review” from the list while editing
+                reviews = reviews.exclude(pk=my_review.pk)
+            else:
+                # show a blank form only if the user hasn't reviewed yet
+                form = None if my_review else ReviewForm(user=request.user, book_id=book_id)
 
         except (ProgrammingError, OperationalError):
             # db not ready
@@ -342,5 +368,10 @@ def book_detail(request, book_id):
     return render(
         request,
         "books/book_detail.html",
-        {"book": book, "form": form, "reviews": reviews}
+        {
+            "book": book,
+            "form": form,
+            "reviews": reviews,
+            "my_review": my_review
+        }
     )

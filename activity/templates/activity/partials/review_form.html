@@ -1,15 +1,48 @@
+{# activity/partials/review_form.html #}
 {% load crispy_forms_tags %}
 
-      <div class="card-body">
-        {% if user.is_authenticated %}
-          <h3>Leave a Review:</h3>
-          <p>Posting as: <strong>{{ user.username }}</strong></p>
-          <form id="reviewForm" method="post" action="{% url 'add_review' book.id %}" style="margin-top: 1.3em;">
-            {% csrf_token %}
-            {{ form.content }}
-            <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
-          </form>
-        {% else %}
-          <p><a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a> to leave a review</p>
-        {% endif %}
-      </div>
+<div id="review" class="card-body">
+  {% if user.is_authenticated %}
+    {% if form and form.instance.pk %}
+      <h3>Edit your review</h3>
+      <form id="reviewForm" method="post"
+            action="{% url 'add_review' book.id %}" style="margin-top:1.3em;">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ form.content.errors }}
+        {{ form.content }}
+        <div class="mt-2 d-flex gap-2">
+          <button id="submitButton" type="submit" class="btn btn-primary">Save</button>
+          <a href="{% url 'book_detail' book.id %}" class="btn btn-muted btn-outline-secondary">Cancel</a>
+        </div>
+      </form>
+
+    {% elif my_review %}
+      <h3>Your review</h3>
+      <p class="mb-2">{{ my_review.content }}</p>
+      <small class="text-muted d-block mb-3">
+        Last updated: {{ my_review.updated_at|date:"M d, Y" }}
+      </small>
+      <a class="btn btn-outline-primary"
+         href="{% url 'book_detail' book.id %}?edit=1#review">
+        Edit
+      </a>
+
+    {% else %}
+      <h3>Leave a Review:</h3>
+      <p>Posting as: <strong>{{ user.username }}</strong></p>
+      <form id="reviewForm" method="post"
+            action="{% url 'add_review' book.id %}" style="margin-top:1.3em;">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ form.content.errors }}
+        {{ form.content }}
+        <button id="submitButton" type="submit" class="btn">
+          Submit
+        </button>
+      </form>
+    {% endif %}
+  {% else %}
+    <p><a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a> to leave a review</p>
+  {% endif %}
+</div>
