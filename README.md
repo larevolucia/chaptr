@@ -46,11 +46,11 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Style Book Detail Page](#23)
 - [Populate data from API or local cache](#24)
 
-#### [View comments on books](#8)
+#### [View review on books](#8)
 
 **Technical Tasks**
-- [Create comment model and link to book](#27)
-- [Display comments in detail template](#28)
+- [Create review model and form](#43)
+- [Display reviews in template](#44)
 
 #### [Prompt login when guests try to interact](#9)
 
@@ -96,24 +96,24 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Add forms for status, rating, and commenting](#38)
 - [Display and update user content](#39)
 
-#### [Rate completed books](#14)
+#### [Rate books](#14)
 
 **Technical Tasks:**
 - [Add rating field to reading model or separate model](#40)
 - [Create form and view logic for adding/updating rating](#41)
 - [Show rating summary on book detail](#42)
 
-#### [Leave a comments](#15)
+#### [Leave a review](#15)
 
 **Technical Tasks:**
-- [Create comment model and form](#43)
-- [Display comments in template](#44)
+- [Create review model and form](#43)
+- [Display reviews in template](#44)
 
-#### [Edit, and delete comments](#16)
+#### [Edit, and delete reviews](#16)
 
 **Technical Tasks:**
-- [Validate comment ownership](#45)
-- [Implement update and delete views for comments](#46)
+- [Validate review ownership](#45)
+- [Implement update and delete views for reviews](#46)
 - [Add conditional logic in template for ownership](#47)
 - [Add messaging or UI confirmation for deletion](#48)
 
@@ -175,13 +175,13 @@ Sprint 2:
    - [ ] [Restrict book interactions to authenticated users](#12)
 - Epic 3: Book Interaction and Reading Progress
    - [x] [Mark books as To Read, Reading, or Read](#13)
-   - [ ] [Rate completed books](#14)
+   - [x] [Rate books](#14)
 
 Sprint 3:
 - Epic 1: Book Discovery and Browsing
    - [ ] [View comments on books](#8)
 - Epic 3: Book Interaction and Reading Progress
-   - [ ] [Leave a comments](#15)
+   - [x] [Leave a comments](#15)
    - [ ] [Edit, and delete comments](#16)
 - Epic 4: User Dashboard
    - [ ] [View books grouped by reading status](#17)
@@ -235,6 +235,16 @@ Provides a quick way for readers to rate books and share feedback with the commu
 * **Automatic Sync**: Rating a book without a status sets it to *Read* by default, achieved by using `post_save` signals.
 * **User Feedback**: Notifications confirm when a rating is saved or updated.
 * **Flexible Control**: Ratings can be removed at any time.
+
+### Review System
+
+Lets readers share longer-form thoughts on a book, with a clear, edit-friendly flow on the detail page.
+
+* **Single, Text-Based Review**: Authenticated users can post one review per book.
+* **Inline Compose & Edit**: If you haven’t reviewed, a form appears. If you have, your review shows with an *Edit* button.
+* **One-Per-Book Guarantee**: A unique `(user, book)` constraint updates on re-submit (no duplicates).
+* **Clean Presentation**: Reviews appear under the book details. Your own review isn’t duplicated in the list.
+* **Lightweight Persistence**: Posting a review auto-ensures a minimal `Book` record for Admin and future library views.
 
 
 ### Authentication (Login, Logout & Sign-Up)
@@ -400,12 +410,23 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 
 * **Rating Tests**
 
-  * **Unauthenticated redirects**: posting a rating without logging in redirects to the login page and does **not** create a record.
-  * **Creating a rating**: authenticated users can post a rating, which creates a `Rating` row and redirects to the book detail view.
-  * **Updating a rating**: posting a new value overwrites the existing `Rating` (no duplicates).
-  * **Removing a rating**: posting `rating=0` deletes the existing row and redirects back to the book detail page.
-  * **Auto-create status**: if a user rates a book without an existing `ReadingStatus`, the `post_save` signal ensures a new `READ` status is created.
-  * **Respect existing status**: if the user already has a `ReadingStatus` (`TO_READ`, `READING`, `READ`), rating succeeds without changing it.
+  * __Unauthenticated redirects__: posting a rating without logging in redirects to the login page and does **not** create a record.
+  * __Creating a rating__: authenticated users can post a rating, which creates a `Rating` row and redirects to the book detail view.
+  * __Updating a rating__: posting a new value overwrites the existing `Rating` (no duplicates).
+  * __Removing a rating__: posting `rating=0` deletes the existing row and redirects back to the book detail page.
+  * __Auto-create status__: if a user rates a book without an existing `ReadingStatus`, the `post_save` signal ensures a new `READ` status is created.
+  * __Respect existing status__: if the user already has a `ReadingStatus` (`TO_READ`, `READING`, `READ`), rating succeeds without changing it.
+
+* **Review Tests**
+
+ * **Review Tests**
+
+  * __Creating a review__: POST to `/books/<book_id>/review/` saves and redirects; assert redirect and one new `Review` for `(user, book)`.
+  * __Book detail displays reviews__: detail view lists reviews; assert content and author appear in “User Reviews”.
+  * __Anonymous users see login CTA__: shows “Log in to leave a review”; assert CTA present and no `<form>`.
+  * __Authenticated users see form__: no existing review → textarea rendered; assert form action targets `add_review`.
+  * __Editing a review (no duplicates)__: second POST updates existing row; assert updated content and still exactly one `Review`.
+
 
 ### Approach
 
