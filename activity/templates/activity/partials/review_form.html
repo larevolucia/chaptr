@@ -2,7 +2,6 @@
 {% load crispy_forms_tags %}
 
 <div id="review" class="card-body">
-  {% if user.is_authenticated %}
     {% if form and form.instance.pk %}
       <h3>Edit your review</h3>
       <form id="reviewForm" method="post"
@@ -18,7 +17,7 @@
       </form>
 
     {% elif my_review %}
-      <h3>Your review</h3>
+      <strong>Your review</strong><br>
       <p class="mb-2">{{ my_review.content }}</p>
       <small class="text-muted d-block mb-3">
         Last updated: {{ my_review.updated_at|date:"M d, Y" }}
@@ -42,7 +41,5 @@
         </button>
       </form>
     {% endif %}
-  {% else %}
-    <p><a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a> to leave a review</p>
-  {% endif %}
+
 </div>
