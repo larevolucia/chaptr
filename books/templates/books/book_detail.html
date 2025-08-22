@@ -5,7 +5,7 @@
 {% block title %}{{ book.title }}{% if book.subtitle %}: {{ book.subtitle }}{% endif %}{% endblock %}
 
 {% block header_search %}
-  {% include "partials/search_form.html" %}
+  {% include "books/partials/search_form.html" %}
 {% endblock %}
 
 {% block content %}
@@ -55,26 +55,22 @@
       {% endif %}
     </div>
     <!-- User Reviews  -->
-    <h3>User Reviews</h3>
+    <div class="col-12">
+       {% include "activity/partials/review_form.html" %}
 
-    {% if user.is_authenticated %}
-      {% include "activity/partials/review_form.html" %}
-    {% else %}
-      <p><a href="{% url 'account_login' %}">Log in</a> to write a review.</p>
-    {% endif %}
-
-    <ul class="list-unstyled mt-3">
-      {% for review in book.reviews.all %}
-        <li class="mb-3">
-          <strong>{{ review.user.username }}</strong><br>
-          <p>{{ review.content }}</p>
-          <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
-        </li>
-      {% empty %}
-        <li>No reviews yet.</li>
-      {% endfor %}
-    </ul>
-
+        <h3>User Reviews</h3>
+          <ul class="list-unstyled mt-3">
+            {% for review in reviews %}
+              <li class="mb-3">
+                <strong>{{ review.user.username }}</strong><br>
+                <p>{{ review.content }}</p>
+                <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+              </li>
+            {% empty %}
+              <li>No reviews yet.</li>
+            {% endfor %}
+          </ul>
+      </div>
   </div>
   
 {% endblock %}
