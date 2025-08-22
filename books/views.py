@@ -19,7 +19,8 @@ from django.contrib import messages
 from django.core.cache import cache
 from django.http import Http404
 from django.db.utils import ProgrammingError, OperationalError
-from activity.models import Rating, ReadingStatus
+from activity.models import Rating, ReadingStatus, Review
+from activity.forms import ReviewForm
 from activity.services import (
     statuses_map_for,
     ratings_map_for,
@@ -285,6 +286,7 @@ def book_detail(request, book_id):
         response: The rendered detail template with
         context ``{"book": <dict>}``.
     """
+
     cache_key = f"gbooks:vol:{book_id}"
     book = cache.get(cache_key)
     if not book:
@@ -294,6 +296,8 @@ def book_detail(request, book_id):
     book["user_status"] = None
     book["user_status_label"] = None
     book["user_rating"] = 0
+    form = None
+    reviews = []
 
     if request.user.is_authenticated:
         try:
@@ -319,6 +323,17 @@ def book_detail(request, book_id):
             # avg rating
             book["avg_rating"] = get_average_rating(book_id)
             book["num_ratings"] = get_number_of_ratings(book_id)
+            # review
+            form = ReviewForm(
+                user=request.user,
+                book_id=book_id
+                )
+            reviews = (
+                Review.objects
+                .select_related("user")
+                .filter(book_id=book_id)
+                .order_by("-created_at")
+            )
 
         except (ProgrammingError, OperationalError):
             # db not ready
@@ -327,5 +342,5 @@ def book_detail(request, book_id):
     return render(
         request,
         "books/book_detail.html",
-        {"book": book}
+        {"book": book, "form": form, "reviews": reviews}
     )

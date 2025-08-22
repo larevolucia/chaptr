@@ -1,10 +1,15 @@
-<form method="post" action="{% url 'add_review' book.id %}">
-  {% csrf_token %}
-  <div class="mb-3">
-    {{ form.content }}
-    {% if form.content.errors %}
-      <div class="text-danger">{{ form.content.errors }}</div>
-    {% endif %}
-  </div>
-  <button type="submit" class="btn btn-primary">Post Review</button>
-</form>
+{% load crispy_forms_tags %}
+
+      <div class="card-body">
+        {% if user.is_authenticated %}
+          <h3>Leave a Review:</h3>
+          <p>Posting as: <strong>{{ user.username }}</strong></p>
+          <form id="reviewForm" method="post" action="{% url 'add_review' book.id %}" style="margin-top: 1.3em;">
+            {% csrf_token %}
+            {{ form.content }}
+            <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
+          </form>
+        {% else %}
+          <p><a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a> to leave a review</p>
+        {% endif %}
+      </div>
