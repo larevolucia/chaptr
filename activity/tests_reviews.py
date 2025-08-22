@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from books.models import Book
-from activity.models import Review
+from activity.models import Review, ReadingStatus
 
 User = get_user_model()
 
@@ -44,12 +44,12 @@ class ReviewFlowTests(TestCase):
         mock_fetch.return_value = self.fetch_stub
         self.login(self.alice)
 
-        resp = self.client.post(
+        response = self.client.post(
             self.add_review_url,
             {"content": "Great read!"}
             )
         # should redirect back to book_detail
-        self.assertRedirects(resp, self.detail_url)
+        self.assertRedirects(response, self.detail_url)
 
         self.assertEqual(Review.objects.count(), 1)
         review = Review.objects.get()
@@ -65,21 +65,21 @@ class ReviewFlowTests(TestCase):
         Review.objects.create(user=self.bob, book_id=self.book_id, content="Loved it!")
 
         self.login(self.alice)
-        resp = self.client.get(self.detail_url)
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, "User Reviews")
-        self.assertContains(resp, "Loved it!")
-        self.assertContains(resp, "bob")
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "User Reviews")
+        self.assertContains(response, "Loved it!")
+        self.assertContains(response, "bob")
 
     @patch("books.views.fetch_book_by_id")
     def test_anonymous_sees_login_message_no_form(self, mock_fetch):
         """Test that an anonymous user sees a login prompt without a form."""
         mock_fetch.return_value = self.fetch_stub
-        resp = self.client.get(self.detail_url)
-        self.assertEqual(resp.status_code, 200)
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, 200)
 
-        self.assertContains(resp, ">Log in</a> to leave and read reviews")
-        self.assertNotContains(resp, '<form id="reviewForm"', html=False)
+        self.assertContains(response, ">Log in</a> to leave and read reviews")
+        self.assertNotContains(response, '<form id="reviewForm"', html=False)
 
     @patch("books.views.fetch_book_by_id")
     def test_authenticated_user_without_review_sees_form(self, mock_fetch):
@@ -90,12 +90,12 @@ class ReviewFlowTests(TestCase):
         mock_fetch.return_value = self.fetch_stub
         self.login(self.alice)
 
-        resp = self.client.get(self.detail_url)
-        self.assertEqual(resp.status_code, 200)
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, 200)
         # Form textarea for `content`
-        self.assertContains(resp, '<textarea', html=False)
+        self.assertContains(response, '<textarea', html=False)
         # Action points to the add_review URL
-        self.assertContains(resp, f'action="{self.add_review_url}"')
+        self.assertContains(response, f'action="{self.add_review_url}"')
 
     @patch("books.views.fetch_book_by_id")
     def test_user_can_edit_review_without_creating_duplicate(self, mock_fetch):
@@ -110,10 +110,59 @@ class ReviewFlowTests(TestCase):
         self.login(self.alice)
 
         # Edit the existing review
-        resp = self.client.post(self.add_review_url, {"content": "Actually, fantastic"})
-        self.assertRedirects(resp, self.detail_url)
+        response = self.client.post(self.add_review_url, {"content": "Actually, fantastic"})
+        self.assertRedirects(response, self.detail_url)
 
         # Still exactly one review for (user, book)
         self.assertEqual(Review.objects.filter(user=self.alice, book_id=self.book_id).count(), 1)
         r = Review.objects.get(user=self.alice, book_id=self.book_id)
         self.assertEqual(r.content, "Actually, fantastic")
+
+    @patch("books.views.fetch_book_by_id")
+    def test_review_creates_read_status_when_none_exists(self, mock_fetch):
+        """
+        Posting a review creates READ status if none exists
+        """
+        mock_fetch.return_value = self.fetch_stub
+        self.login(self.alice)
+
+        # No status yet → posting a review should create READ
+        self.assertFalse(
+            ReadingStatus.objects.filter(user=self.alice, book_id=self.book_id).exists()
+        )
+        response = self.client.post(self.add_review_url, {"content": "Great read!"})
+        self.assertRedirects(response, self.detail_url)
+
+        rs = ReadingStatus.objects.get(user=self.alice, book_id=self.book_id)
+        self.assertEqual(rs.status, ReadingStatus.Status.READ)
+
+    @patch("books.views.fetch_book_by_id")
+    def test_review_respects_existing_read_status(self, mock_fetch):
+        """
+        If a status already exists, posting a review should NOT
+        override it to READ.
+        """
+        mock_fetch.return_value = self.fetch_stub
+        self.login(self.alice)
+
+        # Create pre-existing non-READ status
+        ReadingStatus.objects.create(
+            user=self.alice,
+            book_id=self.book_id,  # <-- use book_id, not book=
+            status=ReadingStatus.Status.READING,
+        )
+
+        # Check current status
+        rs = ReadingStatus.objects.get(user=self.alice, book_id=self.book_id)
+        self.assertEqual(rs.status, ReadingStatus.Status.READING)
+
+        # Post a review
+        Review.objects.create(
+            user=self.alice,
+            book_id=self.book_id,
+            content="Halfway through."
+        )
+
+        # Status should remain READING
+        rs = ReadingStatus.objects.get(user=self.alice, book_id=self.book_id)
+        self.assertEqual(rs.status, ReadingStatus.Status.READING)
