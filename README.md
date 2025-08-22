@@ -426,6 +426,8 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
   * __Anonymous users see login CTA__: shows “Log in to leave a review”; assert CTA present and no `<form>`.
   * __Authenticated users see form__: no existing review → textarea rendered; assert form action targets `add_review`.
   * __Editing a review (no duplicates)__: second POST updates existing row; assert updated content and still exactly one `Review`.
+  * __Creates READ status when missing__: Posting a review with no existing `ReadingStatus` auto-creates one with status **READ**, then redirects back to the book detail.
+  * __Respects existing status__: If a `ReadingStatus` already exists (e.g. **READING**), saving/posting a review **does not** override it to READ; the original status remains unchanged.
 
 
 ### Approach
