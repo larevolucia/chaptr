@@ -300,6 +300,7 @@ def book_detail(request, book_id):
     form = None
     reviews = []
     my_review = None
+    edit_mode = False
 
     if request.user.is_authenticated:
         try:
