@@ -51,12 +51,16 @@
                    href="{% url 'book_detail' book.id %}?edit=1#review">
                   <i class="fa-solid fa-pen"></i>
                 </a>
-                <form method="post" action="{% url 'delete_review' book.id my_review.id %}" onsubmit="return confirm('Delete your review?');" class="d-inline">
-                {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-delete">
-                  <i class="fa-solid fa-trash"></i>
-                  </button>
-                </form>
+                <button
+                type="button"
+                class="btn btn-sm btn-delete"
+                data-bs-toggle="modal"
+                data-bs-target="#confirmDeleteModal"
+                data-action="{% url 'delete_review' book.id my_review.id %}"
+                aria-label="Delete your review"
+                title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </button>
               </div>
             </div>
             <p class="mb-0 mt-2">{{ my_review.content }}</p>
@@ -85,12 +89,16 @@
                     href="{% url 'book_detail' book.id %}?edit=1#review">
                     <i class="fa-solid fa-pen"></i>
                   </a>
-                  <form method="post" action="{% url 'delete_review' book.id my_review.id %}" onsubmit="return confirm('Delete your review?');" class="d-inline">
-                  {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-accent">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-delete"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmDeleteModal"
+                    data-action="{% url 'delete_review' book.id review.id %}"
+                    aria-label="Delete your review"
+                    title="Delete">
                     <i class="fa-solid fa-trash"></i>
-                    </button>
-                  </form>
+                  </button>
                 </div>
               {% endif %}
             </div>
@@ -105,7 +113,7 @@
         {% endfor %}
       </ul>
     </div>
-
+  {% include 'activity/partials/confirm_delete_modal.html' %}
   {% else %}
     <p class="text-muted text-center mt-4">
       <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a>
