@@ -78,7 +78,7 @@ class ReviewFlowTests(TestCase):
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, 200)
 
-        self.assertContains(response, ">Log in</a> to leave and read reviews")
+        self.assertContains(response, ">Log in</a> to write and read reviews")
         self.assertNotContains(response, '<form id="reviewForm"', html=False)
 
     @patch("books.views.fetch_book_by_id")

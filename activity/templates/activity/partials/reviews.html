@@ -1,0 +1,103 @@
+{% load crispy_forms_tags %}
+
+<div class="col-12">
+  <h3>User Reviews</h3>
+
+  {% if user.is_authenticated %}
+    <div id="review" class="card-body">
+
+      {# --- EDIT MODE --- #}
+      {% if form and form.instance.pk %}
+        <h4 class="mb-2">Edit your review</h4>
+        <form id="reviewForm" method="post" action="{% url 'add_review' book.id %}">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          {{ form.content.errors }}
+          {{ form.content }}
+          <div class="mt-2 d-flex gap-2">
+            <button id="submitButton" type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'book_detail' book.id %}#review" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+
+      {# --- CREATE MODE --- #}
+      {% elif not my_review %}
+        <h4 class="mb-2">Leave a review</h4>
+        <p class="mb-2">Posting as: <strong>{{ user.username }}</strong></p>
+        <form id="reviewForm" method="post" action="{% url 'add_review' book.id %}" style="margin-top:1.0em;">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          {{ form.content.errors }}
+          {{ form.content }}
+          <button id="submitButton" type="submit" class="btn btn-primary mt-2">Submit</button>
+        </form>
+      {% endif %}
+
+      {# --- REVIEWS LIST --- #}
+      <ul class="list-unstyled mt-3">
+
+        {# 1) Render the authenticated user's review at the top #}
+        {% if my_review %}
+          <li class="mb-3 border rounded p-3 bg-light">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>You</strong>
+                <small class="text-muted d-block">
+                  Last updated: {{ my_review.updated_at|date:"M d, Y" }}
+                </small>
+              </div>
+              <div class="ms-3">
+                <a class="btn btn-sm btn-outline-primary"
+                   href="{% url 'book_detail' book.id %}?edit=1#review">
+                  Edit
+                </a>
+              </div>
+            </div>
+            <p class="mb-0 mt-2">{{ my_review.content }}</p>
+          </li>
+        {% endif %}
+
+        {% for review in reviews %}
+          <li class="mb-3 border rounded p-3 {% if user.is_authenticated and review.user_id == user.id %}bg-light{% endif %}">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <strong>
+                  {% if user.is_authenticated and review.user_id == user.id %}
+                    You
+                  {% else %}
+                    {{ review.user.username }}
+                  {% endif %}
+                </strong>
+                <small class="text-muted d-block">
+                  {{ review.created_at|date:"M d, Y" }}
+                </small>
+              </div>
+
+              {% if user.is_authenticated and review.user_id == user.id %}
+                <div class="ms-3">
+                  <a class="btn btn-sm btn-outline-primary"
+                     href="{% url 'book_detail' book.id %}?edit=1#review">
+                    Edit
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+
+            <p class="mb-0 mt-2">{{ review.content }}</p>
+          </li>
+        {% empty %}
+          {# Only show "No reviews yet." if there is truly no review at all #}
+          {% if not my_review %}
+            <li>No reviews yet.</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+
+  {% else %}
+    <p class="text-muted text-center mt-4">
+      <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a>
+      to write and read reviews
+    </p>
+  {% endif %}
+</div>

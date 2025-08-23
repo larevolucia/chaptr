@@ -54,27 +54,5 @@
         <p>{{ book.description|safe }}</p>
       {% endif %}
     </div>
-    
-    <!-- User Reviews  -->
-    <div class="col-12">
-      
-      <h3>User Reviews</h3>
-      {% if user.is_authenticated %}
-      {% include "activity/partials/review_form.html" %}
-          <ul class="list-unstyled mt-3">
-            {% for review in reviews %}
-              <li class="mb-3">
-                <strong>{{ review.user.username }}</strong><br>
-                <p>{{ review.content }}</p>
-                <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
-              </li>
-            {% empty %}
-              <li>No reviews yet.</li>
-            {% endfor %}
-          </ul>
-      </div>
-  </div>
-    {% else %}
-    <p class="text-muted text-center mt-4"><a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a> to leave and read reviews</p>
-  {% endif %}
+     {% include "activity/partials/reviews.html" %}
 {% endblock %}

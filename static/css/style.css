@@ -28,11 +28,18 @@ body {
 }
 
 h1,
-h2,
-h3 {
-  font-family: var(--secondary-font);
+h2, h3 {
   color: var(--primary-color-dark);
+  font-family: var(--secondary-font);
   text-align: center;
+}
+
+h4 {
+  font-family: var(--primary-font);
+  color: var(--text-color-dark);
+  text-align: left;
+  font-size: 1.15rem;
+  margin: 0.5em 0;
 }
 
 p,
