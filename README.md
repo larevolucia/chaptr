@@ -169,20 +169,20 @@ Sprint 1:
 
 Sprint 2:
 - Epic 1: Book Discovery and Browsing
-   - [ ] [Prompt login when guests try to interact](#9)
-   - [X] [Homepage - Stretch](#56)
+   - [x] [Prompt login when guests try to interact](#9)
+   - [x] [Homepage - Stretch](#56)
 - Epic 2: User Authentication and Permissions
-   - [ ] [Restrict book interactions to authenticated users](#12)
+   - [x] [Restrict book interactions to authenticated users](#12)
 - Epic 3: Book Interaction and Reading Progress
    - [x] [Mark books as To Read, Reading, or Read](#13)
    - [x] [Rate books](#14)
+   - [x] [Leave a review](#15)
 
 Sprint 3:
 - Epic 1: Book Discovery and Browsing
-   - [ ] [View comments on books](#8)
+   - [x] [View reviews on books](#8)
 - Epic 3: Book Interaction and Reading Progress
-   - [x] [Leave a comments](#15)
-   - [ ] [Edit, and delete comments](#16)
+   - [x] [Edit, and delete reviews](#16)
 - Epic 4: User Dashboard
    - [ ] [View books grouped by reading status](#17)
    - [ ] [Update reading status directly from dashboard](#18)
@@ -241,7 +241,7 @@ Provides a quick way for readers to rate books and share feedback with the commu
 Lets readers share longer-form thoughts on a book, with a clear, edit-friendly flow on the detail page.
 
 * **Single, Text-Based Review**: Authenticated users can post one review per book.
-* **Inline Compose & Edit**: If you haven’t reviewed, a form appears. If you have, your review shows with an *Edit* button.
+* **Inline Compose, Edit & Delete**: If you haven’t reviewed, a form appears. If you have, your review shows with an *Edit* and *Delete* buttons.
 * **One-Per-Book Guarantee**: A unique `(user, book)` constraint updates on re-submit (no duplicates).
 * **Clean Presentation**: Reviews appear under the book details. Your own review isn’t duplicated in the list.
 * **Lightweight Persistence**: Posting a review auto-ensures a minimal `Book` record for Admin and future library views.
@@ -364,7 +364,7 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 | App Name         | Responsibility                                                                |
 |------------------|-------------------------------------------------------------------------------|
 | `books`          | Google Books search/detail, minimal cached `Book`, admin, service             |
-| `activity`       | Per-user `ReadingStatus` persistence + admin                                  |
+| `activity`       | Per-user `ReadingStatus`, `Rating`, `Review` persistence + admin              |
 | `dashboard`      | Displays user-specific reading activity grouped by status.                    |
 
 
@@ -417,17 +417,19 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
   * __Auto-create status__: if a user rates a book without an existing `ReadingStatus`, the `post_save` signal ensures a new `READ` status is created.
   * __Respect existing status__: if the user already has a `ReadingStatus` (`TO_READ`, `READING`, `READ`), rating succeeds without changing it.
 
-* **Review Tests**
 
- * **Review Tests**
+* **Review Tests**
 
   * __Creating a review__: POST to `/books/<book_id>/review/` saves and redirects; assert redirect and one new `Review` for `(user, book)`.
   * __Book detail displays reviews__: detail view lists reviews; assert content and author appear in “User Reviews”.
   * __Anonymous users see login CTA__: shows “Log in to leave a review”; assert CTA present and no `<form>`.
-  * __Authenticated users see form__: no existing review → textarea rendered; assert form action targets `add_review`.
+  * __Authenticated users see add review form__: no existing review → textarea rendered; assert form action targets `add_review`.
   * __Editing a review (no duplicates)__: second POST updates existing row; assert updated content and still exactly one `Review`.
   * __Creates READ status when missing__: Posting a review with no existing `ReadingStatus` auto-creates one with status **READ**, then redirects back to the book detail.
   * __Respects existing status__: If a `ReadingStatus` already exists (e.g. **READING**), saving/posting a review **does not** override it to READ; the original status remains unchanged.
+  * __Delete ownership check__: Only the user who created a review can delete it. Delete button is not visible to others.
+  * __Delete confirmation__: The book detail page renders a modal for delete confirmation, allowing the user to confirm or cancel the deletion.
+  * __Delete success__: The review is removed from the database after confirmation, displaying a success message to user.
 
 
 ### Approach
