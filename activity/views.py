@@ -4,7 +4,8 @@ This view expects a POST request with 'status' in {TO_READ, READING, READ}.
 """
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, get_object_or_404
+from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.urls import reverse
 
@@ -144,3 +145,21 @@ def add_review(request, book_id):
     return redirect(
         "book_detail", book_id=book_id
     )
+
+
+@login_required
+@require_POST
+def delete_review(request, book_id: str, review_id: int):
+    """
+    Delete a specific review for a book.
+    Only the review owner can delete.
+    """
+    review = get_object_or_404(Review, pk=review_id, book_id=book_id)
+
+    # Authorization guard: only owner can delete
+    if review.user_id != request.user.id:
+        return HttpResponseForbidden("You can only delete your own review.")
+
+    review.delete()
+    messages.success(request, "Your review was deleted.")
+    return redirect("book_detail", book_id=book_id)

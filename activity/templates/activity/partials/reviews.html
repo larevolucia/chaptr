@@ -14,9 +14,9 @@
           {{ form.non_field_errors }}
           {{ form.content.errors }}
           {{ form.content }}
-          <div class="mt-2 d-flex gap-2">
+          <div class="mt-2 d-flex gap-2 flex-row-reverse">
             <button id="submitButton" type="submit" class="btn btn-primary">Save</button>
-            <a href="{% url 'book_detail' book.id %}#review" class="btn btn-outline-secondary">Cancel</a>
+            <a href="{% url 'book_detail' book.id %}#review" class="btn btn-muted">Cancel</a>
           </div>
         </form>
 
@@ -36,8 +36,8 @@
       {# --- REVIEWS LIST --- #}
       <ul class="list-unstyled mt-3">
 
-        {# 1) Render the authenticated user's review at the top #}
-        {% if my_review %}
+        {# Render the authenticated user's review at the top #}
+        {% if my_review and not edit_mode %}
           <li class="mb-3 border rounded p-3 bg-light">
             <div class="d-flex justify-content-between align-items-start">
               <div>
@@ -47,10 +47,16 @@
                 </small>
               </div>
               <div class="ms-3">
-                <a class="btn btn-sm btn-outline-primary"
+                <a class="btn btn-sm"
                    href="{% url 'book_detail' book.id %}?edit=1#review">
-                  Edit
+                  <i class="fa-solid fa-pen"></i>
                 </a>
+                <form method="post" action="{% url 'delete_review' book.id my_review.id %}" onsubmit="return confirm('Delete your review?');" class="d-inline">
+                {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-delete">
+                  <i class="fa-solid fa-trash"></i>
+                  </button>
+                </form>
               </div>
             </div>
             <p class="mb-0 mt-2">{{ my_review.content }}</p>
@@ -75,10 +81,16 @@
 
               {% if user.is_authenticated and review.user_id == user.id %}
                 <div class="ms-3">
-                  <a class="btn btn-sm btn-outline-primary"
-                     href="{% url 'book_detail' book.id %}?edit=1#review">
-                    Edit
+                  <a class="btn btn-sm"
+                    href="{% url 'book_detail' book.id %}?edit=1#review">
+                    <i class="fa-solid fa-pen"></i>
                   </a>
+                  <form method="post" action="{% url 'delete_review' book.id my_review.id %}" onsubmit="return confirm('Delete your review?');" class="d-inline">
+                  {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-accent">
+                    <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </form>
                 </div>
               {% endif %}
             </div>

@@ -6,6 +6,7 @@
   --primary-color: #009688; /* Teal Green */
   --primary-color-light: #b2dfdb; /* Light Teal Green */
   --accent-color: #ff5722; /* Deep Orange */
+  --danger-color: #DC3545; /* Deep Orange */
   --secondary-color: #1e88e5;
   --divider-color: #bdbdbd; /* Light Gray */
   --text-color-dark: #212121; /* Dark Gray */
@@ -130,16 +131,16 @@ INTERACTIVE ELEMENTS
 
 button,
 .btn {
-  background-color: var(--primary-color-dark);
-  color: var(--background-color-light);
   border: none;
   padding: 0.6rem 1rem;
   cursor: pointer;
   font-family: var(--brand-font);
   border-radius: 12px;
+  color: var(--background-color-light);
+  background-color: var(--primary-color-dark);
 }
 
-.btn:hover {
+button:hover, button:focus,.btn:hover, .btn:focus {
   background-color: var(--primary-color);
   color: var(--background-color-light);
 }
@@ -159,6 +160,16 @@ button,
   background-color: var(--accent-color);
   filter: brightness(0.9);
   color: #fff;
+}
+.btn-delete {
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+  color: #fff;
+}
+.btn-delete:hover,
+.btn-delete:focus {
+  background-color: var(--danger-color);
+  filter: brightness(0.9);
 }
 
 /* Muted Status Button */

@@ -372,6 +372,7 @@ def book_detail(request, book_id):
             "book": book,
             "form": form,
             "reviews": reviews,
-            "my_review": my_review
+            "my_review": my_review,
+            "edit_mode": edit_mode,
         }
     )
