@@ -22,6 +22,9 @@ class ReadingStatusAdmin(admin.ModelAdmin):
     )
     list_filter = ("status",)
     search_fields = ("user__username", "book__id", "book__title")
+    search_help_text = (
+        "Search by username, book ID or book title."
+    )
     date_hierarchy = "updated_at"
     ordering = ("-updated_at",)
 
@@ -53,6 +56,9 @@ class RatingAdmin(admin.ModelAdmin):
         )
     list_filter = ("rating",)
     search_fields = ("user__username", "book__id", "book__title")
+    search_help_text = (
+        "Search by username, book ID or book title."
+    )
     date_hierarchy = "updated_at"
     ordering = ("-updated_at",)
 
@@ -84,6 +90,9 @@ class ReviewAdmin(admin.ModelAdmin):
     )
     list_filter = ("created_at", "updated_at")
     search_fields = ("user__username", "book__id", "book__title", "content")
+    search_help_text = (
+        "Search by username, email, book ID, book title, or review content."
+    )
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
 
