@@ -21,7 +21,7 @@ class ReadingStatusAdmin(admin.ModelAdmin):
         "user", "book_id", "book_title", "status", "updated_at", "google_link"
     )
     list_filter = ("status",)
-    search_fields = ("user__username", "user__email", "book_id")
+    search_fields = ("user__username", "book__id", "book__title")
     date_hierarchy = "updated_at"
     ordering = ("-updated_at",)
 
@@ -52,7 +52,7 @@ class RatingAdmin(admin.ModelAdmin):
         "user", "book_id", "book_title", "rating", "updated_at", "google_link"
         )
     list_filter = ("rating",)
-    search_fields = ("user__username", "user__email", "book_id")
+    search_fields = ("user__username", "book__id", "book__title")
     date_hierarchy = "updated_at"
     ordering = ("-updated_at",)
 
@@ -83,7 +83,7 @@ class ReviewAdmin(admin.ModelAdmin):
         "user", "book_id", "book_title", "content", "created_at", "updated_at"
     )
     list_filter = ("created_at", "updated_at")
-    search_fields = ("user__username", "book_id", "content")
+    search_fields = ("user__username", "book__id", "book__title", "content")
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
 
