@@ -59,6 +59,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Add Login Prompt Messaging](#26)
 
 ---
+
 ### Epic 2: [User Authentication and Permissions](#2)
 
 **Goal**: Set up account registration, login/logout, and protect user actions.
@@ -119,18 +120,18 @@ Below is a summary of the planned development scope using Agile epics, user stor
 
 ---
 
-### Epic 4: [User Dashboard](#4)
+### Epic 4: [User Library](#4)
 
-**Goal**: Provide users with a personalized dashboard to manage their reading activity.
+**Goal**: Provide users with a personalized library to manage their reading activity.
 
 #### [View books grouped by reading status](#17)
 
 **Technical Tasks:**
-- [Create dashboard view with user authentication](#49)
-- [Build style dashboard template](#50)
+- [Create library view with user authentication](#49)
+- [Build style library template](#50)
 - [Query and display grouped book data](#51)
 
-#### [Update reading status directly from dashboard](#18)
+#### [Update reading status directly from library](#18)
 
 **Technical Tasks:**
 - [Add inline status update controls](#52)
@@ -246,6 +247,13 @@ Lets readers share longer-form thoughts on a book, with a clear, edit-friendly f
 * **Clean Presentation**: Reviews appear under the book details. Your own review isn’t duplicated in the list.
 * **Lightweight Persistence**: Posting a review auto-ensures a minimal `Book` record for Admin and future library views.
 
+### Library
+
+A user’s personal library displays all books they are interested in, along with their reading status.
+
+* **Grouped by Status**: Books are organized into sections for *To Read*, *Reading*, and *Read*.
+* **Dynamic Updates**: The library view updates in real-time as users change book statuses.
+* **Link to Book Details**: Each book links to its detail page for more information.
 
 ### Authentication (Login, Logout & Sign-Up)
 
