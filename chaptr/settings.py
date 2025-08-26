@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'books',
     'activity',
+    'library',
 ]
 
 
