@@ -88,3 +88,29 @@ class LibraryViewTests(TestCase):
         self.assertContains(response, ' id="to-read-collection"')
         self.assertContains(response, ' id="reading-collection"')
         self.assertContains(response, ' id="read-collection"')
+
+    def test_each_book_links_to_its_detail_page(self):
+        """
+        Each book card links to the detail route 'book_detail' with the book pk.
+        """
+        self.client.login(username="alice", password="pass1234")
+
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_to_read, status=ReadingStatus.Status.TO_READ
+        )
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_reading, status=ReadingStatus.Status.READING
+        )
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_read, status=ReadingStatus.Status.READ
+        )
+
+        response = self.client.get(reverse("library"))
+
+        u1 = reverse("book_detail", args=[self.book_to_read.pk])
+        u2 = reverse("book_detail", args=[self.book_reading.pk])
+        u3 = reverse("book_detail", args=[self.book_read.pk])
+
+        self.assertContains(response, f'href="{u1}"')
+        self.assertContains(response, f'href="{u2}"')
+        self.assertContains(response, f'href="{u3}"')
