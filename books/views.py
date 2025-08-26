@@ -16,6 +16,7 @@ from django.shortcuts import render,  redirect
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.contrib import messages
+from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
 from django.http import Http404
 from django.db.utils import ProgrammingError, OperationalError
@@ -140,8 +141,9 @@ def book_search(request):
     books = search_google_books(query_for_api) if query_for_api else []
 
     ids = [r["id"] for r in books]
-    status_map = statuses_map_for(request.user, ids)
-    rating_map = ratings_map_for(request.user, ids)
+    user = getattr(request, "user", AnonymousUser())
+    status_map = statuses_map_for(user, ids)
+    rating_map = ratings_map_for(user, ids)
 
     labels = dict(ReadingStatus.Status.choices)
 
@@ -302,7 +304,15 @@ def book_detail(request, book_id):
     my_review = None
     edit_mode = False
 
-    if request.user.is_authenticated:
+    user = getattr(request, "user", AnonymousUser())
+    if getattr(user, "is_authenticated", False):
+        # use `user` below instead of `request.user`
+        rs = (
+            ReadingStatus.objects
+            .filter(user=user, book_id=book_id)
+            .only("status")
+            .first()
+              )
         try:
             # reading status
             rs = (

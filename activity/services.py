@@ -1,15 +1,15 @@
 """
 Service for managing reading statuses and rating.
 """
-from .models import ReadingStatus, Rating
 from django.db.models import Avg
+from .models import ReadingStatus, Rating
 
 
 def statuses_map_for(user, book_ids):
     """
     Returns {book_id: {"status": "..."}}
     """
-    if not user.is_authenticated or not book_ids:
+    if not getattr(user, "is_authenticated", False) or not book_ids:
         return {}
     rows = (
         ReadingStatus.objects
