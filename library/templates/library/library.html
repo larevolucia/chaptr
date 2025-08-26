@@ -10,70 +10,84 @@
 {% block content %}
 <div class="container py-4">
   <h1 class="h2 mb-3">Your Library</h1>
-    <div class="container my-4">
-    <h2 class="h5 collection-header">To Read</h2>
-    <div class="d-flex overflow-auto gap-3 pb-2">
-        {% for book in to_read %}
-            <div class="card-library flex-shrink-0" style="width: 150px;">
-                <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
-                    <div class="poster-library mb-2 text-center">
-                        <img
-                        src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-                        alt="{{ book.title }}"
-                        loading="lazy"
-                        class="rounded"  />
+    {% if to_read or reading or read %}
+        <!--To Read-->
+        {% if to_read %}
+        <div class="container my-4" id="to-read-collection">
+            <h2 class="h5 collection-header">To Read</h2>
+            <div class="d-flex overflow-auto gap-3 pb-2">
+            {% for book in to_read %}
+                    <div class="card-library flex-shrink-0" style="width: 150px;">
+                        <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+                            <div class="poster-library mb-2 text-center">
+                                <img
+                                src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+                                alt="{{ book.title }}"
+                                loading="lazy"
+                                class="rounded"  />
+                            </div>
+                            <div class="card-body p-2 library-card-body">
+                            <h6 class="card-title title-2-lines">{{ book.title }}</h6>
+                            </div>
+                        </a>
                     </div>
-                    <div class="card-body p-2 library-card-body">
-                    <h6 class="card-title title-2-lines">{{ book.title }}</h6>
-                    </div>
-                </a>
+                {% endfor %}
             </div>
-        {% endfor %}
-    </div>
-    </div>
-
-    <div class="container my-4">
-    <h2 class="h5 collection-header">Reading</h2>
-    <div class="d-flex overflow-auto gap-3 pb-2">
-        {% for book in reading %}
-        <div class="card-library flex-shrink-0" style="width: 150px;">
-            <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
-                <div class="poster-library mb-2 text-center">
-                    <img
-                    src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-                    class="rounded"
-                    alt="{{ book.title }}" />
-                </div>
-                <div class="card-body p-2 library-card-body">
-                <h6 class="card-title title-2-lines">{{ book.title }}</h6>
-                </div>
-            </a>
         </div>
-        {% endfor %}
-    </div>
-    </div>
+        {% endif %}
 
-    <div class="container my-4">
-    <h2 class="h5 collection-header">Read</h2>
-    <div class="d-flex overflow-auto gap-3 pb-2">
-        {% for book in read %}
-        <div class="card-library flex-shrink-0" style="width: 150px;">
-                <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
-                <div class="poster-library mb-2 text-center">
-                    <img 
-                    src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-                    alt="{{ book.title }}"
-                    loading="lazy"
-                    class="rounded"  />
+        <!-- Reading -->
+        {% if reading %}
+        <div class="container my-4" id="reading-collection">
+            <h2 class="h5 collection-header">Reading</h2>
+            <div class="d-flex overflow-auto gap-3 pb-2">
+            {% for book in reading %}
+                <div class="card-library flex-shrink-0" style="width: 150px;">
+                    <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+                        <div class="poster-library mb-2 text-center">
+                            <img
+                            src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+                            class="rounded"
+                            alt="{{ book.title }}" />
+                        </div>
+                        <div class="card-body p-2 library-card-body">
+                        <h6 class="card-title title-2-lines">{{ book.title }}</h6>
+                        </div>
+                    </a>
                 </div>
-                <div class="card-body p-2 library-card-body">
-                <h6 class="card-title title-2-lines">{{ book.title }}</h6>
-                </div>
-            </a>
+                {% endfor %}
             </div>
-        {% endfor %}
-    </div>
-    </div>
+        </div>
+        {% endif %}
 
+        <!-- Read -->
+        {% if read %}
+        <div class="container my-4" id="read-collection">
+            <h2 class="h5 collection-header">Read</h2>
+            <div class="d-flex overflow-auto gap-3 pb-2">
+            {% for book in read %}
+                <div class="card-library flex-shrink-0" style="width: 150px;">
+                        <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+                        <div class="poster-library mb-2 text-center">
+                            <img 
+                            src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+                            alt="{{ book.title }}"
+                            loading="lazy"
+                            class="rounded"  />
+                        </div>
+                        <div class="card-body p-2 library-card-body">
+                        <h6 class="card-title title-2-lines">{{ book.title }}</h6>
+                        </div>
+                    </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="container my-4">
+        <p>No books found in your library.</p>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

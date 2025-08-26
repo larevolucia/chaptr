@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 # Create your tests here.
 
-# from books.models import Book
-# from activity.models import ReadingStatus
+from books.models import Book
+from activity.models import ReadingStatus
 
 
 class LibraryViewTests(TestCase):
@@ -16,6 +16,9 @@ class LibraryViewTests(TestCase):
         self.user = User.objects.create_user(
             username="alice", email="alice@example.com", password="pass1234"
         )
+        self.book_to_read = Book.objects.create(id="to-read", title="To Read Book")
+        self.book_reading = Book.objects.create(id="reading", title="Reading Book")
+        self.book_read = Book.objects.create(id="read", title="Read Book")
 
     def test_navbar_links_visible_only_when_authenticated(self):
         """
@@ -43,3 +46,45 @@ class LibraryViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn(settings.LOGIN_URL, response["Location"])
         self.assertIn("?next=", response["Location"])
+
+    def test_authenticated_user_can_access_library(self):
+        """
+        Authenticated users should be able to access the library page.
+        """
+        self.client.login(username="alice", password="pass1234")
+        response = self.client.get(reverse("library"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "library/library.html")
+        self.assertContains(response, "Your Library")
+
+    def test_library_page_no_books(self):
+        """
+        If the user has no books in their library, they should see a message.
+        """
+        self.client.login(username="alice", password="pass1234")
+        response = self.client.get(reverse("library"))
+        self.assertContains(response, "No books found in your library.")
+        self.assertNotContains(response, ' id="to-read-collection"')
+        self.assertNotContains(response, ' id="reading-collection"')
+        self.assertNotContains(response, ' id="read-collection"')
+
+    def test_library_page_with_books(self):
+        """
+        If the user has books in their library, they should see them organized by status.
+        """
+        self.client.login(username="alice", password="pass1234")
+
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_to_read, status=ReadingStatus.Status.TO_READ
+        )
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_reading, status=ReadingStatus.Status.READING
+        )
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_read, status=ReadingStatus.Status.READ
+        )
+
+        response = self.client.get(reverse("library"))
+        self.assertContains(response, ' id="to-read-collection"')
+        self.assertContains(response, ' id="reading-collection"')
+        self.assertContains(response, ' id="read-collection"')
