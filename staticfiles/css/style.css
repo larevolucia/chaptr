@@ -201,6 +201,9 @@ a.btn {
   text-decoration: none;
   border-radius: 12px;
 }
+a.no-decoration{
+  text-decoration: none;
+}
 
 /* -------------------------------
 RATING STYLES
@@ -340,7 +343,14 @@ BOOKS PAGE STYLES
 .book-title, .book-description {
   text-align: left;
 }
-
+/* -------------------------------
+LIBRARY
+---------------------------------- */
+.collection-header {
+  font-family: var(--primary-font);
+  color: var(--text-color-dark);
+  text-align: left;
+}
 /* -------------------------------
 DROPDOWN
 ---------------------------------- */

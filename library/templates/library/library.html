@@ -1,7 +1,73 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Your Library - NextChaptr{% endblock %}
+
+{% block header_search %}
+    {% include 'books/partials/search_form.html' %}
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
-  <h1 class="h3 mb-3">Your Library</h1>
-  <p class="text-muted">Books you've interacted with will appear here.</p>
+  <h1 class="h2 mb-3">Your Library</h1>
+    <div class="container my-4">
+    <h2 class="h5 collection-header">To Read</h2>
+    <div class="d-flex overflow-auto gap-3 pb-2">
+        {% for book in to_read %}
+        <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+            <div class="card flex-shrink-0" style="width: 150px;">
+                <img
+                src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+                alt="{{ book.title }}"
+                loading="lazy"
+                class="img-fluid rounded border mb-2"
+                />
+                <div class="card-body p-2">
+                <h6 class="card-title text-truncate">{{ book.title }}</h6>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    </div>
+
+    <div class="container my-4">
+    <h2 class="h5 collection-header">Reading</h2>
+    <div class="d-flex overflow-auto gap-3 pb-2">
+        {% for book in reading %}
+        <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+            <div class="card flex-shrink-0" style="width: 150px;">
+                <img src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}" class="card-img-top" alt="{{ book.title }}">
+
+                <div class="card-body p-2">
+                <h6 class="card-title text-truncate">{{ book.title }}</h6>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    </div>
+
+    <div class="container my-4">
+    <h2 class="h5 collection-header">Read</h2>
+    <div class="d-flex overflow-auto gap-3 pb-2">
+        {% for book in read %}
+        <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+            <div class="card flex-shrink-0" style="width: 150px;">
+                <img
+                src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+                alt="{{ book.title }}"
+                loading="lazy"
+                class="img-fluid rounded border mb-2"
+                />
+                <div class="card-body p-2">
+                <h6 class="card-title text-truncate">{{ book.title }}</h6>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    </div>
+
 </div>
 {% endblock %}
