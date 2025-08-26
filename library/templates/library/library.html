@@ -14,19 +14,20 @@
     <h2 class="h5 collection-header">To Read</h2>
     <div class="d-flex overflow-auto gap-3 pb-2">
         {% for book in to_read %}
-        <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
-            <div class="card flex-shrink-0" style="width: 150px;">
-                <img
-                src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-                alt="{{ book.title }}"
-                loading="lazy"
-                class="img-fluid rounded border mb-2"
-                />
-                <div class="card-body p-2">
-                <h6 class="card-title text-truncate">{{ book.title }}</h6>
-                </div>
+            <div class="card-library flex-shrink-0" style="width: 150px;">
+                <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+                    <div class="poster-library mb-2 text-center">
+                        <img
+                        src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+                        alt="{{ book.title }}"
+                        loading="lazy"
+                        class="rounded"  />
+                    </div>
+                    <div class="card-body p-2 library-card-body">
+                    <h6 class="card-title title-2-lines">{{ book.title }}</h6>
+                    </div>
+                </a>
             </div>
-        </a>
         {% endfor %}
     </div>
     </div>
@@ -35,15 +36,19 @@
     <h2 class="h5 collection-header">Reading</h2>
     <div class="d-flex overflow-auto gap-3 pb-2">
         {% for book in reading %}
-        <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
-            <div class="card flex-shrink-0" style="width: 150px;">
-                <img src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}" class="card-img-top" alt="{{ book.title }}">
-
-                <div class="card-body p-2">
-                <h6 class="card-title text-truncate">{{ book.title }}</h6>
+        <div class="card-library flex-shrink-0" style="width: 150px;">
+            <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+                <div class="poster-library mb-2 text-center">
+                    <img
+                    src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+                    class="rounded"
+                    alt="{{ book.title }}" />
                 </div>
-            </div>
-        </a>
+                <div class="card-body p-2 library-card-body">
+                <h6 class="card-title title-2-lines">{{ book.title }}</h6>
+                </div>
+            </a>
+        </div>
         {% endfor %}
     </div>
     </div>
@@ -52,19 +57,20 @@
     <h2 class="h5 collection-header">Read</h2>
     <div class="d-flex overflow-auto gap-3 pb-2">
         {% for book in read %}
-        <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
-            <div class="card flex-shrink-0" style="width: 150px;">
-                <img
-                src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-                alt="{{ book.title }}"
-                loading="lazy"
-                class="img-fluid rounded border mb-2"
-                />
-                <div class="card-body p-2">
-                <h6 class="card-title text-truncate">{{ book.title }}</h6>
+        <div class="card-library flex-shrink-0" style="width: 150px;">
+                <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">
+                <div class="poster-library mb-2 text-center">
+                    <img 
+                    src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+                    alt="{{ book.title }}"
+                    loading="lazy"
+                    class="rounded"  />
                 </div>
+                <div class="card-body p-2 library-card-body">
+                <h6 class="card-title title-2-lines">{{ book.title }}</h6>
+                </div>
+            </a>
             </div>
-        </a>
         {% endfor %}
     </div>
     </div>

@@ -64,6 +64,9 @@ footer {
   color: var(--text-color-dark);
 }
 
+.navbar-brand.brand-font {
+  letter-spacing: 0.02em;
+}
 /* -------------------------------
 HEADER
 ---------------------------------- */
@@ -121,9 +124,12 @@ SEARCH FORM
   overflow: visible; /* so the search card can hang over */
 }
 
-.navbar-brand.brand-font {
-  letter-spacing: 0.02em;
-}
+
+/* -------------------------------
+SEARCH RESULTS
+---------------------------------- */
+
+
 
 /* -------------------------------
 INTERACTIVE ELEMENTS
@@ -351,6 +357,40 @@ LIBRARY
   color: var(--text-color-dark);
   text-align: left;
 }
+.card-library a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.poster-library {
+    min-height: 205px;
+    max-width: auto;
+}
+
+.library-card-body {
+  min-height: 65px;
+}
+
+/* keep card titles tidy (2-line clamp) */
+.title-2-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.poster-library img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poster-library:hover img {
+  transform: scale(1.05);              /* zoom in slightly */
+  box-shadow: 0 4px 12px rgba(0,0,0,.3); /* add a subtle shadow */
+}
+
 /* -------------------------------
 DROPDOWN
 ---------------------------------- */
