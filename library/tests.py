@@ -20,6 +20,34 @@ class LibraryViewTests(TestCase):
         self.book_reading = Book.objects.create(id="reading", title="Reading Book")
         self.book_read = Book.objects.create(id="read", title="Read Book")
 
+    def set_book_to_read(self):
+        """ Log a book with 'to read' status for the user."""
+        self.client.login(username="alice", password="pass1234")
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_to_read, status=ReadingStatus.Status.TO_READ
+        )
+
+    def set_book_reading(self):
+        """ Log a book with 'reading' status for the user."""
+        self.client.login(username="alice", password="pass1234")
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_reading, status=ReadingStatus.Status.READING
+        )
+
+    def set_book_read(self):
+        """ Log a book with 'read' status for the user."""
+        self.client.login(username="alice", password="pass1234")
+        ReadingStatus.objects.create(
+            user=self.user, book=self.book_read, status=ReadingStatus.Status.READ
+        )
+
+    def set_books_statuses(self):
+        """ Log three books with different statuses for the user."""
+        self.client.login(username="alice", password="pass1234")
+        self.set_book_to_read()
+        self.set_book_reading()
+        self.set_book_read()
+
     def test_navbar_links_visible_only_when_authenticated(self):
         """
         Navbar (in base.html) shows user dropdown items only for logged-in users.
@@ -74,19 +102,52 @@ class LibraryViewTests(TestCase):
         """
         self.client.login(username="alice", password="pass1234")
 
-        ReadingStatus.objects.create(
-            user=self.user, book=self.book_to_read, status=ReadingStatus.Status.TO_READ
-        )
-        ReadingStatus.objects.create(
-            user=self.user, book=self.book_reading, status=ReadingStatus.Status.READING
-        )
-        ReadingStatus.objects.create(
-            user=self.user, book=self.book_read, status=ReadingStatus.Status.READ
-        )
+        self.set_books_statuses()
 
         response = self.client.get(reverse("library"))
         self.assertContains(response, ' id="to-read-collection"')
         self.assertContains(response, ' id="reading-collection"')
+        self.assertContains(response, ' id="read-collection"')
+
+    def test_library_page_with_only_to_read_book(self):
+        """
+        If the user has only books on their to-read list,
+        they shouldn't see other collection headers.
+        """
+        self.client.login(username="alice", password="pass1234")
+
+        self.set_book_to_read()
+
+        response = self.client.get(reverse("library"))
+        self.assertContains(response, ' id="to-read-collection"')
+        self.assertNotContains(response, ' id="reading-collection"')
+
+    def test_library_page_with_only_reading_book(self):
+        """
+        If the user has only books on their reading list,
+        they shouldn't see other collection headers.
+        """
+        self.client.login(username="alice", password="pass1234")
+
+        self.set_book_reading()
+
+        response = self.client.get(reverse("library"))
+        self.assertNotContains(response, ' id="to-read-collection"')
+        self.assertContains(response, ' id="reading-collection"')
+        self.assertNotContains(response, ' id="read-collection"')
+
+    def test_library_page_with_only_read_book(self):
+        """
+        If the user has only books on their reading list,
+        they shouldn't see other collection headers.
+        """
+        self.client.login(username="alice", password="pass1234")
+
+        self.set_book_read()
+
+        response = self.client.get(reverse("library"))
+        self.assertNotContains(response, ' id="to-read-collection"')
+        self.assertNotContains(response, ' id="reading-collection"')
         self.assertContains(response, ' id="read-collection"')
 
     def test_each_book_links_to_its_detail_page(self):
@@ -95,15 +156,7 @@ class LibraryViewTests(TestCase):
         """
         self.client.login(username="alice", password="pass1234")
 
-        ReadingStatus.objects.create(
-            user=self.user, book=self.book_to_read, status=ReadingStatus.Status.TO_READ
-        )
-        ReadingStatus.objects.create(
-            user=self.user, book=self.book_reading, status=ReadingStatus.Status.READING
-        )
-        ReadingStatus.objects.create(
-            user=self.user, book=self.book_read, status=ReadingStatus.Status.READ
-        )
+        self.set_books_statuses()
 
         response = self.client.get(reverse("library"))
 
