@@ -28,16 +28,22 @@ body {
   padding: 0;
 }
 
-h1,
-h2, h3 {
+h1, h3 {
   color: var(--primary-color-dark);
   font-family: var(--secondary-font);
   text-align: center;
 }
-
-h4 {
+h2, h4 {
   font-family: var(--primary-font);
   color: var(--text-color-dark);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 0.5em;
+}
+
+h4 {
   text-align: left;
   font-size: 1.15rem;
   margin: 0.5em 0;
@@ -183,7 +189,11 @@ a.no-decoration{
 /* -------------------------------
    SEARCH RESULTS
 ---------------------------------- */
-/* (reserved for search results styles if added later) */
+.img-card-search {
+  width: 128px;
+  height: 192px;
+  object-fit: cover;
+}
 
 /* -------------------------------
    BUTTONS
@@ -427,6 +437,11 @@ input[type="radio"] {
 /* -------------------------------
    GENRE CARDS
 ---------------------------------- */
+.genre-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 /* Make genre cards feel clickable */
 .genre-card,
 .genre-card .card {
@@ -522,6 +537,9 @@ input[type="radio"] {
 /* -------------------------------
    DROPDOWN / STATUSES
 ---------------------------------- */
+.reading-status-btn-group {
+  min-width: 134px;
+}
 /* open the dropdown when the caret area is hovered or focused */
 .hover-dropdown:hover .dropdown-menu,
 .hover-dropdown:focus-within .dropdown-menu {

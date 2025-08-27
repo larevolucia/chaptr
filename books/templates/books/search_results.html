@@ -21,7 +21,9 @@
               src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
               alt="{{ book.title }}"
               loading="lazy"
-              class="img-fluid rounded border mb-2"
+              class="mb-2 img-card-search"
+              width="128"
+              height="192"
             />
       </a>
         {% include "activity/partials/reading_status_button.html" %}
