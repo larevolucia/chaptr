@@ -439,6 +439,13 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
   * __Delete confirmation__: The book detail page renders a modal for delete confirmation, allowing the user to confirm or cancel the deletion.
   * __Delete success__: The review is removed from the database after confirmation, displaying a success message to user.
 
+* **Library Tests**
+
+   * __Viewing the library page__: Users can view their library page with all books organized by status.
+   * __Empty states__: Appropriate messages are displayed when a user has no books in a particular status.
+   * __Multiple statuses__: Users with books in multiple statuses see each section correctly.
+   * __Book details__: Users can click on a book to view its details.
+   * __Access control__: Only authenticated users can access their library; unauthenticated users are redirected to the login page.
 
 ### Approach
 
