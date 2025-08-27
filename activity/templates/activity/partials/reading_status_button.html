@@ -8,14 +8,14 @@
               <button type="submit"
                       name="status"
                       value="{% if book.user_status %}{{ book.user_status }}{% else %}TO_READ{% endif %}"
-                      class="btn {% if book.user_status %}btn-muted{% else %}{{ current_btn }}{% endif %} rounded-start px-3">
+                      class="nc-btn {% if book.user_status %}nc-btn--muted{% else %}{{ current_btn|default:'nc-btn--primary' }}{% endif %} nc-btn--round-start px-3">
                       {{ book.user_status_label|default:"To Read" }}
               </button>
 
               <!-- reveals the options on hover -->
               <div class="btn-group hover-dropdown" role="group">
                 <button type="button"
-                        class="btn {{ current_btn }} dropdown-toggle dropdown-toggle-split rounded-end border-start"
+                        class="nc-btn {{ current_btn|default:'nc-btn--primary' }} dropdown-toggle dropdown-toggle-split nc-btn--round-end border-start"
                         data-bs-toggle="dropdown" aria-expanded="false"
                         aria-label="Change status">
                 </button>
@@ -37,5 +37,5 @@
             </div>
     </form>
 {% else %}
-    <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}" class="btn btn-outline-primary">Log in to add</a>
+    <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}" class="nc-btn nc-btn--secondary">Log in to add</a>
 {% endif %}

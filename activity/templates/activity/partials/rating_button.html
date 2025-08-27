@@ -9,7 +9,7 @@
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
             <div class="btn-group stars d-flex flex-row-reverse" role="group" aria-label="Rating">
                 {% if current_rating > 0 %}
-                    <button type="button" class="btn btn-sm rounded btn-remove-rating" onclick="removeRating('{{ book.id }}')" title="Remove rating">
+                    <button type="button" class="nc-btn nc-btn--ghost nc-btn--icon nc-btn--sm btn-remove-rating" onclick="removeRating('{{ book.id }}')" title="Remove rating">
                             ✕
                     </button>
                 {% endif %}
@@ -28,7 +28,7 @@
        {% endwith %}
     {% else %}
         <small class="text-muted">Log in to rate this book</small>
-        <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}" class="btn-no-decoration">
+        <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}" class="no-decoration">
             <div class="stars d-flex flex-row-reverse">
                 <span class="star" title="5 stars">★</span>
                 <span class="star" title="4 stars">★</span>

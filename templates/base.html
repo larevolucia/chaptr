@@ -27,51 +27,35 @@
      href="#main-content">Skip to main content</a>
     <!-- Site header -->
     <header class="site-header">
-    <div class="container py-3">
-        <!-- Row 1: logo (left) + auth (right) -->
+      <div class="container py-3">
         <div class="d-flex align-items-center justify-content-between">
-        <a class="navbar-brand brand-font fs-3 text-dark m-0" href="/">NextChaptr</a>
-            <div class="d-flex align-items-center gap-2">
+          <a class="navbar-brand brand-font fs-3 text-dark m-0" href="/">NextChaptr</a>
+          <div class="d-flex align-items-center gap-2">
             {% if user.is_authenticated %}
-                <div id="account-welcome">Hi, {{ user.username }}</div>
-                <div class="dropdown">
+              <div id="account-welcome">Hi, {{ user.username }}</div>
+              <div class="dropdown">
                 <button class="btn-toggle-navbar d-flex align-items-center"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
-                        aria-label="Account menu"
-                    >
-                    <i class="fa-solid fa-circle-user"></i>
+                        aria-label="Account menu">
+                  <i class="fa-solid fa-circle-user"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                    <a class="dropdown-item" href="{% url 'library' %}">
-                        <i class="fa-solid fa-book-open me-2"></i>Library
-                    </a>
-                    </li>
-                    <li>
-                    <a class="dropdown-item" href="{% url 'home' %}">
-                        <i class="fa-solid fa-compass me-2"></i>Browse
-                    </a>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                    <a class="dropdown-item text-danger" href="{{ logout_url }}">
-                        <i class="fa-solid fa-right-from-bracket me-2"></i>Sign out
-                    </a>
-                    </li>
+                  <li><a class="dropdown-item" href="{% url 'library' %}"><i class="fa-solid fa-book-open me-2"></i>Library</a></li>
+                  <li><a class="dropdown-item" href="{% url 'home' %}"><i class="fa-solid fa-compass me-2"></i>Browse</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger" href="{{ logout_url }}"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign out</a></li>
                 </ul>
-                </div>
+              </div>
             {% else %}
-                <a href="{{ signup_url }}" class="btn btn-outline-dark btn-sm">Sign up</a>
-                <a href="{{ login_url }}" class="btn btn-dark btn-sm">Log in</a>
+              <a href="{{ signup_url }}" class="nc-btn nc-btn--primary nc-btn--sm">Sign up</a>
+              <a href="{{ login_url }}"  class="nc-btn nc-btn--primary nc-btn--sm">Log in</a>
             {% endif %}
-            </div>
+          </div>
         </div>
-        
         {% block header_search %}{% endblock %}
-
-     </div>
+      </div>
     </header>
 
     {% if messages %}

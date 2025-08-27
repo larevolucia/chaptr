@@ -18,7 +18,7 @@
 }
 
 /* -------------------------------
-GENERAL STYLES
+   GENERAL STYLES
 ---------------------------------- */
 body {
   font-family: var(--primary-font);
@@ -43,6 +43,10 @@ h4 {
   margin: 0.5em 0;
 }
 
+h5 {
+  font-size: 1.1rem;
+}
+
 p,
 span {
   color: var(--text-color);
@@ -56,6 +60,28 @@ footer {
   text-align: center;
 }
 
+/* Links */
+a {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+a.btn {
+  text-decoration: none;
+  border-radius: 12px;
+}
+
+a.no-decoration{
+  text-decoration: none;
+}
+
+/* -------------------------------
+   HEADER
+---------------------------------- */
 .brand-font {
   font-family: var(--brand-font);
   font-weight: bold;
@@ -67,9 +93,6 @@ footer {
 .navbar-brand.brand-font {
   letter-spacing: 0.02em;
 }
-/* -------------------------------
-HEADER
----------------------------------- */
 
 .site-header {
   background-color: var(--primary-color-light);
@@ -81,10 +104,43 @@ HEADER
   z-index: 1030;
 }
 
-/* -------------------------------
-SEARCH FORM
----------------------------------- */
+.btn-toggle-navbar {
+  background-color: none;
+  border: none;
+  color: var(--primary-color-dark);
+  background-color: inherit;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1.65rem;
+}
 
+.btn-toggle-navbar:hover {
+  border: none;
+  color: var(--background-color-light);
+}
+
+/* -------------------------------
+   HERO
+---------------------------------- */
+.hero-title {
+  font-family: var(--secondary-font);
+  font-size: 2.5rem;
+  color: var(--background-color-light);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-top: 3.5rem;
+}
+
+.hero-text {
+  font-family: var(--brand-font);
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  color: var(--background-color-light);
+  margin-top: 1rem;
+}
+
+/* -------------------------------
+   SEARCH FORM
+---------------------------------- */
 /* Overlapping search card  */
 .search-card {
   background: #fff;
@@ -124,97 +180,192 @@ SEARCH FORM
   overflow: visible; /* so the search card can hang over */
 }
 
+/* -------------------------------
+   SEARCH RESULTS
+---------------------------------- */
+/* (reserved for search results styles if added later) */
 
 /* -------------------------------
-SEARCH RESULTS
+   BUTTONS
+   Namespace: .nc-btn
 ---------------------------------- */
 
+/* Base */
+.nc-btn {
+  --btn-bg: var(--primary-color-dark);
+  --btn-border: transparent;
+  --btn-text: #fff;
+  --btn-bg-hover: var(--primary-color);
+  --btn-text-hover: #fff;
+  --btn-bg-active: var(--primary-color);
+  --btn-text-active: #fff;
 
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 
-/* -------------------------------
-INTERACTIVE ELEMENTS
----------------------------------- */
-
-button,
-.btn {
-  border: none;
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  font-family: var(--brand-font);
-  border-radius: 12px;
-  color: var(--background-color-light);
-  background-color: var(--primary-color-dark);
-}
-
-button:hover, button:focus,.btn:hover, .btn:focus {
-  background-color: var(--primary-color);
-  color: var(--background-color-light);
-}
-
-/* Accent action  */
-.btn-accent {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: var(--text-color-dark);
-  padding: 0.65rem 1rem;
   font-family: var(--brand-font);
   font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+
+  height: 2.5rem;               
+  padding: 0.6rem 1rem;        
+  border-radius: 12px;
+  border: 1px solid var(--btn-border);
+  color: var(--btn-text);
+  background: var(--btn-bg);
+  cursor: pointer;
+
+  transition: background-color .15s ease, color .15s ease,
+              border-color .15s ease, box-shadow .15s ease, transform .05s ease;
 }
 
-.btn-accent:hover,
-.btn-accent:focus {
-  background-color: var(--accent-color);
-  filter: brightness(0.9);
-  color: #fff;
+.nc-btn:hover {
+  background: var(--btn-bg-hover);
+  color: var(--btn-text-hover);
 }
-.btn-delete {
-  background-color: var(--danger-color);
-  border-color: var(--danger-color);
-  color: #fff;
+
+.nc-btn:active {
+  transform: translateY(1px);
+  background: var(--btn-bg-active);
+  color: var(--btn-text-active);
 }
-.btn-delete:hover,
-.btn-delete:focus {
-  background-color: var(--danger-color);
-  filter: brightness(0.9);
+
+.nc-btn:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.nc-btn[disabled],
+.nc-btn[aria-disabled="true"] {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* Sizes */
+.nc-btn--sm { height: 2rem; padding: 0.55rem 0.75rem; font-size: 0.965rem; }
+.nc-btn--lg { height: 3rem; padding: 0.85rem 1.25rem; font-size: 1.05rem; }
+
+/* Icon-only helper (square, center) */
+.nc-btn--icon {
+  width: 2rem;
+  min-width: 2rem;
+  padding: 0;
+}
+
+/* Shape helpers for split buttons */
+.nc-btn--round-start { border-top-left-radius: 12px; border-bottom-left-radius: 12px; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.nc-btn--round-end   { border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+/* Variants */
+.nc-btn--primary {
+  --btn-bg: var(--primary-color-dark);
+  --btn-bg-hover: var(--primary-color);
+  --btn-bg-active: var(--primary-color);
+  --btn-text: #fff;
+  --btn-border: var(--primary-color-dark);
+}
+
+.nc-btn--accent {
+  --btn-bg: var(--accent-color);
+  --btn-bg-hover: color-mix(in oklab, var(--accent-color) 90%, black);
+  --btn-bg-active: color-mix(in oklab, var(--accent-color) 80%, black);
+  --btn-text: #fff;
+  --btn-border: var(--accent-color);
+}
+
+.nc-btn--muted {
+  --btn-bg: #f2f4f7;
+  --btn-bg-hover: #e4e7ec;
+  --btn-bg-active: #d5d9e0;
+  --btn-text: #344054;
+  --btn-border: #d0d5dd;
+}
+
+.nc-btn--danger {
+  --btn-bg: var(--danger-color);
+  --btn-bg-hover: color-mix(in oklab, var(--danger-color) 90%, black);
+  --btn-bg-active: color-mix(in oklab, var(--danger-color) 80%, black);
+  --btn-text: #fff;
+  --btn-border: var(--danger-color);
+}
+
+/* Outline/ghost styles – replacement for Bootstrap "btn-outline-*" */
+.nc-btn--secondary {
+  --btn-bg: transparent;
+  --btn-text: var(--primary-color-dark);
+  --btn-border: var(--primary-color-dark);
+  --btn-bg-hover: var(--primary-color-light);
+  --btn-text-hover: var(--text-color-dark);
+  --btn-bg-active: var(--primary-color);
+  --btn-text-active: #fff;
+}
+
+.nc-btn--ghost {
+  --btn-bg: transparent;
+  --btn-text: var(--secondary-color);
+  --btn-border: transparent;
+  --btn-bg-hover: rgba(0,0,0,.05);
+  --btn-text-hover: var(--accent-color);
+  --btn-bg-active: rgba(0,0,0,.08);
+  --btn-text-active: var(--accent-color);
+}
+
+/* Contrast helpers (use on dark or image backgrounds) */
+.is-on-dark .nc-btn--secondary { --btn-text: #fff; --btn-border: #fff; --btn-text-hover: #111; }
+.is-on-dark .nc-btn--ghost     { --btn-text: #fff; --btn-text-hover: var(--primary-color-light); }
+
+/* ---------------------------------
+   Back-compat aliases (existing classes)
+   — so nothing breaks if a template was missed
+------------------------------------ */
+.btn-default { /* maps to primary filled */
+  --btn-bg: var(--primary-color-dark);
+  --btn-bg-hover: var(--primary-color);
+  --btn-bg-active: var(--primary-color);
+  --btn-text: #fff;
+  --btn-border: var(--primary-color-dark);
+  border: 1px solid var(--btn-border);
+  color: var(--btn-text);
+  background: var(--btn-bg);
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  text-decoration: none; font-family: var(--brand-font); font-weight: 600;
 }
 
 /* Muted Status Button */
-.btn-muted {
-  background: #f2f4f7;         /* light grey background */
-  color: #344054;              /* dark grey text */
-  border: 1px solid #d0d5dd;   /* subtle grey border */
-  border-radius: 12px;
-  font-family: var(--brand-font);
-  font-weight: 600;
+.nc-btn--muted {
+  --btn-bg: #f2f4f7;       /* base light gray */
+  --btn-border: #d0d5dd;
+  --btn-text: #344054;
+
+  --btn-bg-hover: #e0e3e8; /* slightly darker gray for hover */
+  --btn-text-hover: #1d2939;
+
+  --btn-bg-active: #cbd0d7; /* distinctly darker for active */
+  --btn-text-active: #111;
+}
+.btn-accent { /* maps to accent filled */
+  background: var(--accent-color); border-color: var(--accent-color); color: #fff;
+}
+.btn-delete { /* maps to danger filled */
+  background: var(--danger-color); border-color: var(--danger-color); color: #fff;
+}
+.btn-muted  { /* maps to muted */
+  background: #f2f4f7; color: #344054; border: 1px solid #d0d5dd; border-radius: 12px;
 }
 
-.btn-muted:hover,
-.btn-muted:focus {
-  background: #e4e7ec;         /* slightly darker on hover */
-  color: #1d2939;
-}
-
-a {
-  color: var(--secondary-color);
-  text-decoration: underline;
-}
-
-a:hover {
-  color: var(--accent-color);
-}
-
-a.btn {
-  text-decoration: none;
-  border-radius: 12px;
-}
-a.no-decoration{
-  text-decoration: none;
-}
+/* Give anchors that look like buttons the same hover/focus */
+a.nc-btn:hover, a.nc-btn:focus-visible { text-decoration: none; }
 
 /* -------------------------------
-RATING STYLES
+   RATING
 ---------------------------------- */
-
 .rating-widget .stars {
   cursor: pointer;
 }
@@ -231,9 +382,6 @@ RATING STYLES
   color: #f2b01e;       /* highlight on hover */
 }
 
-.btn-no-decoration {
-  text-decoration: none;
-}
 .stars label {
   cursor: pointer;
 }
@@ -255,20 +403,21 @@ RATING STYLES
   padding: 0.25rem;
   transition: color 0.2s, font-size 0.2s;  
 }
+
 .btn-remove-rating:hover, .btn-remove-rating:focus {
   background: transparent;
   font-size: 1.3rem;
   color: #1d2939;
   font-weight: bold;
 }
+
 .book-rating-info {
   font-size: 0.875rem;
 }
 
 /* -------------------------------
-FORM STYLES
+   FORMS
 ---------------------------------- */
-
 /* Make native checkboxes & radios use the brand accent when checked */
 input[type="checkbox"],
 input[type="radio"] {
@@ -276,29 +425,8 @@ input[type="radio"] {
 }
 
 /* -------------------------------
-HERO STYLES
+   GENRE CARDS
 ---------------------------------- */
-
-.hero-title {
-  font-family: var(--secondary-font);
-  font-size: 2.5rem;
-  color: var(--background-color-light);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  margin-top: 3.5rem;
-}
-
-.hero-text {
-  font-family: var(--brand-font);
-  font-size: 1.2rem;
-  letter-spacing: 0.5px;
-  color: var(--background-color-light);
-  margin-top: 1rem;
-}
-
-/* -------------------------------
-GENRE CARDS
----------------------------------- */
-
 /* Make genre cards feel clickable */
 .genre-card,
 .genre-card .card {
@@ -329,10 +457,8 @@ GENRE CARDS
 }
 
 /* -------------------------------
-BOOKS PAGE STYLES
+   BOOKS PAGE
 ---------------------------------- */
-
-/* Make book items on search results page interactive */
 .book-item:hover,
 .genre-card:hover {
   transform: translateY(-3px);
@@ -349,22 +475,24 @@ BOOKS PAGE STYLES
 .book-title, .book-description {
   text-align: left;
 }
+
 /* -------------------------------
-LIBRARY
+   LIBRARY
 ---------------------------------- */
 .collection-header {
   font-family: var(--primary-font);
   color: var(--text-color-dark);
   text-align: left;
 }
+
 .card-library a {
   text-decoration: none;
   color: inherit;
 }
 
 .poster-library {
-    min-height: 205px;
-    max-width: auto;
+  min-height: 205px;
+  max-width: auto;
 }
 
 .library-card-body {
@@ -392,25 +520,24 @@ LIBRARY
 }
 
 /* -------------------------------
-DROPDOWN
+   DROPDOWN / STATUSES
 ---------------------------------- */
 /* open the dropdown when the caret area is hovered or focused */
-  .hover-dropdown:hover .dropdown-menu,
-  .hover-dropdown:focus-within .dropdown-menu {
-    display: block;
-  }
+.hover-dropdown:hover .dropdown-menu,
+.hover-dropdown:focus-within .dropdown-menu {
+  display: block;
+}
 
-  /* make dropdown items look tidy */
-  .dropdown-menu .dropdown-item { width: 100%; }
+/* make dropdown items look tidy */
+.dropdown-menu .dropdown-item { width: 100%; }
 
-  .btn-group .dropdown-toggle-split {
+.btn-group .dropdown-toggle-split {
   border-left: 1px solid var(--divider-color, #dee2e6);
 }
 
 /* -------------------------------
-LOG-IN, SIGN-UP, LOG-OUT STYLES
+   AUTH (LOGIN / SIGNUP / LOGOUT)
 ---------------------------------- */
-
 /* Auth container */
 .auth-container {
   font-family: var(--brand-font);
@@ -459,13 +586,6 @@ LOG-IN, SIGN-UP, LOG-OUT STYLES
   font-family: var(--brand-font);
 }
 
-/* Make primary actions fill width by default in the container */
-.auth-actions .btn,
-.auth-actions [type="submit"] {
-  margin-top: 0;
-  width: 100%;
-}
-
 /* Auth actions container */
 .auth-actions {
   margin-top: 1rem;
@@ -506,13 +626,13 @@ LOG-IN, SIGN-UP, LOG-OUT STYLES
 }
 
 /* Help text for forms */
-
 .helptext {
   font-size: 0.9rem;
   color: var(--text-color);
   margin-top: 0.5rem;
   display: block;
 }
+
 /* lists */
 .auth-container ul {
   color: var(--text-color);
@@ -530,10 +650,107 @@ ul.errorlist {
   padding-left: 1.5rem;
 }
 
-/* -------------------------------
-EMAIL ADDRESSES
----------------------------------- */
+/* ================================
+   Allauth buttons 
+=================================== */
 
+/* Make the Allauth forms layout flex so we can right-align the action row */
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;           /* gentle spacing between fields and actions */
+}
+
+/* Treat common Allauth "action" regions as right-aligned rows */
+.auth-container :is(.actions, .button-group, .btn-group, .form-actions) {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* If Allauth renders the actions slot as just the button itself, this still works */
+.auth-container form :is(button[type="submit"], a[role="button"]) {
+  align-self: flex-end;   /* right-align the lone action if no wrapper exists */
+}
+
+/* Unify visual style: Allauth button primitives */
+.auth-container :is(button[type="submit"], a[role="button"], .btn, .button) {
+  /* Base: mirror .nc-btn + primary variant */
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  height: 2.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+
+  font-family: var(--brand-font);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+
+  /* Primary fill tokens */
+  background: var(--primary-color-dark);
+  color: #fff;
+  border: 1px solid var(--primary-color-dark);
+
+  transition: background-color .15s ease, color .15s ease,
+              border-color .15s ease, box-shadow .15s ease, transform .05s ease;
+}
+
+/* Hover / active / focus match your .nc-btn interactions */
+.auth-container :is(button[type="submit"], a[role="button"], .btn, .button):hover {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.auth-container :is(button[type="submit"], a[role="button"], .btn, .button):active {
+  transform: translateY(1px);
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.auth-container :is(button[type="submit"], a[role="button"], .btn, .button):focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+.auth-container :is(button[type="submit"], a[role="button"], .btn, .button)[disabled],
+.auth-container :is(button[type="submit"], a[role="button"], .btn, .button)[aria-disabled="true"] {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* If Allauth emits "outline"/"primary" or other themed classes, force them to the primary look */
+.auth-container :is(.btn-outline-primary, .btn-outline, .outline, .primary, [data-theme="outline"]) {
+  background: var(--primary-color-dark) !important;
+  color: #fff !important;
+  border-color: var(--primary-color-dark) !important;
+}
+
+/* Vertical button groups stack but right-aligned */
+.auth-container :is(.btn-group-vertical, .button-group[vertical], .button-group.vertical) {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;   /* right edge alignment */
+  gap: 0.5rem;
+}
+
+/* Make anchor "buttons" behave like buttons for hover/focus */
+.auth-container a[role="button"]:hover,
+.auth-container a[role="button"]:focus-visible {
+  text-decoration: none;
+}
+
+
+/* -------------------------------
+   EMAIL ADDRESSES
+---------------------------------- */
 .email-list {
   margin: 1rem 0 0.5rem;
   padding: 0;
@@ -595,17 +812,18 @@ EMAIL ADDRESSES
 }
 
 /* -------------------------------
-MESSAGES
+   MESSAGES
 ---------------------------------- */
-
 .message-container {
   position: relative;
   z-index: 1050;
 }
 
 /* -------------------------------
-SMALL SCREEN
+   MEDIA QUERIES
 ---------------------------------- */
+
+/* SMALL SCREEN */
 @media (max-width: 767px) {
   .search-card {
     grid-template-areas:
@@ -629,9 +847,7 @@ SMALL SCREEN
   }
 }
 
-/* -------------------------------
-MEDIUM SCREEN STYLES
----------------------------------- */
+/* MEDIUM+ SCREEN */
 @media (min-width: 768px) {
   .search-card {
     /* 4 cols: scope | query | filter | button */
@@ -640,36 +856,25 @@ MEDIUM SCREEN STYLES
     gap: 10px;
     transform: translateY(25%); /* card dips further */
   }
+
   .search-row {
     height: 15px;
   }
+
   /* Actions row inside auth forms: put primary + secondary side by side */
   .auth-actions {
+    flex-direction: row;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
+
   .auth-actions .btn,
   .auth-actions [type="submit"] {
     width: auto;
     min-width: 10rem; /* keeps buttons usable */
   }
-  .auth-actions {
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-  /* Put action buttons side by side, not full width */
-  .auth-actions {
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-  .auth-actions .btn,
-  .auth-actions [type="submit"] {
-    width: auto;
-    min-width: 10rem; /* keep buttons usable */
-  }
+
   .email-item {
     padding: 1rem 1.25rem;
   }
