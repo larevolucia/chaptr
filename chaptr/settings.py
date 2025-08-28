@@ -39,7 +39,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Production-safe DEBUG
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'nextchaptr-f17e381cb655.herokuapp.com',
@@ -71,7 +71,7 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/library/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Crispy Forms settings
@@ -83,7 +83,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 # ACCOUNT_EMAIL_VERIFICATION = 'none' dev
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # prod
-LOGIN_REDIRECT_URL = "/"
 
 # Email settings
 
