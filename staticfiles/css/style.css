@@ -532,9 +532,51 @@ input[type="radio"] {
 .status--read     { background: #e6f4ea; color: #0f5132; }
 .status--none     { background: #f2f4f7; color: #344054; }
 
+
+/* clickable table headers */
+.table-sort {
+  text-decoration: none;
+}
+.table-sort:hover { text-decoration: none; }
 /* -------------------------------
    DROPDOWN / STATUSES
 ---------------------------------- */
+/* Override Bootstrap dropdown links to match site design */
+.dropdown-menu .dropdown-item {
+  color: var(--text-color-dark);
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+  background-color: var(--primary-color-light);
+  color: var(--text-color-dark);
+}
+
+.dropdown-menu .dropdown-item:active {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+/* Danger link variant (Sign out) */
+.dropdown-menu .dropdown-item.logout {
+  color: var(--danger-color);
+}
+
+.dropdown-menu .dropdown-item.logout:hover,
+.dropdown-menu .dropdown-item.logout:focus {
+  background-color: color-mix(in oklab, var(--danger-color) 90%, white);
+  color: var(--background-color-light);
+}
+
+.dropdown-menu .dropdown-item.logout:active {
+  background-color: var(--danger-color);
+  color: #fff;
+}
+
+
 .reading-status-btn-group {
   min-width: 134px;
 }

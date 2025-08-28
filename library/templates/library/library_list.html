@@ -12,13 +12,48 @@
 
   {% if rows %}
   <div class="table-responsive">
+    <!-- Mobile: Status filter -->
+    <div class="mb-3 d-sm-none">
+      <form method="get" class="d-flex align-items-center gap-2">
+        <label for="status" class="small text-muted">Status</label>
+        <input type="hidden" name="sort" value="{{ sort }}">
+        <input type="hidden" name="dir"  value="{{ direction }}">
+        <select id="status" name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+          <option value="ALL"     {% if status_param == 'ALL' %}selected{% endif %}>All</option>
+          <option value="TO_READ" {% if status_param == 'TO_READ' %}selected{% endif %}>To Read</option>
+          <option value="READING" {% if status_param == 'READING' %}selected{% endif %}>Reading</option>
+          <option value="READ"    {% if status_param == 'READ' %}selected{% endif %}>Read</option>
+        </select>
+      </form>
+    </div>
+    <!--Desktop: Status Filter -->
+    <div class="mb-3 d-none d-sm-block">
+      <div class="btn-group" role="group" aria-label="Filter by status">
+        <a class="m-1 nc-btn nc-btn--sm {% if status_param == 'ALL' %}nc-btn--primary{% else %}nc-btn--muted{% endif %}"
+          href="?status=ALL&sort={{ sort }}&dir={{ direction }}">All</a>
+        <a class="m-1 nc-btn nc-btn--sm {% if status_param == 'TO_READ' %}nc-btn--primary{% else %}nc-btn--muted{% endif %}"
+          href="?status=TO_READ&sort={{ sort }}&dir={{ direction }}">To Read</a>
+        <a class="m-1 nc-btn nc-btn--sm {% if status_param == 'READING' %}nc-btn--primary{% else %}nc-btn--muted{% endif %}"
+          href="?status=READING&sort={{ sort }}&dir={{ direction }}">Reading</a>
+        <a class="m-1 nc-btn nc-btn--sm {% if status_param == 'READ' %}nc-btn--primary{% else %}nc-btn--muted{% endif %}"
+          href="?status=READ&sort={{ sort }}&dir={{ direction }}">Read</a>
+      </div>
+    </div>
     <table class="table table-sm align-middle library-table">
       <thead>
         <tr class="small text-uppercase text-muted">
           <th style="width:64px;">Cover</th>
           <th>Title</th>
           <th class="d-none d-md-table-cell">Author(s)</th>
-          <th class="d-none d-lg-table-cell">Status</th>
+          <th class="d-none d-lg-table-cell">
+            <a class="table-sort"
+              href="?status={{ status_param }}&sort=status&dir={% if sort == 'status' and direction == 'asc' %}desc{% else %}asc{% endif %}">
+              Status
+              {% if sort == 'status' %}
+                <span aria-hidden="true">{% if direction == 'asc' %}▲{% else %}▼{% endif %}</span>
+              {% endif %}
+            </a>
+          </th>
           <th class="d-none d-sm-table-cell">Updated</th>
           <th class="text-end">Actions</th>
         </tr>
