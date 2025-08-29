@@ -201,7 +201,7 @@ A welcoming, responsive landing experience that introduces CHAPTR and funnels vi
 * **Responsive Hero Banner**: A full‑width banner at the top establishes brand tone and provides instant visual context.
 * **Clear Purpose Blurb**: A short, centered description directly beneath the banner explains what NextChaptr does and who it’s for.
 * **Primary Actions Up Front**: Prominent entry points to start searching books or sign up/log in, keeping the first‑run path obvious.
-* **Browse by Genre**: Category tiles allow users to jump straight to a filtered browse view for a given genre.
+* **Browse by Genre**: Category tiles allow users to jump straight to a filtered search view for a given genre.
 
 ### Search & Browse (API First)
 
@@ -210,6 +210,7 @@ Book discovery is powered by the Google Books API, allowing users to explore a v
 - **Keyword or Field-Specific Search**: Search by general keywords or refine by title, author, or genre.
 - **Smart Query Handling**: The system applies the correct Google Books operators automatically.
 - **Clean Results**: Results display thumbnails, titles, and authors in a browsable layout.
+- **Pagination**: Supports navigating through large result sets with ease.
 - **Resilient Design**: Handles API or network errors gracefully without breaking the user experience.
 * **Caching:** details are cached for \~1h to reduce API calls.
 
@@ -405,6 +406,21 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
   * __Google Books API integration__: parsing of valid responses, handling of failed requests.
   * __Book detail view__: correct mapping of metadata fields, 404 behavior for missing books, and caching to reduce API calls.
   * __Home page__: correct rendering of template, hero, about area, featured genres and search functionality.
+
+
+* **Book Search Pagination**
+
+  * __Page size__: `PER_PAGE = 12` drives both the Google Books query (`max_results=12`) and Django paginator.
+  * __First page__: calling `?q=django&field=all&page=1` triggers `search_google_books("django", start_index=0, max_results=12)`; `page_obj.number == 1`, `start_index()==1`, `end_index()==12`.
+  * __Second page__: calling `?q=python&field=all&page=2` triggers `search_google_books("python", start_index=12, max_results=12)`; `page_obj.number == 2`, `start_index()==13`, `end_index()==24` when total is 30.
+  * __Template context__: view provides `page_obj`, `paginator`, `is_paginated`, and `page_range`; `paginator.count == total`, `paginator.per_page == 12`, `is_paginated` is `True`, and the rendered page’s `object_list` length equals `PER_PAGE`.
+
+* **Genre Browsing & Search Integration**
+
+  * __Home genre links__: home page renders subject links formatted as `/book_search?field=subject&q=<urlencoded>`, with `class="stretched-link"` and accessible `aria-label`s (e.g. Sci-Fi, Mystery).
+  * __Subject filter mapping__: clicking a genre tile (e.g. “science fiction”) calls `search_google_books("subject:science fiction", start_index=0, max_results=12)` — note the `subject:` operator prefixing the query.
+  * __Pagination preserves filters__: on page 2 for `subject=mystery`, the view calls `search_google_books("subject:mystery", start_index=12, max_results=12)` and renders pagination links that keep `field=subject&q=mystery` for First/Prev/Next/Last and numbered pages.
+  * __Active page semantics__: current page number is rendered as an active `<span>`, ensuring proper UX semantics; other page numbers remain links that retain the subject params.
 
 * **ReadingStatus Tests**
 
