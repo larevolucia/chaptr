@@ -72,15 +72,6 @@ def home(request):
     return render(request, "books/home.html", {"genres": genres})
 
 
-# def browse(request):
-#     """Redirect genre tiles to the subject-based search."""
-#     genre = (request.GET.get("genre") or "").strip()
-#     if not genre:
-#         return redirect("book_search")  # or home
-#     params = {"field": "subject", "q": genre}
-#     return redirect(f"{reverse('book_search')}?{urlencode(params)}")
-
-
 def build_q(q_raw, field, _title_unused="", _author_unused="", _subject_unused=""):  # noqa: E501 pylint: disable=line-too-long
     """
     Build a Google Books 'q' using a single dropdown field.
