@@ -6,7 +6,7 @@
   {% if user.is_authenticated %}
     <div id="review" class="card-body">
 
-      {# --- EDIT MODE --- #}
+      <!-- EDIT MODE -->
       {% if form and form.instance.pk %}
         <h4 class="mb-2">Edit your review</h4>
         <form id="reviewForm" method="post" action="{% url 'add_review' book.id %}">
@@ -15,12 +15,12 @@
           {{ form.content.errors }}
           {{ form.content }}
           <div class="mt-2 d-flex gap-2 flex-row-reverse">
-            <button id="submitButton" type="submit" class="nc-btn nc-btn--primary">Save</button>
             <a href="{% url 'book_detail' book.id %}#review" class="nc-btn nc-btn--muted">Cancel</a>
+            <button id="submitButton" type="submit" class="nc-btn nc-btn--primary">Save</button>
           </div>
         </form>
 
-      {# --- CREATE MODE --- #}
+      <!-- CREATE MODE -->
       {% elif not my_review %}
         <h4 class="mb-2">Leave a review</h4>
         <p class="mb-2">Posting as: <strong>{{ user.username }}</strong></p>
@@ -29,14 +29,16 @@
           {{ form.non_field_errors }}
           {{ form.content.errors }}
           {{ form.content }}
-          <button id="submitButton" type="submit" class="nc-btn nc-btn--primary">Submit</button>
+          <div class="mt-2 d-flex gap-2 flex-row-reverse">
+            <button id="submitButton" type="submit" class="nc-btn nc-btn--primary">Submit</button>
+          </div>
         </form>
       {% endif %}
 
-      {# --- REVIEWS LIST --- #}
+      <!-- REVIEWS LIST  -->
       <ul class="list-unstyled mt-3">
 
-        {# Render the authenticated user's review at the top #}
+        <!-- Render the authenticated user's review at the top -->
         {% if my_review and not edit_mode %}
           <li class="mb-3 border rounded p-3 bg-light">
             <div class="d-flex justify-content-between align-items-start">
@@ -106,7 +108,7 @@
             <p class="mb-0 mt-2">{{ review.content }}</p>
           </li>
         {% empty %}
-          {# Only show "No reviews yet." if there is truly no review at all #}
+          <!-- Only show "No reviews yet." if there is truly no review at all -->
           {% if not my_review %}
             <li>No reviews yet.</li>
           {% endif %}

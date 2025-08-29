@@ -20,7 +20,14 @@
 /* -------------------------------
    GENERAL STYLES
 ---------------------------------- */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 body {
+  display: flex;
+  flex-direction: column;
   font-family: var(--primary-font);
   color: var(--text-color-dark);
   background-color: var(--background-color-light);
@@ -60,6 +67,7 @@ span {
 
 main {
   margin-top: 6rem;
+  flex: 1;
 }
 
 footer {
@@ -124,6 +132,7 @@ a.no-decoration{
   border: none;
   color: var(--background-color-light);
 }
+
 
 /* -------------------------------
    HERO
@@ -919,10 +928,24 @@ ul.errorlist {
 /* -------------------------------
    MESSAGES
 ---------------------------------- */
-.message-container {
-  position: relative;
-  z-index: 1050;
+
+/* Put flash messages on top, centered, without affecting layout */
+.message-overlay {
+  position: fixed;
+  top: calc(var(--header-height, 64px) + 8px); 
+  left: 0;
+  right: 0;
+  z-index: 1055; 
+  pointer-events: none; 
 }
+
+.message-overlay .alert {
+  width: min(960px, calc(100% - 2rem)); 
+  margin: 0.5rem auto;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  pointer-events: auto; 
+}
+
 
 /* -------------------------------
    MEDIA QUERIES

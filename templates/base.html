@@ -59,7 +59,7 @@
     </header>
 
     {% if messages %}
-        <div class="message-container container mt-3" aria-live="polite" aria-atomic="true">
+        <div class="message-overlay" aria-live="polite" aria-atomic="true">
             {% for message in messages %}
             <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
                 {{ message }}
@@ -84,6 +84,7 @@
     </footer>
     <!-- Optional JavaScript -->
     <script src="{% static 'js/rating.js' %}"></script>
+    <script src="{% static 'js/alerts.js' %}"></script>
     <script src="{% static 'js/library.js' %}"></script>
     <script src="{% static 'js/delete_modal.js' %}"></script>
     <!-- Font Awesome Icons -->
