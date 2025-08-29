@@ -6,7 +6,7 @@ from activity.models import ReadingStatus
 
 # Create your views here.
 @login_required
-def library_list(request):
+def library(request):
     """Display the user's library with reading statuses."""
     status_param = (request.GET.get("status", "ALL") or "ALL").upper()
     
@@ -58,4 +58,4 @@ def library_list(request):
         rs.user_status_label = labels.get(rs.status, "—")
         rs.user_status_class = status_class.get(rs.status, "status--none")
 
-    return render(request, "library/library_list.html", {"rows": rows, "status_param": status_param,"sort": sort, "direction": direction})
+    return render(request, "library/library.html", {"rows": rows, "status_param": status_param, "sort": sort, "direction": direction})
