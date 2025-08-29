@@ -143,7 +143,54 @@ a.no-decoration{
   color: var(--background-color-light);
   margin-top: 1rem;
 }
+/* -------------------------------
+   PAGINATION
+---------------------------------- */
+.pagination {
+  --bs-pagination-color: var(--primary-color-dark);
+  --bs-pagination-hover-color: #fff;
+  --bs-pagination-hover-bg: var(--primary-color);
+  --bs-pagination-hover-border-color: var(--primary-color);
+  --bs-pagination-active-color: #fff;
+  --bs-pagination-active-bg: var(--primary-color-dark);
+  --bs-pagination-active-border-color: var(--primary-color-dark);
+  --bs-pagination-focus-color: #fff;
+  --bs-pagination-focus-bg: var(--primary-color);
+  --bs-pagination-border-radius: 8px;
+  flex-wrap: wrap;              
+  max-width: 100%;
+}
 
+.pagination .page-link {
+  color: var(--primary-color-dark);
+  border: 1px solid var(--divider-color);
+  font-family: var(--brand-font);
+  font-weight: 600;
+  min-width: 2.25rem;          
+  padding: .45rem .6rem;
+}
+
+.pagination-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pagination .page-link:hover {
+  background-color: var(--primary-color-light);
+  color: var(--text-color-dark);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
+  color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: var(--text-color);
+  background-color: #f9f9f9;
+  border-color: var(--divider-color);
+}
 /* -------------------------------
    SEARCH FORM
 ---------------------------------- */
@@ -561,17 +608,17 @@ input[type="radio"] {
 }
 
 /* Danger link variant (Sign out) */
-.dropdown-menu .dropdown-item.logout {
+.dropdown-menu .dropdown-item.danger-color {
   color: var(--danger-color);
 }
 
-.dropdown-menu .dropdown-item.logout:hover,
-.dropdown-menu .dropdown-item.logout:focus {
+.dropdown-menu .dropdown-item.danger-color:hover,
+.dropdown-menu .dropdown-item.danger-color:focus {
   background-color: color-mix(in oklab, var(--danger-color) 90%, white);
   color: var(--background-color-light);
 }
 
-.dropdown-menu .dropdown-item.logout:active {
+.dropdown-menu .dropdown-item.danger-color:active {
   background-color: var(--danger-color);
   color: #fff;
 }

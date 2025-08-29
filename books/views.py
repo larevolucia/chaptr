@@ -12,6 +12,7 @@ import re
 import logging
 import requests
 from requests import RequestException
+from django.core.paginator import Paginator
 from django.shortcuts import render,  redirect
 from django.urls import reverse
 from django.utils.http import urlencode
@@ -71,13 +72,13 @@ def home(request):
     return render(request, "books/home.html", {"genres": genres})
 
 
-def browse(request):
-    """Redirect genre tiles to the subject-based search."""
-    genre = (request.GET.get("genre") or "").strip()
-    if not genre:
-        return redirect("book_search")  # or home
-    params = {"field": "subject", "q": genre}
-    return redirect(f"{reverse('book_search')}?{urlencode(params)}")
+# def browse(request):
+#     """Redirect genre tiles to the subject-based search."""
+#     genre = (request.GET.get("genre") or "").strip()
+#     if not genre:
+#         return redirect("book_search")  # or home
+#     params = {"field": "subject", "q": genre}
+#     return redirect(f"{reverse('book_search')}?{urlencode(params)}")
 
 
 def build_q(q_raw, field, _title_unused="", _author_unused="", _subject_unused=""):  # noqa: E501 pylint: disable=line-too-long
@@ -138,7 +139,19 @@ def book_search(request):
         return render(request, "books/home.html", {"genres": _genres()})
 
     query_for_api = build_q(q_raw, field)
-    books = search_google_books(query_for_api) if query_for_api else []
+
+    per_page = 12
+    try:
+        current_page = int(request.GET.get("page") or 1)
+    except ValueError:
+        current_page = 1
+    start_index = (current_page - 1) * per_page
+
+    books, total = search_google_books(
+        query_for_api,
+        start_index=start_index,
+        max_results=per_page
+        )
 
     ids = [r["id"] for r in books]
     user = getattr(request, "user", AnonymousUser())
@@ -155,19 +168,31 @@ def book_search(request):
         b["avg_rating"] = get_average_rating(b["id"])
         b["num_ratings"] = get_number_of_ratings(b["id"])
 
+    paginator = Paginator(range(total), per_page)
+    page_obj = paginator.get_page(current_page)
+    page_obj.object_list = books
+    page_range = paginator.get_elided_page_range(
+        number=page_obj.number,
+        on_each_side=1,
+        on_ends=1
+        )
+
     # Render the search results
     return render(
         request,
         'books/search_results.html',
         {
-            'books': books,
+            'page_obj': page_obj,
+            'paginator': paginator,
+            'is_paginated': page_obj.has_other_pages(),
+            'page_range': list(page_range),
             'query': q_raw,
             'field': field,
         }
     )
 
 
-def search_google_books(query):
+def search_google_books(query, *, start_index=0, max_results=12):
     """Query the Google Books API and return simplified book results.
 
     This helper performs a GET request to ``/volumes`` with defaults
@@ -185,7 +210,7 @@ def search_google_books(query):
     """
     api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
     if not api_key:
-        return []
+        return [], 0
 
     url = "https://www.googleapis.com/books/v1/volumes"
     params = {
@@ -193,24 +218,31 @@ def search_google_books(query):
         "key": api_key,
         "printType": "books",
         "orderBy": "relevance",
-        "langRestrict": "en"
+        "langRestrict": "en",
+        "startIndex": start_index,
+        "maxResults": max_results,
     }
 
     try:
         response = requests.get(url, params=params, timeout=10)
         response.raise_for_status()  # Raises HTTPError for bad status codes
         data = response.json() or {}
+
     except RequestException as e:
         # This catches all requests-related exceptions including HTTPError
         logger.warning("Google Books search failed: %s", e)
-        return []
+        return [], 0
     except ValueError as e:
         # This catches JSON decode errors
         logger.warning("Google Books response parsing failed: %s", e)
-        return []
+        return [], 0
+
+    items = data.get("items") or []
+    total_raw = int(data.get("totalItems") or 0)
 
     books = []
-    for item in data.get("items", []):
+
+    for item in items:
         volume = item.get("volumeInfo", {})
         books.append({
             "id": item.get("id"),
@@ -219,7 +251,14 @@ def search_google_books(query):
             "thumbnail": volume.get("imageLinks", {}).get("thumbnail"),
         })
 
-    return books
+    # Avoid millions of pages
+    API_HARD_CAP = 120
+    total = min(total_raw, API_HARD_CAP)
+
+    if len(books) < max_results:
+        total = start_index + len(books)
+
+    return books, total
 
 
 def fetch_book_by_id(book_id):
