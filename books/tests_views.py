@@ -91,6 +91,13 @@ class BookSearchViewTests(TestCase):
         # ensure build_q result was used
         called_args = mock_search.call_args.args[0]
         self.assertEqual(called_args, "inauthor:emily bronte")
+        
+    def test_book_search_no_query_renders(self):
+        """Test that the search view renders with no query."""
+        req = self.rf.get("/books/search", {"field": "subject", "q": "jellyfish age backwards"})
+        resp = book_search(req)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'id="no-results"')
 
 
 class SearchGoogleBooksTests(TestCase):
