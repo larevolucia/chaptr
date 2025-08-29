@@ -84,13 +84,13 @@ class BookSearchViewTests(TestCase):
     @patch("books.views.search_google_books")
     def test_book_search_uses_built_query(self, mock_search):
         """Test that the search view uses the built query."""
-        mock_search.return_value = []
+        mock_search.return_value = ([], 0)
         req = self.rf.get("/books/search", {"field": "author", "q": "emily bronte"})  # noqa: E501
         resp = book_search(req)
         self.assertEqual(resp.status_code, 200)
         # ensure build_q result was used
-        called_q = mock_search.call_args.args[0]
-        self.assertEqual(called_q, "inauthor:emily bronte")
+        called_args = mock_search.call_args.args[0]
+        self.assertEqual(called_args, "inauthor:emily bronte")
 
 
 class SearchGoogleBooksTests(TestCase):
@@ -101,6 +101,7 @@ class SearchGoogleBooksTests(TestCase):
         """Test that a successful API call returns a parsed list."""
         mock_resp = Mock(status_code=200)
         mock_resp.json.return_value = {
+            "totalItems": 100,
             "items": [
                 {
                     "id": "X",
@@ -122,16 +123,16 @@ class SearchGoogleBooksTests(TestCase):
         }
         mock_get.return_value = mock_resp
 
-        results = search_google_books("inauthor:emily bronte")
-        self.assertEqual(len(results), 2)
-        self.assertEqual(results[0]["id"], "X")
-        self.assertEqual(results[0]["authors"], "A")
-        self.assertEqual(results[0]["title"], "T")
-        self.assertEqual(results[0]["thumbnail"], "http://t")
-        self.assertEqual(results[1]["id"], "Y")
-        self.assertEqual(results[1]["authors"], "B")
-        self.assertEqual(results[1]["title"], "U")
-        self.assertEqual(results[1]["thumbnail"], "http://u")
+        books, _total = search_google_books("inauthor:emily bronte")
+        self.assertEqual(len(books), 2)
+        self.assertEqual(books[0]["id"], "X")
+        self.assertEqual(books[0]["authors"], "A")
+        self.assertEqual(books[0]["title"], "T")
+        self.assertEqual(books[0]["thumbnail"], "http://t")
+        self.assertEqual(books[1]["id"], "Y")
+        self.assertEqual(books[1]["authors"], "B")
+        self.assertEqual(books[1]["title"], "U")
+        self.assertEqual(books[1]["thumbnail"], "http://u")
 
     @patch.dict(os.environ, {"GOOGLE_BOOKS_API_KEY": "fake-key"}, clear=False)
     @patch("books.views.requests.get")
@@ -140,7 +141,8 @@ class SearchGoogleBooksTests(TestCase):
         mock_resp = Mock()
         mock_resp.raise_for_status.side_effect = HTTPError("500")
         mock_get.return_value = mock_resp
-        self.assertEqual(search_google_books("X"), [])
+        books, _total = search_google_books("X")
+        self.assertEqual(books, [])
 
 
 class FetchBookByIdTests(TestCase):
@@ -344,16 +346,16 @@ class HomeViewTests(TestCase):
         self.assertContains(resp, reverse("account_signup"), html=False)
         self.assertContains(resp, reverse("account_login"), html=False)
 
-    def test_authenticated_user_sees_welcome_and_logout(self):
-        """Test that logged-in users see welcome message and logout link."""
+    def test_authenticated_user_sees_welcome_and_menu(self):
+        """Test that logged-in users see welcome message and account menu."""
         self.client.force_login(self.user)
 
         url = reverse("home")
         resp = self.client.get(url)
 
-        self.assertContains(resp, "Hi, testuser", html=False)
+        self.assertContains(resp, 'id="account-welcome"', html=False)
 
-        self.assertContains(resp, "Log out", html=False)
+        self.assertContains(resp, 'aria-label="Account menu"', html=False)
         self.assertContains(resp, reverse("account_logout"), html=False)
 
         self.assertNotContains(resp, "Sign up", html=False)
