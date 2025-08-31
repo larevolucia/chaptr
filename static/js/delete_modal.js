@@ -4,17 +4,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var submitBtn = modalEl.querySelector('#confirmDeleteSubmit');
   var msgEl = modalEl.querySelector('#confirmDeleteMessage');
+  var detailsEl = modalEl.querySelector('#confirmDeleteDetails');
 
   // Store the target form id on the modal element
   modalEl.addEventListener('show.bs.modal', function (event) {
     var trigger = event.relatedTarget;
     if (!trigger) return;
 
-    var formId  = trigger.getAttribute('data-form');   // REQUIRED
-    var message = trigger.getAttribute('data-message'); // optional
+    var formId  = trigger.getAttribute('data-form'); 
+    var message = trigger.getAttribute('data-message');
+    var details = trigger.getAttribute('data-details');
 
     if (formId) modalEl.dataset.formId = formId;
     if (message && msgEl) msgEl.textContent = message;
+    if (details && detailsEl) detailsEl.textContent = details;
   });
 
   // Submit the stored form when clicking confirm
@@ -41,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
   modalEl.addEventListener('hidden.bs.modal', function () {
     delete modalEl.dataset.formId;
     if (msgEl) msgEl.textContent = 'Are you sure?';
+    if (detailsEl) detailsEl.textContent = "This action can't be undone.";
     submitBtn.disabled = false;
   });
 });
