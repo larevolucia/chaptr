@@ -1,6 +1,4 @@
-
-
-    {% if request.user.is_authenticated %}
+   {% if request.user.is_authenticated %}
     
         <strong>Rate this book</strong>
         {% with book.user_rating as current_rating %}

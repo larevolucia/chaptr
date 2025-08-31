@@ -8,6 +8,11 @@
   {% include "books/partials/search_form.html" %}
 {% endblock %}
 
+{% block extra_js %}
+    <script src="{% static 'js/rating.js' %}"></script>
+    <script src="{% static 'js/delete_modal.js' %}"></script>
+{% endblock %}
+
 {% block content %}
   <!-- Book Details -->
   <div class="row g-4">
@@ -22,15 +27,12 @@
           <img
           src="{% static 'images/placeholder_cover.png' %}"
           alt="Placeholder cover"
-          class="img-fluid mb-3"
+          class="img-fluid rounded border mb-3"
           loading="lazy"
-          decoding="async"
-          width="320"
-          height="480"
           >
       {% endif %}
       {% include "activity/partials/reading_status_button.html" %}
-      <div class="rating-widget d-flex flex-column align-items-center gap-2 mt-2">
+      <div id="rating" class="rating-widget d-flex flex-column align-items-center gap-2 mt-2">
         {% include "activity/partials/rating_button.html" %}
       </div>
     </div>
@@ -54,5 +56,7 @@
         <p>{{ book.description|safe }}</p>
       {% endif %}
     </div>
-     {% include "activity/partials/reviews.html" %}
+  <div id="reviews">
+    {% include "activity/partials/reviews.html" %}
+  </div>
 {% endblock %}

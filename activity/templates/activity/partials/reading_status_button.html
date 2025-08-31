@@ -1,41 +1,56 @@
- {% if request.user.is_authenticated %}
-    <form action="{% url 'set_reading_status' book.id %}" method="post" class="align-items-center">
-        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+{% if request.user.is_authenticated %}
+  <!-- Main form: change status -->
+  <form action="{% url 'set_reading_status' book.id %}" method="post" class="align-items-center">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
 
-          {% csrf_token %}
-            <div class="btn-group reading-status-btn-group" role="group" aria-label="Reading status">
-              <!-- main button submits the default/current status -->
-              <button type="submit"
-                      name="status"
-                      value="{% if book.user_status %}{{ book.user_status }}{% else %}TO_READ{% endif %}"
-                      class="nc-btn {% if book.user_status %}nc-btn--muted{% else %}{{ current_btn|default:'nc-btn--primary' }}{% endif %} nc-btn--round-start px-3">
-                      {{ book.user_status_label|default:"To Read" }}
-              </button>
+    <div class="btn-group reading-status-btn-group" role="group" aria-label="Reading status">
+      <!-- main button submits the default/current status -->
+      <button type="submit"
+              name="status"
+              value="{% if book.user_status %}{{ book.user_status }}{% else %}TO_READ{% endif %}"
+              class="nc-btn {% if book.user_status %}nc-btn--muted{% else %}{{ current_btn|default:'nc-btn--primary' }}{% endif %} nc-btn--round-start px-3">
+        {{ book.user_status_label|default:"To Read" }}
+      </button>
 
-              <!-- reveals the options on hover -->
-              <div class="btn-group" role="group">
-                <button type="button"
-                        class="nc-btn {{ current_btn|default:'nc-btn--primary' }} dropdown-toggle dropdown-toggle-split nc-btn--round-end border-start"
-                        data-bs-toggle="dropdown" aria-expanded="false"
-                        aria-label="Change status">
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><button type="submit" name="status" value="TO_READ"  class="dropdown-item">To Read</button></li>
-                  <li><button type="submit" name="status" value="READING"  class="dropdown-item">Reading</button></li>
-                  <li><button type="submit" name="status" value="READ"     class="dropdown-item">Read</button></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li>
-                    <button type="submit"
-                            name="status"
-                            value="NONE"
-                            class="dropdown-item danger-color">
-                      Remove from List
-                    </button>
-                 </li> 
-                </ul>
-              </div>
-            </div>
-    </form>
+      <div class="btn-group" role="group">
+        <button type="button"
+                class="nc-btn {{ current_btn|default:'nc-btn--primary' }} dropdown-toggle dropdown-toggle-split nc-btn--round-end border-start"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-label="Change status">
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><button type="submit" name="status" value="TO_READ"  class="dropdown-item">To Read</button></li>
+          <li><button type="submit" name="status" value="READING"  class="dropdown-item">Reading</button></li>
+          <li><button type="submit" name="status" value="READ"     class="dropdown-item">Read</button></li>
+
+          <li><hr class="dropdown-divider"></li>
+
+          <!-- Remove uses a separate, hidden form submitted by the confirm modal JS -->
+          <li>
+            <button type="button"
+                    class="dropdown-item danger-color"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmDeleteModal"
+                    data-form="remove-status-{{ book.id }}"
+                    data-message="Remove this book from your library?">
+              Remove from Library
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </form>
+
+  <!-- Hidden sibling form for the delete action -->
+  <form id="remove-status-{{ book.id }}"
+        method="post"
+        action="{% url 'set_reading_status' book.id %}"
+        class="d-none">
+    {% csrf_token %}
+    <input type="hidden" name="status" value="NONE">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  </form>
 {% else %}
-    <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}" class="nc-btn nc-btn--secondary">Log in to add</a>
+  <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}" class="nc-btn nc-btn--secondary">Log in to add</a>
 {% endif %}

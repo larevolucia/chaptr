@@ -3,6 +3,11 @@
 
 {% block title %}Your Library{% endblock %}
 {% block header_search %}{% include "books/partials/search_form.html" %}{% endblock %}
+{% block extra_js %}
+    <script src="{% static 'js/library.js' %}"></script>
+    <script src="{% static 'js/delete_modal.js' %}"></script>
+{% endblock %}
+    
 
 {% block content %}
 <div class="container py-4">
@@ -103,7 +108,7 @@
 
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="{% url 'book_detail' book.id %}#reviews">Write a review</a></li>
-                <li><a class="dropdown-item" href="{% url 'book_detail' book.id %}#rating">Rate</a></li>
+                <li><a class="dropdown-item" href="{% url 'book_detail' book.id %}">Rate</a></li>
 
                 <!-- Submenu: Change status -->
                 <li class="dropdown-submenu">
@@ -139,12 +144,26 @@
                 </li>
 
                 <li><hr class="dropdown-divider"></li>
+
+                <!-- Remove from Library (single hidden form; no nesting) -->
                 <li>
-                  <form method="post" action="{% url 'set_reading_status' book.id %}">
+                  <form id="remove-status-{{ book.id }}"
+                        method="post"
+                        action="{% url 'set_reading_status' book.id %}"
+                        class="d-none">
                     {% csrf_token %}
+                    <input type="hidden" name="status" value="NONE">
                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                    <button class="dropdown-item text-danger" name="status" value="NONE">Remove from Library</button>
                   </form>
+
+                  <button type="button"
+                          class="dropdown-item danger-color"
+                          data-bs-toggle="modal"
+                          data-bs-target="#confirmDeleteModal"
+                          data-form="remove-status-{{ book.id }}"
+                          data-message="Remove this book from your library?">
+                    Remove from Library
+                  </button>
                 </li>
               </ul>
             </div>

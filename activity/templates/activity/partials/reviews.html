@@ -53,14 +53,19 @@
                    href="{% url 'book_detail' book.id %}?edit=1#review">
                   <i class="fa-solid fa-pen"></i>
                 </a>
-                <button
-                type="button"
-                class="nc-btn nc-btn--danger nc-btn--icon nc-btn--sm"
-                data-bs-toggle="modal"
-                data-bs-target="#confirmDeleteModal"
-                data-action="{% url 'delete_review' book.id my_review.id %}"
-                aria-label="Delete your review"
-                title="Delete">
+               <form id="delete-review-{{ my_review.id }}"
+                    method="post"
+                    action="{% url 'delete_review' book.id my_review.id %}"
+                    class="d-none">
+                {% csrf_token %}
+              </form>
+
+              <button type="button"
+                      class="nc-btn nc-btn--danger nc-btn--icon nc-btn--sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirmDeleteModal"
+                      data-form="delete-review-{{ my_review.id }}"
+                      data-message="Delete your review?">
                 <i class="fa-solid fa-trash"></i>
               </button>
               </div>
@@ -91,14 +96,18 @@
                     href="{% url 'book_detail' book.id %}?edit=1#review">
                     <i class="fa-solid fa-pen"></i>
                   </a>
-                  <button
-                    type="button"
-                    class="nc-btn nc-btn--danger nc-btn--icon nc-btn--sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#confirmDeleteModal"
-                    data-action="{% url 'delete_review' book.id review.id %}"
-                    aria-label="Delete your review"
-                    title="Delete">
+                  <form id="delete-review-{{ review.id }}"
+                        method="post"
+                        action="{% url 'delete_review' book.id review.id %}"
+                        class="d-none">
+                    {% csrf_token %}
+                  </form>
+                  <button type="button"
+                          class="nc-btn nc-btn--danger nc-btn--icon nc-btn--sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#confirmDeleteModal"
+                          data-form="delete-review-{{ review.id }}"
+                          data-message="Delete your review?">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </div>

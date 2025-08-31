@@ -1,6 +1,14 @@
 {% extends 'base.html' %} {% load static %} 
 
 {% block header_search %} {% include "books/partials/search_form.html" %} {% endblock %} 
+
+{% block extra_js %}
+    <script src="{% static 'js/rating.js' %}"></script>
+    <script src="{% static 'js/delete_modal.js' %}"></script>
+{% endblock %}
+
+{% block title %}Search Results{% endblock %}
+
 {% block content %}
 <h2>Results for "{{ query }}"</h2>
 {% if is_paginated %}
