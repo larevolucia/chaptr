@@ -185,7 +185,7 @@ Sprint 3:
 - Epic 3: Book Interaction and Reading Progress
    - [x] [Edit, and delete reviews](#16)
 - Epic 4: User Dashboard
-   - [ ] [View books grouped by reading status](#17)
+   - [x] [View books grouped by reading status](#17)
    - [ ] [Update reading status directly from dashboard](#18)
 - Testing and Bug Fixes
 
@@ -227,14 +227,16 @@ Lets users track their progress with any book, directly from search results or d
 
 * **Simple Progress Tracking**: Mark books as *To Read*, *Reading*, or *Read*.
 * **Integrated Placement**: Status buttons are shown beneath the cover art on both search results and book detail views, by implementing a template partial.
-* **Lightweight Persistence**: Saving a status automatically creates/updates a minimal `Book` record, ensuring it appears in Admin and future *My Library* views without extra API calls.
+* **Lightweight Persistence**: Status/ratings/reviews are coordinated through a small service layer.
+
 
 ### Rating System
 
 Provides a quick way for readers to rate books and share feedback with the community.
 
-* **Star-Based Ratings**: Authenticated users can assign a rating from 0–5 stars.
-* **Automatic Sync**: Rating a book without a status sets it to *Read* by default, achieved by using `post_save` signals.
+* **Star-Based Ratings**: Authenticated users can assign a rating from 1–5 stars.
+* **Status Invariant**: Rating a book ensures a status row exists (defaults to **Read** if missing).
+**Archive on Status Removal**: Removing a book from your library archives your rating (it disappears from your profile but can be used avg and future analytics).
 * **User Feedback**: Notifications confirm when a rating is saved or updated.
 * **Flexible Control**: Ratings can be removed at any time.
 
@@ -245,16 +247,26 @@ Lets readers share longer-form thoughts on a book, with a clear, edit-friendly f
 * **Single, Text-Based Review**: Authenticated users can post one review per book.
 * **Inline Compose, Edit & Delete**: If you haven’t reviewed, a form appears. If you have, your review shows with an *Edit* and *Delete* buttons.
 * **One-Per-Book Guarantee**: A unique `(user, book)` constraint updates on re-submit (no duplicates).
+* **Status Invariant**: Posting a review ensures a status row exists (defaults to **Read** if missing).
+* **Archive on Status Removal**: Removing a book from your library archives your review (hidden from profile/UI; available for future analytics).
 * **Clean Presentation**: Reviews appear under the book details. Your own review isn’t duplicated in the list.
-* **Lightweight Persistence**: Posting a review auto-ensures a minimal `Book` record for Admin and future library views.
 
 ### Library
 
 A user’s personal library displays all books they are interested in, along with their reading status.
 
 * **Grouped by Status**: Books are organized into sections for *To Read*, *Reading*, and *Read*.
+* **UX Note**: The “Remove from Library” action opens a confirm dialog that also tells you your rating and review for the book will be removed from your profile (they’ll be archived, not permanently deleted).
 * **Dynamic Updates**: The library view updates in real-time as users change book statuses.
 * **Link to Book Details**: Each book links to its detail page for more information.
+
+### Confirmation Modals
+
+Critical actions, such as removing a book from the library or deleting a review, are protected by confirmation modals to prevent accidental loss of data.
+
+- **Clear Messaging**: Modals clearly explain the consequences of the action.
+- **User Control**: Users can confirm or cancel the action, ensuring they have full control over their data.
+- **Reusable Component**: The modal is implemented as a reusable template partial for consistency across the site.
 
 ### Authentication (Login, Logout & Sign-Up)
 
@@ -345,9 +357,14 @@ Stores a user's rating for a book.
 * `rating`: `PositiveSmallIntegerField` (0-5)
 * `created_at`: `DateTimeField`
 * `updated_at`: `DateTimeField` (auto_now=True)
+* `is_archived` `BooleanField` (default `False`) — hidden from profile/UI if `True`
+* `archived_at` `DateTimeField` (nullable)
 
 **Meta:**
-* Unique constraint on `(user, book)` → one rating per book per user.
+* Unique constraint on `(user, book)` where `is_archived=False` guarantees at most one **active** rating per user/book while allowing archived history.
+
+ **Visibility:**
+ * Archived ratings are hidden from the UI but retained for analytics.
 
 ### Review
  Represents a user's written review of a book.
@@ -358,9 +375,14 @@ Stores a user's rating for a book.
  * `content`: `TextField`
  * `created_at`: `DateTimeField`
  * `updated_at`: `DateTimeField` (auto_now=True)
+ * `is_archived` `BooleanField` (default `False`)
+ * `archived_at` `DateTimeField` (nullable)
 
  **Meta:** 
-* Unique constraint on `(user, book)` → one review per book per user.
+* Unique constraint on `(user, book)` where `is_archived=False`.
+
+ **Visibility:**
+ * Archived reviews are hidden from the UI but retained for analytics.
 
 ---
 
@@ -374,8 +396,16 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 |------------------|-------------------------------------------------------------------------------|
 | `books`          | Google Books search/detail, minimal cached `Book`, admin, service             |
 | `activity`       | Per-user `ReadingStatus`, `Rating`, `Review` persistence + admin              |
-| `dashboard`      | Displays user-specific reading activity grouped by status.                    |
+| `library`        | Displays user-specific reading activity grouped by status.                    |
 
+### State Changes via Services
+
+Lifecycle rules (e.g. “rating implies a status exists”, or “removing status archives rating/review”) are implemented in a **service layer**s. This makes behavior explicit, testable, and easy to evolve.
+
+Key functions:
+* `remove_from_library(user, book_id)` — deletes the status and **archives** the user’s rating/review for that book.
+* `upsert_active_rating(user, book_id, value)` — creates or **unarchives** the latest rating, ensuring a status exists.
+* `upsert_active_review(user, book_id, content)` — creates or **unarchives** the latest review, ensuring a status exists.
 
 ### Design Rationale
 
@@ -383,6 +413,7 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 - **Separation of concerns**: Each app encapsulates its own models, views, and templates, making it easier to manage and extend.
 - **Maintainability**: Clear boundaries between apps reduce complexity and improve code readability.
 - **Scalability**: Allows future extension, such as adding a social/friendship app, without disrupting the core architecture.
+
 ---
 
 ## Testing
@@ -438,7 +469,7 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
   * __Creating a rating__: authenticated users can post a rating, which creates a `Rating` row and redirects to the book detail view.
   * __Updating a rating__: posting a new value overwrites the existing `Rating` (no duplicates).
   * __Removing a rating__: posting `rating=0` deletes the existing row and redirects back to the book detail page.
-  * __Auto-create status__: if a user rates a book without an existing `ReadingStatus`, the `post_save` signal ensures a new `READ` status is created.
+  * __Auto-create status__: if a user rates a book without an existing `ReadingStatus`, a new `READ` status is created.
   * __Respect existing status__: if the user already has a `ReadingStatus` (`TO_READ`, `READING`, `READ`), rating succeeds without changing it.
 
 
@@ -454,6 +485,12 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
   * __Delete ownership check__: Only the user who created a review can delete it. Delete button is not visible to others.
   * __Delete confirmation__: The book detail page renders a modal for delete confirmation, allowing the user to confirm or cancel the deletion.
   * __Delete success__: The review is removed from the database after confirmation, displaying a success message to user.
+
+* **Archive Flow**
+  * __Status Removal__: Removing a status archives the user’s rating and review (and deletes only the status).
+  * __Status Persistence__: Posting a new rating/review **unarchives** the latest archived row and ensures a status exists.
+  * __UI behavior__: UI ignore archived ratings; detail page, search_results and library hides archived reviews.
+
 
 * **Library Tests**
 
