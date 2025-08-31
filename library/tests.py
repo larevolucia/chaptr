@@ -2,17 +2,20 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.contrib.messages import get_messages
+
 # Create your tests here.
 
 from books.models import Book
 from activity.models import ReadingStatus
+
+User = get_user_model()
 
 
 class LibraryViewTests(TestCase):
     """ Test the library views """
     def setUp(self):
         # Create a user we can log in with
-        User = get_user_model()
         self.user = User.objects.create_user(
             username="alice", email="alice@example.com", password="pass1234"
         )
@@ -161,3 +164,88 @@ class LibraryViewTests(TestCase):
         self.assertContains(response, f'href="{u1}"')
         self.assertContains(response, f'href="{u2}"')
         self.assertContains(response, f'href="{u3}"')
+        
+
+class LibraryPageActionsTests(TestCase):
+    """
+    Tests that simulate how the Library page posts the hidden forms and
+    renders the action links inside each row.
+    """
+    def setUp(self):
+        
+        self.user = User.objects.create_user(username="u1", password="pw")
+        self.book = Book.objects.create(
+            id="TEST-BOOK-2", title="Another Book", authors=["B Two"]
+        )
+        self.client.login(username="u1", password="pw")
+
+        self.next_url = reverse("library") + "?status=ALL&sort=updated&dir=desc"
+
+    def test_remove_from_library_deletes_and_redirects(self):
+        """ Remove from Library (library page)"""
+        ReadingStatus.objects.create(user=self.user, book=self.book, status="TO_READ")
+
+        url = reverse("set_reading_status", args=[self.book.id])
+        resp = self.client.post(url, data={"status": "NONE", "next": self.next_url})
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(resp["Location"].startswith(reverse("library")))
+
+        self.assertFalse(
+            ReadingStatus.objects.filter(user=self.user, book=self.book).exists()
+        )
+        msgs = [m.message for m in get_messages(resp.wsgi_request)]
+        self.assertIn("Removed your reading status.", msgs)
+
+    def test_change_status_to_to_read_from_library(self):
+        """ Change status to TO_READ from library"""
+        # set different status so we assert the change
+        ReadingStatus.objects.create(user=self.user, book=self.book, status="READING")
+
+        url = reverse("set_reading_status", args=[self.book.id])
+        resp = self.client.post(url, data={"status": "TO_READ", "next": self.next_url})
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(resp["Location"].startswith(reverse("library")))
+
+        rs = ReadingStatus.objects.get(user=self.user, book=self.book)
+        self.assertEqual(rs.status, "TO_READ")
+
+        msgs = [m.message for m in get_messages(resp.wsgi_request)]
+        self.assertIn("Saved to your list.", msgs)
+
+    def test_change_status_to_reading_from_library(self):
+        """ Change status to READING from library"""
+        ReadingStatus.objects.create(user=self.user, book=self.book, status="TO_READ")
+
+        url = reverse("set_reading_status", args=[self.book.id])
+        resp = self.client.post(url, data={"status": "READING", "next": self.next_url})
+        self.assertEqual(resp.status_code, 302)
+        rs = ReadingStatus.objects.get(user=self.user, book=self.book)
+        self.assertEqual(rs.status, "READING")
+
+    def test_change_status_to_read_from_library(self):
+        """ Change status to READ from library"""
+        ReadingStatus.objects.create(user=self.user, book=self.book, status="TO_READ")
+
+        url = reverse("set_reading_status", args=[self.book.id])
+        resp = self.client.post(url, data={"status": "READ", "next": self.next_url})
+        self.assertEqual(resp.status_code, 302)
+        rs = ReadingStatus.objects.get(user=self.user, book=self.book)
+        self.assertEqual(rs.status, "READ")
+
+    def test_library_actions_render_review_and_rating_links(self):
+        """
+      Verify the Library HTML contains the correct hrefs for the rows actions:
+          - Write a review -> book detail #reviews
+          - Rate -> book detail
+        """
+        # Ensure the row exists (status presence isn't required but fine)
+        ReadingStatus.objects.get_or_create(
+            user=self.user, book=self.book, defaults={"status": "TO_READ"}
+        )
+
+        page = self.client.get(reverse("library"))
+        self.assertEqual(page.status_code, 200)
+
+        detail_url = reverse("book_detail", args=[self.book.id])
+        self.assertContains(page, f'href="{detail_url}#reviews"')
+        self.assertContains(page, f'href="{detail_url}')
