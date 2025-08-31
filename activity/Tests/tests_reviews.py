@@ -253,7 +253,11 @@ class ReviewFlowTests(TestCase):
         """
         mock_fetch.return_value = self.fetch_stub
         # Alice review
-        review = Review.objects.create(user=self.alice, book_id=self.book_id, content="Mine")
+        Review.objects.create(
+            user=self.alice,
+            book_id=self.book_id,
+            content="Mine"
+            )
 
         self.login(self.alice)
         response = self.client.get(self.detail_url)

@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from books.models import Book
-from .models import Rating, ReadingStatus
+from activity.models import Rating, ReadingStatus
 
 User = get_user_model()
 
@@ -134,10 +134,12 @@ class RatingViewTests(TestCase):
         rs = ReadingStatus.objects.get(user=self.user, book=self.book)
         self.assertEqual(rs.status, ReadingStatus.Status.READ)
 
-    def test_can_rate_regardless_of_existing_reading_status_and_preserve_it(self):
+    def test_can_rate_regardless_of_existing_reading_status_and_preserve_it(self):  # noqa: E501
         """
-        If the user already has any reading status (TO_READ/READING/READ),
-        rating should still succeed and the existing status should remain unchanged.
+        If the user already has any reading status
+        (TO_READ/READING/READ),
+        rating should still succeed
+        and the existing status should remain unchanged.
         """
         self.client.force_login(self.user)
         # Start with TO_READ

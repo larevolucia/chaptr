@@ -1,3 +1,4 @@
+"""Tests for deleting reading status and reviews."""
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -28,7 +29,11 @@ class LibraryAndReviewsTests(TestCase):
         """Remove from Library (details page)"""
         self.login("user")
         # seed a status
-        ReadingStatus.objects.create(user=self.user, book=self.book, status="READING")
+        ReadingStatus.objects.create(
+            user=self.user,
+            book=self.book,
+            status="READING"
+        )
 
         url = reverse("set_reading_status", args=[self.book.id])
         next_url = reverse("book_detail", args=[self.book.id])
@@ -38,8 +43,11 @@ class LibraryAndReviewsTests(TestCase):
         self.assertEqual(resp["Location"], next_url)
 
         self.assertFalse(
-            ReadingStatus.objects.filter(user=self.user, book=self.book).exists()
-        )
+            ReadingStatus.objects.filter(
+                user=self.user,
+                book=self.book
+                ).exists()
+            )
 
         # confirm the success flash
         msgs = [m.message for m in get_messages(resp.wsgi_request)]
@@ -48,12 +56,19 @@ class LibraryAndReviewsTests(TestCase):
     def test_delete_review_owner_only(self):
         """ Delete review (owner)"""
         self.login("user")
-        review = Review.objects.create(user=self.user, book=self.book, content="ok")
+        review = Review.objects.create(
+            user=self.user,
+            book=self.book,
+            content="ok"
+            )
 
         url = reverse("delete_review", args=[self.book.id, review.id])
         resp = self.client.post(url)
         self.assertEqual(resp.status_code, 302)
-        self.assertEqual(resp["Location"], reverse("book_detail", args=[self.book.id]))
+        self.assertEqual(
+            resp["Location"],
+            reverse("book_detail", args=[self.book.id])
+        )
         self.assertFalse(Review.objects.filter(pk=review.pk).exists())
 
         msgs = [m.message for m in get_messages(resp.wsgi_request)]

@@ -1,3 +1,4 @@
+""" Tests for the library app views and functionality."""
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -17,31 +18,48 @@ class LibraryViewTests(TestCase):
     def setUp(self):
         # Create a user we can log in with
         self.user = User.objects.create_user(
-            username="alice", email="alice@example.com", password="pass1234"
+            username="alice",
+            email="alice@example.com",
+            password="pass1234"
         )
-        self.book_to_read = Book.objects.create(id="to-read", title="To Read Book")
-        self.book_reading = Book.objects.create(id="reading", title="Reading Book")
-        self.book_read = Book.objects.create(id="read", title="Read Book")
+        self.book_to_read = Book.objects.create(
+            id="to-read",
+            title="To Read Book"
+        )
+        self.book_reading = Book.objects.create(
+            id="reading",
+            title="Reading Book"
+            )
+        self.book_read = Book.objects.create(
+            id="read",
+            title="Read Book"
+            )
 
     def set_book_to_read(self):
         """ Log a book with 'to read' status for the user."""
         self.client.login(username="alice", password="pass1234")
         ReadingStatus.objects.create(
-            user=self.user, book=self.book_to_read, status=ReadingStatus.Status.TO_READ
+            user=self.user,
+            book=self.book_to_read,
+            status=ReadingStatus.Status.TO_READ
         )
 
     def set_book_reading(self):
         """ Log a book with 'reading' status for the user."""
         self.client.login(username="alice", password="pass1234")
         ReadingStatus.objects.create(
-            user=self.user, book=self.book_reading, status=ReadingStatus.Status.READING
+            user=self.user,
+            book=self.book_reading,
+            status=ReadingStatus.Status.READING
         )
 
     def set_book_read(self):
         """ Log a book with 'read' status for the user."""
         self.client.login(username="alice", password="pass1234")
         ReadingStatus.objects.create(
-            user=self.user, book=self.book_read, status=ReadingStatus.Status.READ
+            user=self.user,
+            book=self.book_read,
+            status=ReadingStatus.Status.READ
         )
 
     def set_books_statuses(self):
@@ -53,7 +71,8 @@ class LibraryViewTests(TestCase):
 
     def test_navbar_links_visible_only_when_authenticated(self):
         """
-        Navbar (in base.html) shows user dropdown items only for logged-in users.
+        Navbar (in base.html) shows user
+        dropdown items only for logged-in users.
         """
         response_anon = self.client.get(reverse("library"), follow=True)
         self.assertEqual(response_anon.status_code, 200)
@@ -98,7 +117,8 @@ class LibraryViewTests(TestCase):
 
     def test_library_page_with_books(self):
         """
-        If the user has books in their library, they should see them organized by status.
+        If the user has books in their library,
+        they should see them organized by status.
         """
         self.client.login(username="alice", password="pass1234")
 
@@ -149,7 +169,8 @@ class LibraryViewTests(TestCase):
 
     def test_each_book_links_to_its_detail_page(self):
         """
-        Each book card links to the detail route 'book_detail' with the book pk.
+        Each book card links to the detail route
+        'book_detail' with the book pk.
         """
         self.client.login(username="alice", password="pass1234")
 
@@ -164,7 +185,7 @@ class LibraryViewTests(TestCase):
         self.assertContains(response, f'href="{u1}"')
         self.assertContains(response, f'href="{u2}"')
         self.assertContains(response, f'href="{u3}"')
-        
+
 
 class LibraryPageActionsTests(TestCase):
     """
@@ -172,26 +193,38 @@ class LibraryPageActionsTests(TestCase):
     renders the action links inside each row.
     """
     def setUp(self):
-        
         self.user = User.objects.create_user(username="u1", password="pw")
         self.book = Book.objects.create(
             id="TEST-BOOK-2", title="Another Book", authors=["B Two"]
         )
         self.client.login(username="u1", password="pw")
 
-        self.next_url = reverse("library") + "?status=ALL&sort=updated&dir=desc"
+        self.next_url = (
+            reverse("library")
+            + "?status=ALL&sort=updated&dir=desc"
+            )
 
     def test_remove_from_library_deletes_and_redirects(self):
         """ Remove from Library (library page)"""
-        ReadingStatus.objects.create(user=self.user, book=self.book, status="TO_READ")
+        ReadingStatus.objects.create(
+            user=self.user,
+            book=self.book,
+            status="TO_READ"
+            )
 
         url = reverse("set_reading_status", args=[self.book.id])
-        resp = self.client.post(url, data={"status": "NONE", "next": self.next_url})
+        resp = self.client.post(
+            url,
+            data={"status": "NONE", "next": self.next_url}
+            )
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(resp["Location"].startswith(reverse("library")))
 
         self.assertFalse(
-            ReadingStatus.objects.filter(user=self.user, book=self.book).exists()
+            ReadingStatus.objects.filter(
+                user=self.user,
+                book=self.book
+                ).exists()
         )
         msgs = [m.message for m in get_messages(resp.wsgi_request)]
         self.assertIn("Removed your reading status.", msgs)
@@ -199,14 +232,24 @@ class LibraryPageActionsTests(TestCase):
     def test_change_status_to_to_read_from_library(self):
         """ Change status to TO_READ from library"""
         # set different status so we assert the change
-        ReadingStatus.objects.create(user=self.user, book=self.book, status="READING")
+        ReadingStatus.objects.create(
+            user=self.user,
+            book=self.book,
+            status="READING"
+            )
 
         url = reverse("set_reading_status", args=[self.book.id])
-        resp = self.client.post(url, data={"status": "TO_READ", "next": self.next_url})
+        resp = self.client.post(
+            url,
+            data={"status": "TO_READ", "next": self.next_url}
+            )
         self.assertEqual(resp.status_code, 302)
         self.assertTrue(resp["Location"].startswith(reverse("library")))
 
-        rs = ReadingStatus.objects.get(user=self.user, book=self.book)
+        rs = ReadingStatus.objects.get(
+            user=self.user,
+            book=self.book
+            )
         self.assertEqual(rs.status, "TO_READ")
 
         msgs = [m.message for m in get_messages(resp.wsgi_request)]
@@ -214,20 +257,34 @@ class LibraryPageActionsTests(TestCase):
 
     def test_change_status_to_reading_from_library(self):
         """ Change status to READING from library"""
-        ReadingStatus.objects.create(user=self.user, book=self.book, status="TO_READ")
+        ReadingStatus.objects.create(
+            user=self.user,
+            book=self.book,
+            status="TO_READ"
+            )
 
         url = reverse("set_reading_status", args=[self.book.id])
-        resp = self.client.post(url, data={"status": "READING", "next": self.next_url})
+        resp = self.client.post(
+            url,
+            data={"status": "READING", "next": self.next_url}
+            )
         self.assertEqual(resp.status_code, 302)
         rs = ReadingStatus.objects.get(user=self.user, book=self.book)
         self.assertEqual(rs.status, "READING")
 
     def test_change_status_to_read_from_library(self):
         """ Change status to READ from library"""
-        ReadingStatus.objects.create(user=self.user, book=self.book, status="TO_READ")
+        ReadingStatus.objects.create(
+            user=self.user,
+            book=self.book,
+            status="TO_READ"
+            )
 
         url = reverse("set_reading_status", args=[self.book.id])
-        resp = self.client.post(url, data={"status": "READ", "next": self.next_url})
+        resp = self.client.post(
+            url,
+            data={"status": "READ", "next": self.next_url}
+            )
         self.assertEqual(resp.status_code, 302)
         rs = ReadingStatus.objects.get(user=self.user, book=self.book)
         self.assertEqual(rs.status, "READ")
