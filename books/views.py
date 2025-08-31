@@ -358,7 +358,7 @@ def book_detail(request, book_id):
             # rating
             r = (
                 Rating.objects
-                .filter(user=request.user, book_id=book_id)
+                .filter(user=request.user, book_id=book_id, is_archived=False)
                 .only("rating")
                 .first()
             )
@@ -370,14 +370,14 @@ def book_detail(request, book_id):
             reviews = (
                 Review.objects
                 .select_related("user")
-                .filter(book_id=book_id)
+                .filter(book_id=book_id, is_archived=False)
                 .order_by("-created_at")
             )
             # check if user has already written a review
             # user’s review (if any)
             my_review = (
                 Review.objects
-                .filter(user=request.user, book_id=book_id)
+                .filter(user=request.user, book_id=book_id, is_archived=False)
                 .first()
             )
 

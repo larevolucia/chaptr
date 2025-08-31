@@ -10,6 +10,11 @@ from django.contrib import messages
 from django.urls import reverse
 
 from books.services import fetch_or_refresh_book, safe_redirect_back
+from .services import (
+    archive_user_evaluations,
+    upsert_active_rating,
+    upsert_active_review
+    )
 from .models import ReadingStatus, Rating, Review
 from .forms import ReviewForm
 
@@ -28,6 +33,7 @@ def set_reading_status(request, book_id: str):
         ReadingStatus.objects.filter(
             user=request.user, book_id=book_id
         ).delete()
+        archive_user_evaluations(request.user, book_id)
         messages.success(request, "Removed your reading status.")
         return safe_redirect_back(
             request, reverse("book_detail", args=[book_id])
@@ -95,18 +101,15 @@ def add_rating(request, book_id: str):
     fetch_or_refresh_book(book_id)
 
     # Create or update the rating
-    rating_obj, created = Rating.objects.get_or_create(
+    ReadingStatus.objects.get_or_create(
         user=request.user,
         book_id=book_id,
-        defaults={"rating": rating}
+        defaults={"status": ReadingStatus.Status.READ},
     )
 
-    if not created:
-        rating_obj.rating = rating
-        rating_obj.save(update_fields=["rating", "updated_at"])
-        messages.success(request, "Updated your rating.")
-    else:
-        messages.success(request, "Saved your rating.")
+    # Unarchive/reuse last row or create fresh active
+    upsert_active_rating(request.user, book_id, rating)
+    messages.success(request, "Saved your rating.")
 
     return safe_redirect_back(request, reverse("book_detail", args=[book_id]))
 
@@ -123,16 +126,21 @@ def add_review(request, book_id):
         HttpResponse: The response object.
     """
     fetch_or_refresh_book(book_id)
-    existing = Review.objects.filter(user=request.user, book_id=book_id).first()
+    existing = Review.objects.filter(user=request.user, book_id=book_id, is_archived=False).first()
 
     if request.method == "POST":
         form = ReviewForm(request.POST, user=request.user, book_id=book_id, instance=existing)
         if form.is_valid():
-            form.save()
-            messages.success(
-                request, "Updated your review." if existing
-                else "Your review has been posted."
-                )
+            # Ensure a status exists if posting a review
+            ReadingStatus.objects.get_or_create(
+                user=request.user,
+                book_id=book_id,
+                defaults={"status": ReadingStatus.Status.READ}
+            )
+            content = (request.POST.get("content") or "").strip()
+            if content:
+                upsert_active_review(request.user, book_id, content)
+                messages.success(request, "Updated your review." if existing else "Your review has been posted.")
             return redirect("book_detail", book_id=book_id)
     else:
         instance = existing if request.GET.get("edit") and existing else None

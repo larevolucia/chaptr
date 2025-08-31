@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from books.models import Book
 
 User = get_user_model()
@@ -54,6 +55,9 @@ class ReadingStatus(models.Model):
 
 class Rating(models.Model):
     """Stores a user's rating for a book."""
+    is_archived = models.BooleanField(default=False)
+    archived_at = models.DateTimeField(null=True, blank=True, editable=False)
+    
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -76,7 +80,8 @@ class Rating(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "book"],
-                name="uniq_user_book_rating"
+                name="uniq_user_book_rating",
+                condition=Q(is_archived=False)
                 ),
         ]
         verbose_name = "Rating"
@@ -85,6 +90,9 @@ class Rating(models.Model):
 
 class Review(models.Model):
     """Stores a user's review for a book."""
+    is_archived = models.BooleanField(default=False)
+    archived_at = models.DateTimeField(null=True, blank=True, editable=False)
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -104,7 +112,8 @@ class Review(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "book"],
-                name="uniq_user_book_review"
+                name="uniq_user_book_review",
+                condition=Q(is_archived=False)
             ),
         ]
         verbose_name = "Review"
