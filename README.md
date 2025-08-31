@@ -186,7 +186,7 @@ Sprint 3:
    - [x] [Edit, and delete reviews](#16)
 - Epic 4: User Dashboard
    - [x] [View books grouped by reading status](#17)
-   - [ ] [Update reading status directly from dashboard](#18)
+   - [x] [Update reading status directly from dashboard](#18)
 - Testing and Bug Fixes
 
 ---
@@ -394,6 +394,7 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 
 | App Name         | Responsibility                                                                |
 |------------------|-------------------------------------------------------------------------------|
+| `accounts`       | Accounts app current only for authentication, but will hold profile in future |
 | `books`          | Google Books search/detail, minimal cached `Book`, admin, service             |
 | `activity`       | Per-user `ReadingStatus`, `Rating`, `Review` persistence + admin              |
 | `library`        | Displays user-specific reading activity grouped by status.                    |
