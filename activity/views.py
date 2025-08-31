@@ -17,12 +17,12 @@ from .forms import ReviewForm
 # Create your views here
 @login_required
 @require_POST
-def add_reading_status(request, book_id: str):
+def set_reading_status(request, book_id: str):
     """
     Set the current user's reading status for a Google Books volume.
     Expects POST 'status' in {TO_READ, READING, READ}.
     """
-    status = (request.POST.get("status") or "").upper()
+    status = (request.POST.get("status") or request.GET.get("status") or "").upper()
 
     if status == "NONE":
         ReadingStatus.objects.filter(
