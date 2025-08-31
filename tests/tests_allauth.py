@@ -203,7 +203,7 @@ class LoginLogoutTests(TestCase):
         self.assertTrue(resp.context["user"].is_authenticated)
         self.assertEqual(resp.context["user"].username, "testuser")
 
-        self.assertRedirects(resp, "/")
+        self.assertRedirects(resp, "/library/")
 
     def test_login_empty_username_validation(self):
         """Test login form username validation error."""
