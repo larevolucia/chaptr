@@ -46,7 +46,8 @@ ALLOWED_HOSTS = [
     '.herokuapp.com',
     '127.0.0.1',
 ]
-
+# For development, you might want to use the console email backend
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Application definition
 
@@ -71,7 +72,10 @@ INSTALLED_APPS = [
 
 
 SITE_ID = 1
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+if DEBUG:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
+else:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 LOGIN_REDIRECT_URL = '/library/'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -85,16 +89,34 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 # ACCOUNT_EMAIL_VERIFICATION = 'none' dev
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # prod
 
-# Email settings
 
-EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")  # noqa: E501 pylint: disable=line-too-long
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
-EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True") == "True"
-EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "False") == "True"
+# Email settings
+def env_bool(name: str, default: bool = False) -> bool:
+    """ Helper to parse boolean environment variables."""
+    return str(
+        os.environ.get(name, str(default))
+        ).strip().lower() in ("1", "true", "yes", "y", "on")
+
+
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.smtp.EmailBackend"
+    )
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "25"))
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
+EMAIL_USE_SSL = env_bool("EMAIL_USE_SSL", False)
+if EMAIL_USE_TLS and EMAIL_USE_SSL:
+    raise ValueError(
+        "Configure either EMAIL_USE_TLS or EMAIL_USE_SSL, not both."
+        )
+
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "webmaster@localhost")  # noqa: E501 pylint: disable=line-too-long
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL",
+    EMAIL_HOST_USER or "webmaster@localhost"
+    )
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
 
@@ -145,21 +167,14 @@ CSRF_TRUSTED_ORIGINS = [
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',  # noqa: E501 pylint: disable=line-too-long
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',  # noqa: E501
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',  # noqa: E501
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',  # noqa: E501
-    },
-]
+PWD = "django.contrib.auth.password_validation"
 
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": f"{PWD}.UserAttributeSimilarityValidator"},
+    {"NAME": f"{PWD}.MinimumLengthValidator"},
+    {"NAME": f"{PWD}.CommonPasswordValidator"},
+    {"NAME": f"{PWD}.NumericPasswordValidator"},
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -186,8 +201,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
-]
