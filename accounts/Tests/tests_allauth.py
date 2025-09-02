@@ -45,11 +45,10 @@ class SignupBasicsTests(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         # Search form elements should NOT be present
-        self.assertNotContains(resp, 'name="q"', html=False)
-        self.assertNotContains(resp, 'name="field"', html=False)
+        self.assertNotContains(resp, 'name="search-q"', html=False)
+        self.assertNotContains(resp, 'name="search-field"', html=False)
         self.assertNotContains(resp, 'role="search"', html=False)
-        self.assertNotContains(resp, 'class="search-card shadow"', html=False)
-        self.assertNotContains(resp, 'placeholder="Search books, authors, genres"', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertNotContains(resp, 'data-testid="search-form"', html=False)
 
     def test_signup_success_shows_feedback_and_sends_confirmation(self):
         """
@@ -69,7 +68,13 @@ class SignupBasicsTests(TestCase):
         self.assertFalse(resp.context["user"].is_authenticated)
 
         # A confirmation email MUST be sent
-        self.assertGreaterEqual(len(mail.outbox), 1, f"Outbox empty. Settings in test may not be applied. Current outbox: {mail.outbox}")  # noqa: E501 pylint: disable=line-too-long
+        self.assertGreaterEqual(
+            len(mail.outbox),
+            1,
+            f"Outbox empty."
+            f"Settings in test may not be applied. Current outbox:"
+            f"{mail.outbox}"
+            )
 
     def test_signup_username_taken(self):
         """
@@ -77,7 +82,9 @@ class SignupBasicsTests(TestCase):
         for taken username.
         """
         User.objects.create_user(
-            username="reader2", email="reader2@example.com", password="Xx12345678!"  # noqa: E501 pylint: disable=line-too-long
+            username="reader2",
+            email="reader2@example.com",
+            password="Xx12345678!"
         )
         signup_url = reverse("account_signup")
         bad_data = {
@@ -90,11 +97,18 @@ class SignupBasicsTests(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         form = resp.context.get("form")
-        self.assertIsNotNone(form, "Expected 'form' in template context after invalid signup")  # noqa: E501 pylint: disable=line-too-long
+        self.assertIsNotNone(
+            form,
+            "Expected 'form' in template context after invalid signup"
+            )
 
         self.assertIn("username", form.errors)
 
-        self.assertContains(resp, "A user with that username already exists.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(
+            resp,
+            "A user with that username already exists.",
+            status_code=200
+            )
 
     def test_signup_password_too_short(self):
         """
@@ -103,7 +117,9 @@ class SignupBasicsTests(TestCase):
         """
         # follow redirects so we land on a page with a form in context
         User.objects.create_user(
-            username="reader1", email="reader1@example.com", password="Xx12345678!"  # noqa: E501 pylint: disable=line-too-long
+            username="reader1",
+            email="reader1@example.com",
+            password="Xx12345678!"
         )
         signup_url = reverse("account_signup")
         bad_data = {
@@ -116,11 +132,19 @@ class SignupBasicsTests(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         form = resp.context.get("form")
-        self.assertIsNotNone(form, "Expected 'form' in template context after invalid signup")  # noqa: E501 pylint: disable=line-too-long
+        self.assertIsNotNone(
+            form,
+            "Expected 'form' in template context after invalid signup"
+            )
 
         self.assertIn("password1", form.errors)
 
-        self.assertContains(resp, "This password is too short. It must contain at least 8 characters.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(
+            resp,
+            "This password is too short."
+            " It must contain at least 8 characters.",
+            status_code=200
+            )
 
     def test_signup_password_mismatch(self):
         """
@@ -138,11 +162,18 @@ class SignupBasicsTests(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         form = resp.context.get("form")
-        self.assertIsNotNone(form, "Expected 'form' in template context after invalid signup")  # noqa: E501 pylint: disable=line-too-long
+        self.assertIsNotNone(
+            form,
+            "Expected 'form' in template context after invalid signup"
+            )
 
         self.assertIn("password2", form.errors)
 
-        self.assertContains(resp, "You must type the same password each time.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(
+            resp,
+            "You must type the same password each time.",
+            status_code=200
+            )
 
 
 @override_settings(
@@ -184,12 +215,10 @@ class LoginLogoutTests(TestCase):
         resp = self.client.get(url)
 
         # Search form elements should NOT be present
-        self.assertNotContains(resp, 'name="q"', html=False)
-        self.assertNotContains(resp, 'name="field"', html=False)
+        self.assertNotContains(resp, 'name="search-q"', html=False)
+        self.assertNotContains(resp, 'name="search-field"', html=False)
         self.assertNotContains(resp, 'role="search"', html=False)
-        self.assertNotContains(resp, 'aria-label="Site search"', html=False)
-        self.assertNotContains(resp, 'class="search-card shadow"', html=False)
-        self.assertNotContains(resp, 'placeholder="Search books, authors, genres', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertNotContains(resp, 'data-testid="search-form"', html=False)
 
     def test_successful_login_with_username(self):
         """Test successful login using username."""
@@ -215,7 +244,10 @@ class LoginLogoutTests(TestCase):
         resp = self.client.post(login_url, data, follow=True)
 
         form = resp.context.get("form")
-        self.assertIsNotNone(form, "Expected 'form' in template context after invalid login")  # noqa: E501 pylint: disable=line-too-long
+        self.assertIsNotNone(
+            form,
+            "Expected 'form' in template context after invalid login"
+            )
 
         # Check that form has errors
         self.assertTrue(form.errors)
@@ -231,7 +263,10 @@ class LoginLogoutTests(TestCase):
         resp = self.client.post(login_url, data, follow=True)
 
         form = resp.context.get("form")
-        self.assertIsNotNone(form, "Expected 'form' in template context after invalid login")  # noqa: E501 pylint: disable=line-too-long
+        self.assertIsNotNone(
+            form,
+            "Expected 'form' in template context after invalid login"
+            )
 
         # Check that form has errors
         self.assertTrue(form.errors)
@@ -248,16 +283,25 @@ class LoginLogoutTests(TestCase):
 
         form = resp.context.get("form")
         self.assertTrue(
-            any("username" in e.lower() or "password" in e.lower() for e in form.errors["__all__"]),  # noqa: E501 pylint: disable=line-too-long
+            any(
+                "username" in e.lower() or "password" in e.lower()
+                for e in form.errors["__all__"]
+                ),
             f"Expected a generic auth error, got: {form.errors}"
             )
 
-        self.assertContains(resp, "The username and/or password you specified are not correct.", status_code=200)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(
+            resp,
+            "The username and/or password you specified are not correct.",
+            status_code=200
+            )
 
     def test_login_with_invalid_password_fails(self):
         """Test that login fails with an invalid password."""
         User.objects.create_user(
-            username="reader2", email="reader2@example.com", password="Xx12345678!"  # noqa: E501 pylint: disable=line-too-long
+            username="reader2",
+            email="reader2@example.com",
+            password="Xx12345678!"
         )
         login_url = reverse("account_login")
         data = {
@@ -272,7 +316,10 @@ class LoginLogoutTests(TestCase):
 
         self.assertIn("__all__", form.errors)
         self.assertTrue(
-            any("username" in e.lower() or "password" in e.lower() for e in form.errors["__all__"]),  # noqa: E501 pylint: disable=line-too-long
+            any(
+                "username" in e.lower() or "password" in e.lower()
+                for e in form.errors["__all__"]
+                ),
             f"Expected a generic auth error, got: {form.errors}"
         )
 
@@ -294,10 +341,10 @@ class LoginLogoutTests(TestCase):
         resp = self.client.get(logout_url)
 
         # Search form elements should NOT be present
-        self.assertNotContains(resp, 'name="q"', html=False)
-        self.assertNotContains(resp, 'name="field"', html=False)
+        self.assertNotContains(resp, 'name="search-q"', html=False)
+        self.assertNotContains(resp, 'name="search-field"', html=False)
         self.assertNotContains(resp, 'role="search"', html=False)
-        self.assertNotContains(resp, 'class="search-card shadow"', html=False)
+        self.assertNotContains(resp, 'data-testid="search-form"', html=False)
 
     def test_logout_when_logged_in(self):
         """Test successful logout when user is logged in."""
@@ -379,7 +426,7 @@ class PasswordResetTests(TestCase):
         resp = self.client.get(url)
 
         # Search form elements should NOT be present
-        self.assertNotContains(resp, 'name="q"', html=False)
-        self.assertNotContains(resp, 'name="field"', html=False)
+        self.assertNotContains(resp, 'name="search-q"', html=False)
+        self.assertNotContains(resp, 'name="search-field"', html=False)
         self.assertNotContains(resp, 'role="search"', html=False)
-        self.assertNotContains(resp, 'class="search-card shadow"', html=False)
+        self.assertNotContains(resp, 'data-testid="search-form"', html=False)

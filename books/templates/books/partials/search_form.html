@@ -2,12 +2,12 @@
 
 <!-- Row 2: search + filters  -->
 
-<div class="search-row position-relative">
+<div data-testid="search-form" class="search-row position-relative">
     <form class="search-card shadow"
         method="get" action="{% url 'book_search' %}" role="search" aria-label="Site search">
         <!-- Scope -->
         <label class="visually-hidden" for="field">Search scope</label>
-        <select id="field" class="form-select" name="field" aria-label="Search scope">
+        <select id="search-field" class="form-select" name="field" aria-label="Search scope">
             <option value="all">All</option>
             <option value="title">Title</option>
             <option value="author">Author</option>
@@ -16,7 +16,7 @@
 
         <!-- Query -->
         <label class="visually-hidden" for="q">Search books</label>
-        <input id="q" class="form-control" type="search" name="q" required
+        <input id="search-q" class="form-control" type="search" name="q" required
             placeholder="Search books, authors, genres…" aria-label="Search">
         
         <!-- Submit -->
