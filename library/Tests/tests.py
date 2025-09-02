@@ -113,7 +113,7 @@ class LibraryViewTests(TestCase):
         """
         self.client.login(username="alice", password="pass1234")
         response = self.client.get(reverse("library"))
-        self.assertContains(response, 'id="empty-library"')
+        self.assertContains(response, 'data-testid="empty-library"')
 
     def test_library_page_with_books(self):
         """
@@ -125,8 +125,8 @@ class LibraryViewTests(TestCase):
         self.set_books_statuses()
 
         response = self.client.get(reverse("library"))
-        self.assertContains(response, 'id="library-table"')
-        self.assertNotContains(response, 'id="empty-library"')
+        self.assertContains(response, 'data-testid="library-table"')
+        self.assertNotContains(response, 'data-testid="empty-library"')
 
     def test_library_page_with_only_to_read_book(self):
         """
@@ -138,8 +138,8 @@ class LibraryViewTests(TestCase):
         self.set_book_to_read()
 
         response = self.client.get(reverse("library"))
-        self.assertContains(response, 'id="library-table"')
-        self.assertNotContains(response, 'id="empty-library"')
+        self.assertContains(response, 'data-testid="library-table"')
+        self.assertNotContains(response, 'data-testid="empty-library"')
 
     def test_library_page_with_only_reading_book(self):
         """
@@ -151,8 +151,8 @@ class LibraryViewTests(TestCase):
         self.set_book_reading()
 
         response = self.client.get(reverse("library"))
-        self.assertContains(response, 'id="library-table"')
-        self.assertNotContains(response, 'id="empty-library"')
+        self.assertContains(response, 'data-testid="library-table"')
+        self.assertNotContains(response, 'data-testid="empty-library"')
 
     def test_library_page_with_only_read_book(self):
         """
@@ -164,8 +164,8 @@ class LibraryViewTests(TestCase):
         self.set_book_read()
 
         response = self.client.get(reverse("library"))
-        self.assertContains(response, 'id="library-table"')
-        self.assertNotContains(response, 'id="empty-library"')
+        self.assertContains(response, 'data-testid="library-table"')
+        self.assertNotContains(response, 'data-testid="empty-library"')
 
     def test_each_book_links_to_its_detail_page(self):
         """

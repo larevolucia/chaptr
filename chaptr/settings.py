@@ -17,7 +17,7 @@ import dj_database_url
 
 if os.path.isfile('env.py'):
     # If env.py exists, import it to load environment variables
-    import env   # pylint: disable=unused-import  # noqa: F401
+    import env
 
 
 load_dotenv()

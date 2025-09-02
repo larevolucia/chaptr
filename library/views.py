@@ -1,7 +1,14 @@
+""" Views for the library app."""
 from django.contrib.auth.decorators import login_required
 from django.db.models import Case, When, Value, IntegerField
 from django.shortcuts import render
 from activity.models import ReadingStatus
+
+VALID_STATUS = {
+    "TO_READ": ReadingStatus.Status.TO_READ,
+    "READING": ReadingStatus.Status.READING,
+    "READ":    ReadingStatus.Status.READ,
+}
 
 
 # Create your views here.
@@ -9,7 +16,7 @@ from activity.models import ReadingStatus
 def library(request):
     """Display the user's library with reading statuses."""
     status_param = (request.GET.get("status", "ALL") or "ALL").upper()
-    
+
     sort = request.GET.get("sort", "updated")   # default sort
     direction = request.GET.get("dir", "desc")  # asc|desc
     prefix = "" if direction == "asc" else "-"
@@ -20,14 +27,8 @@ def library(request):
         .select_related("book")
     )
 
-    VALID = {
-        "TO_READ": ReadingStatus.Status.TO_READ,
-        "READING": ReadingStatus.Status.READING,
-        "READ":    ReadingStatus.Status.READ,
-    }
-
-    if status_param in VALID:
-        qs = qs.filter(status=VALID[status_param])
+    if status_param in VALID_STATUS:
+        qs = qs.filter(status=VALID_STATUS[status_param])
     if sort == "status":
         status_order = Case(
             When(status=ReadingStatus.Status.TO_READ,  then=Value(0)),
@@ -58,4 +59,11 @@ def library(request):
         rs.user_status_label = labels.get(rs.status, "—")
         rs.user_status_class = status_class.get(rs.status, "status--none")
 
-    return render(request, "library/library.html", {"rows": rows, "status_param": status_param, "sort": sort, "direction": direction})
+    context = {
+        "rows": rows,
+        "status_param": status_param,
+        "sort": sort,
+        "direction": direction
+        }
+
+    return render(request, "library/library.html", context)
