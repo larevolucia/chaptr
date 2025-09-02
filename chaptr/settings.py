@@ -25,6 +25,8 @@ load_dotenv()
 # Get the Google Books API key from environment variables
 # Make sure to set GOOGLE_BOOKS_API_KEY in your .env file
 GOOGLE_BOOKS_API_KEY = os.environ.get("GOOGLE_BOOKS_API_KEY")
+GOOGLE_BOOKS_SEARCH_URL = os.environ.get("GOOGLE_BOOKS_SEARCH_URL")
+GOOGLE_BOOKS_VOLUME_URL = os.environ.get("GOOGLE_BOOKS_VOLUME_URL")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

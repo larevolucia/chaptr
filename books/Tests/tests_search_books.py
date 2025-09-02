@@ -17,12 +17,12 @@ from django.core.cache import cache
 from django.http import Http404
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
-from books.views import (
-    build_q,
-    book_search,
+from books.services import (
     search_google_books,
     fetch_book_by_id,
 )
+from books.views import book_search
+from books.utils import build_q
 
 User = get_user_model()
 
@@ -103,7 +103,7 @@ class BookSearchViewTests(TestCase):
 class SearchGoogleBooksTests(TestCase):
     """Integration tests for the Google Books API search functionality."""
     @patch.dict(os.environ, {"GOOGLE_BOOKS_API_KEY": "fake-key"}, clear=False)
-    @patch("books.views.requests.get")
+    @patch("books.services.requests.get")
     def test_returns_parsed_list_on_200(self, mock_get):
         """Test that a successful API call returns a parsed list."""
         mock_resp = Mock(status_code=200)
@@ -142,7 +142,7 @@ class SearchGoogleBooksTests(TestCase):
         self.assertEqual(books[1]["thumbnail"], "http://u")
 
     @patch.dict(os.environ, {"GOOGLE_BOOKS_API_KEY": "fake-key"}, clear=False)
-    @patch("books.views.requests.get")
+    @patch("books.services.requests.get")
     def test_non_200_or_exception_returns_empty(self, mock_get):
         """Test that non-200 responses or exceptions return an empty list."""
         mock_resp = Mock()
@@ -158,7 +158,7 @@ class FetchBookByIdTests(TestCase):
         """Clear cache before each test."""
         cache.clear()
 
-    @patch("books.views.requests.get")
+    @patch("books.services.requests.get")
     def test_fetch_book_by_id_success_maps_fields(self, mock_get):
         """Test that fetch_book_by_id maps fields correctly."""
         mock_resp = Mock(status_code=200)
@@ -178,7 +178,7 @@ class FetchBookByIdTests(TestCase):
         self.assertTrue(data["thumbnail"].startswith("http"))
         self.assertEqual(data["previewLink"], "http://example.test/preview")
 
-    @patch("books.views.requests.get")
+    @patch("books.services.requests.get")
     def test_fetch_book_by_id_404_on_non_200(self, mock_get):
         """Test that fetch_book_by_id raises Http404 on non-200."""
         mock_resp = Mock()

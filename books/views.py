@@ -7,19 +7,11 @@ This module exposes:
   and renders results.
 - Detail flow that fetches a single volume by ID with low-level caching.
 """
-import os
-import re
-import logging
-import requests
-from requests import RequestException
 from django.core.paginator import Paginator
-from django.shortcuts import render,  redirect
-from django.urls import reverse
-from django.utils.http import urlencode
+from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
-from django.http import Http404
 from django.db.utils import ProgrammingError, OperationalError
 from activity.models import Rating, ReadingStatus, Review
 from activity.forms import ReviewForm
@@ -29,39 +21,12 @@ from activity.services import (
     get_average_rating,
     get_number_of_ratings
 )
-
+from books.services import (
+    search_google_books,
+    fetch_book_by_id
+)
+from books.utils import _genres, build_q
 # Create your views here.
-logger = logging.getLogger(__name__)
-OPERATOR_RE = re.compile(r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|oclc):', re.I)  # noqa: E501  pylint: disable=line-too-long
-
-
-def _genres():
-    return [
-        ("Sci-Fi", "science fiction"),
-        ("Mystery", "mystery"),
-        ("Non-Fiction", "nonfiction"),
-        ("Fantasy", "fantasy"),
-        ("Horror", "horror"),
-        ("Romance", "romance"),
-        ("Thriller", "thriller"),
-        ("Biography", "biography"),
-        ("Self-Help", "self-help"),
-        ("Children", "children"),
-        ("Cookbooks", "cookbooks"),
-        ("Graphic Novels", "graphic novels"),
-        ("Poetry", "poetry"),
-        ("Classics", "classics"),
-        ("Comics", "comics"),
-        ("Business", "business"),
-        ("Science", "science"),
-        ("History", "history"),
-        ("Travel", "travel"),
-        ("Sports", "sports"),
-        ("Memoir", "memoir"),
-        ("Religion", "religion"),
-        ("Spirituality", "spirituality"),
-        ("Technology", "technology"),
-    ]
 
 
 def home(request):
@@ -70,36 +35,6 @@ def home(request):
     """
     genres = _genres()
     return render(request, "books/home.html", {"genres": genres})
-
-
-def build_q(q_raw, field, _title_unused="", _author_unused="", _subject_unused=""):  # noqa: E501 pylint: disable=line-too-long
-    """
-    Build a Google Books 'q' using a single dropdown field.
-    - If user already typed an operator,
-    pass it through unchanged.
-    - Else apply the dropdown operator
-    (intitle/inauthor/subject)
-    or leave as-is for 'all'.
-    * Unused parameters are ignored.
-    """
-    q_raw = (q_raw or "").strip()
-    field = (field or "all").strip().lower()
-
-    if not q_raw:
-        return ""
-
-    # pass-through if user already used an operator
-    if OPERATOR_RE.search(q_raw):
-        return q_raw
-
-    # apply operator based on dropdown
-    if field == "title":
-        return f"intitle:{q_raw}"
-    if field == "author":
-        return f"inauthor:{q_raw}"
-    if field == "subject":
-        return f"subject:{q_raw}"
-    return q_raw  # field == "all"
 
 
 def book_search(request):
@@ -183,125 +118,6 @@ def book_search(request):
     )
 
 
-def search_google_books(query, *, start_index=0, max_results=12):
-    """Query the Google Books API and return simplified book results.
-
-    This helper performs a GET request to ``/volumes`` with defaults
-    (``printType=books``, ``orderBy=relevance``, ``langRestrict=en``).
-    Network errors and JSON parsing issues are logged and result in an empty
-    list (the UI then renders a "no results" state).
-
-    Args:
-        query (str): A valid Google Books query string (``"intitle:django"``).
-
-    Returns:
-        list[dict]: A list of lightweight book dicts with keys:
-            ``id``, ``title``, ``authors``, ``thumbnail``.
-            Returns ``[]`` if the API key is missing or an error occurs.
-    """
-    api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
-    if not api_key:
-        return [], 0
-
-    url = "https://www.googleapis.com/books/v1/volumes"
-    params = {
-        "q": query,
-        "key": api_key,
-        "printType": "books",
-        "orderBy": "relevance",
-        "langRestrict": "en",
-        "startIndex": start_index,
-        "maxResults": max_results,
-    }
-
-    try:
-        response = requests.get(url, params=params, timeout=10)
-        response.raise_for_status()  # Raises HTTPError for bad status codes
-        data = response.json() or {}
-
-    except RequestException as e:
-        # This catches all requests-related exceptions including HTTPError
-        logger.warning("Google Books search failed: %s", e)
-        return [], 0
-    except ValueError as e:
-        # This catches JSON decode errors
-        logger.warning("Google Books response parsing failed: %s", e)
-        return [], 0
-
-    items = data.get("items") or []
-    total_raw = int(data.get("totalItems") or 0)
-
-    books = []
-
-    for item in items:
-        volume = item.get("volumeInfo", {})
-        books.append({
-            "id": item.get("id"),
-            "title": volume.get("title"),
-            "authors": ', '.join(volume.get("authors", [])),
-            "thumbnail": volume.get("imageLinks", {}).get("thumbnail"),
-        })
-
-    # Avoid millions of pages
-    API_HARD_CAP = 120
-    total = min(total_raw, API_HARD_CAP)
-
-    if len(books) < max_results:
-        total = start_index + len(books)
-
-    return books, total
-
-
-def fetch_book_by_id(book_id):
-    """Fetch full volume details by Google Books volume ID.
-
-    Performs a GET to ``/volumes/{book_id}`` and normalizes the response into a
-    dict for the detail template.
-    Failures are logged and surfaced to Django
-    by raising ``Http404`` (so the standard 404 page is returned).
-
-    Args:
-        book_id (str): Google Books volume identifier.
-
-    Returns:
-        dict: Normalized volume data with keys including:
-            ``id``, ``title``, ``subtitle``, ``authors``, ``thumbnail``,
-            ``publisher``, ``publishedDate``, ``pageCount``, ``categories``,
-            ``description``, ``previewLink``, ``infoLink``
-    """
-
-    api_key = os.environ.get("GOOGLE_BOOKS_API_KEY")
-    url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
-    params = {"key": api_key} if api_key else None
-
-    try:
-        resp = requests.get(url, params=params, timeout=8)
-        resp.raise_for_status()
-        data = resp.json() or {}
-    except RequestException as e:
-        logger.warning("Google Books fetch failed for book_id %s: %s", book_id, e)  # noqa: E501
-        raise Http404("Book not found.") from e
-    except ValueError as e:
-        logger.warning("Google Books response parsing failed for book_id %s: %s", book_id, e)  # noqa: E501 pylint: disable=line-too-long
-        raise Http404("Book not found.") from e
-
-    vi = data.get("volumeInfo", {}) or {}
-    return {
-        "id": data.get("id"),
-        "title": vi.get("title"),
-        "subtitle": vi.get("subtitle"),
-        "authors": ", ".join(vi.get("authors", [])),
-        "thumbnail": (vi.get("imageLinks", {}) or {}).get("thumbnail"),
-        "publisher": vi.get("publisher"),
-        "publishedDate": vi.get("publishedDate"),
-        "pageCount": vi.get("pageCount"),
-        "categories": vi.get("categories", []),
-        "description": vi.get("description"),
-        "previewLink": vi.get("previewLink"),
-        "infoLink": vi.get("infoLink"),
-    }
-
-
 def book_detail(request, book_id):
     """Render the detail page for a single book with 1-hour caching.
 
@@ -336,18 +152,11 @@ def book_detail(request, book_id):
 
     user = getattr(request, "user", AnonymousUser())
     if getattr(user, "is_authenticated", False):
-        # use `user` below instead of `request.user`
-        rs = (
-            ReadingStatus.objects
-            .filter(user=user, book_id=book_id)
-            .only("status")
-            .first()
-              )
         try:
             # reading status
             rs = (
                 ReadingStatus.objects
-                .filter(user=request.user, book_id=book_id)
+                .filter(user=user, book_id=book_id)
                 .only("status")
                 .first()
             )
@@ -358,7 +167,7 @@ def book_detail(request, book_id):
             # rating
             r = (
                 Rating.objects
-                .filter(user=request.user, book_id=book_id, is_archived=False)
+                .filter(user=user, book_id=book_id, is_archived=False)
                 .only("rating")
                 .first()
             )
@@ -377,30 +186,40 @@ def book_detail(request, book_id):
             # user’s review (if any)
             my_review = (
                 Review.objects
-                .filter(user=request.user, book_id=book_id, is_archived=False)
+                .filter(user=user, book_id=book_id, is_archived=False)
                 .first()
             )
 
             # only build a blank form if the user has not reviewed yet
             form = (
                 None if my_review
-                else ReviewForm(user=request.user, book_id=book_id)
+                else ReviewForm(user=user, book_id=book_id)
             )
 
             if my_review:
                 reviews = reviews.exclude(pk=my_review.pk)
 
             # Determine if we are in edit mode
-            edit_mode = request.GET.get("edit") == "1" and my_review is not None
+            edit_mode = (
+                request.GET.get("edit") == "1"
+                and my_review is not None
+                )
 
             if edit_mode:
                 # show a prefilled form to edit
-                form = ReviewForm(user=request.user, book_id=book_id, instance=my_review)
+                form = ReviewForm(
+                    user=user,
+                    book_id=book_id,
+                    instance=my_review
+                    )
                 # optionally hide the “your review” from the list while editing
                 reviews = reviews.exclude(pk=my_review.pk)
             else:
                 # show a blank form only if the user hasn't reviewed yet
-                form = None if my_review else ReviewForm(user=request.user, book_id=book_id)
+                form = None if my_review else ReviewForm(
+                    user=user,
+                    book_id=book_id
+                    )
 
         except (ProgrammingError, OperationalError):
             # db not ready
