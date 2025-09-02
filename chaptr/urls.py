@@ -17,6 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+handler400 = "chaptr.errorviews.bad_request"
+handler403 = "chaptr.errorviews.permission_denied"
+handler404 = "chaptr.errorviews.page_not_found"
+handler500 = "chaptr.errorviews.server_error"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('books.urls')),
@@ -24,3 +29,5 @@ urlpatterns = [
     path('', include("library.urls")),
     path("accounts/", include("allauth.urls")),
 ]
+
+
