@@ -154,14 +154,23 @@ class GenreBrowsingTests(TestCase):
         self.assertEqual(resp.status_code, 200)
 
         # Spot-check
+        expected_romance = (
+            f'<a href="{self.search_url}?field=subject&amp;q=romance" '
+            'class="stretched-link" aria-label="Browse Romance"></a>'
+            )
         self.assertInHTML(
-            '<a href="{}?field=subject&amp;q=science%20fiction" class="stretched-link" aria-label="Browse Sci-Fi"></a>'.format(self.search_url),  # noqa: E501 pylint: disable=line-too-long       ),
+            expected_romance,
             resp.content.decode("utf-8"),
-        )
+            )
+
+        expected_mystery = (
+            f'<a href="{self.search_url}?field=subject&amp;q=mystery" '
+            'class="stretched-link" aria-label="Browse Mystery"></a>'
+            )
         self.assertInHTML(
-            '<a href="{}?field=subject&amp;q=mystery" class="stretched-link" aria-label="Browse Mystery"></a>'.format(self.search_url),  # noqa: E501 pylint: disable=line-too-long
+            expected_mystery,
             resp.content.decode("utf-8"),
-        )
+            )
 
     @patch("books.views.search_google_books")
     def test_genre_tile_redirects_to_search_with_pagination(self, mock_search):
@@ -218,7 +227,9 @@ class GenreBrowsingTests(TestCase):
 
         # Current page (2) is an active <span>, not a link
         self.assertIn(
-            '<li class="page-item active"><span class="page-link">2</span></li>',  # noqa: E501
+            '<li class="page-item active">'
+            '<span class="page-link">2</span>'
+            '</li>',
             html
             )
         self.assertNotIn(

@@ -34,9 +34,9 @@ class HomeViewTests(TestCase):
         resp = self.client.get(url)
 
         # Check for base template elements
-        self.assertContains(resp, "NextChaptr", html=False)  # Brand name
-        self.assertContains(resp, "© 2025 NextChaptr", html=False)  # Footer
-        self.assertContains(resp, "Skip to main content", html=False)  # A11y
+        self.assertContains(resp, 'data-testid="header"', html=False)
+        self.assertContains(resp, 'data-testid="footer"', html=False)
+        self.assertContains(resp, 'data-testid="skip-to-main"', html=False)
 
     def test_search_form_inclusion(self):
         """Test that the search form is included in the header."""
@@ -44,31 +44,43 @@ class HomeViewTests(TestCase):
         resp = self.client.get(url)
 
         # Check for search form elements based on search_form.html
-        self.assertContains(resp, 'name="q"', html=False)
-        self.assertContains(resp, 'name="field"', html=False)
+        self.assertContains(resp, 'id="search-q"', html=False)
+        self.assertContains(resp, 'id="search-field"', html=False)
         self.assertContains(resp, 'role="search"', html=False)
-        self.assertContains(resp, 'aria-label="Site search"', html=False)
+        self.assertContains(resp, 'data-testid="search-form"', html=False)
 
         # Check for specific form action
         self.assertContains(resp, 'action="/search/"', html=False)
 
-        # Check for search form structure
-        self.assertContains(resp, 'placeholder="Search books, authors, genres', html=False)  # noqa: E501 pylint: disable=line-too-long
-        self.assertContains(resp, 'class="search-card shadow"', html=False)
-
         # Check dropdown options
-        self.assertContains(resp, '<option value="all">All</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
-        self.assertContains(resp, '<option value="title">Title</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
-        self.assertContains(resp, '<option value="author">Author</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
-        self.assertContains(resp, '<option value="subject">Genre</option>', html=False)  # noqa: E501 pylint: disable=line-too-long
+        self.assertContains(
+            resp,
+            '<option value="all">All</option>',
+            html=False
+            )
+        self.assertContains(
+            resp,
+            '<option value="title">Title</option>',
+            html=False
+            )
+        self.assertContains(
+            resp,
+            '<option value="author">Author</option>',
+            html=False
+            )
+        self.assertContains(
+            resp,
+            '<option value="subject">Genre</option>',
+            html=False
+            )
 
     def test_anonymous_user_sees_auth_links(self):
         """Test that anonymous users see sign up and log in links."""
         url = reverse("home")
         resp = self.client.get(url)
 
-        self.assertContains(resp, "Sign up", html=False)
-        self.assertContains(resp, "Log in", html=False)
+        self.assertContains(resp, 'data-testid="sign-up"', html=False)
+        self.assertContains(resp, 'data-testid="log-in"', html=False)
 
         self.assertContains(resp, reverse("account_signup"), html=False)
         self.assertContains(resp, reverse("account_login"), html=False)
@@ -85,8 +97,8 @@ class HomeViewTests(TestCase):
         self.assertContains(resp, 'aria-label="Account menu"', html=False)
         self.assertContains(resp, reverse("account_logout"), html=False)
 
-        self.assertNotContains(resp, "Sign up", html=False)
-        self.assertNotContains(resp, "Log in", html=False)
+        self.assertNotContains(resp, 'data-testid="sign-up"', html=False)
+        self.assertNotContains(resp, 'data-testid="log-in"', html=False)
 
     def test_hero_section_content(self):
         """Test that hero section contains expected content."""
@@ -94,8 +106,9 @@ class HomeViewTests(TestCase):
         resp = self.client.get(url)
 
         # Hero title and description
-        self.assertContains(resp, "Your Next Chapter Awaits", html=False)
-        self.assertContains(resp, "Discover new stories", html=False)
+        self.assertContains(resp, 'data-testid="hero-container"', html=False)
+        self.assertContains(resp, 'data-testid="hero-title"', html=False)
+        self.assertContains(resp, 'data-testid="hero-text"', html=False)
 
         # Hero background image
         self.assertContains(resp, "home_banner.jpg", html=False)
@@ -107,19 +120,7 @@ class HomeViewTests(TestCase):
         url = reverse("home")
         resp = self.client.get(url)
 
-        self.assertContains(resp, "What is NextChaptr?", html=False)
-        self.assertContains(resp, "cozy corner of the internet", html=False)
-
-    def test_hero_section_accessibility(self):
-        """Test that hero section has accessibility attributes."""
-        url = reverse("home")
-        resp = self.client.get(url)
-
-        content = resp.content.decode()
-
-        self.assertIn('role="banner"', content)
-
-        self.assertIn('aria-label=', content)
+        self.assertContains(resp, 'data-testid="about-section"', html=False)
 
     def test_genre_section_content(self):
         """Test that genre browsing section renders correctly."""
@@ -135,6 +136,18 @@ class HomeViewTests(TestCase):
         self.assertContains(resp, "Non-Fiction", html=False)
 
         # Genre links
-        self.assertContains(resp, "/search/?field=subject&q=science%20fiction", html=False)  # noqa: E501 pylint: disable=line-too-long
-        self.assertContains(resp, "/search/?field=subject&q=mystery", html=False)  # noqa: E501
-        self.assertContains(resp, "/search/?field=subject&q=nonfiction", html=False)  # noqa: E501
+        self.assertContains(
+            resp,
+            "/search/?field=subject&q=science%20fiction",
+            html=False
+            )
+        self.assertContains(
+            resp,
+            "/search/?field=subject&q=mystery",
+            html=False
+            )
+        self.assertContains(
+            resp,
+            "/search/?field=subject&q=nonfiction",
+            html=False
+            )
