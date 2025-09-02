@@ -22,7 +22,13 @@ class BookAdmin(admin.ModelAdmin):
         "google_link",
     )
     list_filter = ("language",)
-    search_fields = ("id", "title", "authors", "published_date_raw", "language")  # noqa: E501 pylint: disable=line-too-long
+    search_fields = (
+        "id",
+        "title",
+        "authors",
+        "published_date_raw",
+        "language"
+        )
     ordering = ("-last_fetched_at",)
     readonly_fields = (
         "id",
@@ -36,10 +42,43 @@ class BookAdmin(admin.ModelAdmin):
         "last_fetched_at",
     )
     fieldsets = (
-        ("Identity", {"fields": ("id", "title", "author_list")}),
-        ("Metadata", {"fields": ("language", "published_date_raw")}),
-        ("Thumbnail", {"fields": ("thumbnail_preview",)}),
-        ("HTTP cache", {"fields": ("etag", "last_modified", "last_fetched_at")}),  # noqa: E501 pylint: disable=line-too-long
+        (
+            "Identity",
+            {
+                "fields": (
+                    "id",
+                    "title",
+                    "author_list"
+                    )
+            }
+        ),
+        (
+            "Metadata",
+            {
+                "fields": (
+                    "language",
+                    "published_date_raw"
+                )
+             }
+        ),
+        (
+            "Thumbnail",
+            {
+                "fields": (
+                    "thumbnail_preview",
+                    )
+            }
+        ),
+        (
+            "HTTP cache",
+            {
+                "fields": (
+                    "etag",
+                    "last_modified",
+                    "last_fetched_at"
+                    )
+            }
+        ),
     )
     actions = ("refresh_from_google",)
 
@@ -58,8 +97,11 @@ class BookAdmin(admin.ModelAdmin):
         """Return a thumbnail image preview."""
         if not obj.thumbnail_url:
             return "—"
-        return format_html('<img src="{}" style="height:120px;border:1px solid #ddd;border-radius:6px;" />', obj.thumbnail_url)   # noqa: E501 pylint: disable=line-too-long
-    thumbnail_preview.short_description = "Thumbnail"
+        return format_html(
+            '<img src="{}" '
+            'style="height:120px;border:1px solid #ddd;border-radius:6px;" />',
+            obj.thumbnail_url
+            )
 
     def etag_short(self, obj: Book):
         """Return the first 10 characters of the ETag."""
@@ -68,5 +110,9 @@ class BookAdmin(admin.ModelAdmin):
 
     def google_link(self, obj: Book):
         """Return a link to the book on Google Books."""
-        return format_html('<a href="https://books.google.com/books?id={}" target="_blank">Google</a>', obj.id)  # noqa: E501 pylint: disable=line-too-long
+        return format_html(
+            '<a href="https://books.google.com/books?id={}" '
+            'target="_blank">Google</a>',
+            obj.id
+            )
     google_link.short_description = "Link"
