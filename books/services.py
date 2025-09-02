@@ -7,8 +7,8 @@ from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.shortcuts import redirect
 from django.conf import settings
-from django.http import Http404
 from requests.exceptions import RequestException, HTTPError, Timeout
+from books.exceptions import BookFetchError
 from .models import Book
 
 # --- Config API ----------------------------------------------------
@@ -42,6 +42,7 @@ def safe_redirect_back(request, fallback_url):
     return redirect(fallback_url)
 
 
+# --- Google Books API -----------------------------------------------
 def fetch_or_refresh_book(
     volume_id: str, *,
     force: bool = False,
@@ -74,9 +75,17 @@ def fetch_or_refresh_book(
             )
         resp.raise_for_status()
     except (HTTPError, Timeout) as e:
-        raise RuntimeError(f"Failed to fetch book data: {e}") from e
+        raise BookFetchError(
+            "Failed to fetch book data",
+            volume_id=volume_id,
+            original_exception=e
+        ) from e
     except RequestException as e:
-        raise RuntimeError(f"Request error while fetching book: {e}") from e
+        raise BookFetchError(
+            "Request error while fetching book",
+            volume_id=volume_id,
+            original_exception=e
+        ) from e
 
     data = resp.json() or {}
     vi = data.get("volumeInfo", {}) or {}
@@ -207,14 +216,22 @@ def fetch_book_by_id(book_id):
             book_id,
             e
             )
-        raise Http404("Book not found.") from e
+        raise BookFetchError(
+            "Failed to fetch book data",
+            volume_id=book_id,
+            original_exception=e
+        ) from e
     except ValueError as e:
         logger.warning(
             "Google Books response parsing failed for book_id %s: %s",
             book_id,
             e
             )
-        raise Http404("Book not found.") from e
+        raise BookFetchError(
+            "Failed to parse Google Books response",
+            volume_id=book_id,
+            original_exception=e
+        ) from e
 
     vi = data.get("volumeInfo", {}) or {}
     return {

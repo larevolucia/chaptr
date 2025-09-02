@@ -12,6 +12,7 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
+from django.http import Http404
 from django.db.utils import ProgrammingError, OperationalError
 from activity.models import Rating, ReadingStatus, Review
 from activity.forms import ReviewForm
@@ -21,9 +22,10 @@ from activity.services import (
     get_average_rating,
     get_number_of_ratings
 )
+from books.exceptions import BookFetchError
 from books.services import (
     search_google_books,
-    fetch_book_by_id
+    fetch_book_by_id,
 )
 from books.utils import _genres, build_q
 # Create your views here.
@@ -138,7 +140,14 @@ def book_detail(request, book_id):
     cache_key = f"gbooks:vol:{book_id}"
     book = cache.get(cache_key)
     if not book:
-        book = fetch_book_by_id(book_id)
+        try:
+            book = fetch_book_by_id(book_id)
+        except BookFetchError as e:
+            messages.warning(
+                request,
+                "We couldn't load that book right now. Please try again."
+            )
+            raise Http404("Book not found.") from e
         cache.set(cache_key, book, timeout=60*60)
 
     book["user_status"] = None
