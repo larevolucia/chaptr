@@ -18,10 +18,13 @@ class ReadingStatusUITests(TestCase):
         self.user = User.objects.create_user(
             username="alice", email="alice@example.com", password="pass12345"
         )
-        self.book = Book.objects.create(id="VOL123", title="Dune")  # noqa: E501 pylint: disable=no-member
+        self.book = Book.objects.create(id="VOL123", title="Dune")
 
         self.detail_url = reverse("book_detail", args=[self.book.pk])
-        self.add_status_url = reverse("set_reading_status", args=[self.book.pk])  # noqa: E501
+        self.add_status_url = reverse(
+            "set_reading_status",
+            args=[self.book.pk]
+            )
 
     @patch('requests.get')
     def test_anonymous_user_sees_login_button(self, mock_requests_get):
@@ -45,7 +48,7 @@ class ReadingStatusUITests(TestCase):
         resp = self.client.get(url)
 
         self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, "Log in to add", html=False)
+        self.assertContains(resp, 'data-testid="login-to-add-cta"', html=False)
         self.assertContains(resp, reverse("account_login"), html=False)
 
     def test_all_valid_status_choices(self):
@@ -56,7 +59,10 @@ class ReadingStatusUITests(TestCase):
         for status in valid_statuses:
             with self.subTest(status=status):
                 user_status = {"status": status}
-                response = self.client.post(self.add_status_url, data=user_status)  # noqa: E501
+                response = self.client.post(
+                    self.add_status_url,
+                    data=user_status
+                    )
 
                 self.assertEqual(response.status_code, 302)
                 reading_status = ReadingStatus.objects.get(
@@ -71,8 +77,11 @@ class ReadingStatusUITests(TestCase):
         """
         self.client.force_login(self.user)
         user_status = {"status": "TO_READ"}
-        resp = self.client.post(self.add_status_url, data=user_status, follow=False)  # noqa: F841 E501 pylint: disable=unused-variable
-
+        resp = self.client.post(
+            self.add_status_url,
+            data=user_status,
+            follow=False
+            )
         self.assertTrue(
             ReadingStatus.objects.filter(
                 user=self.user, book=self.book, status="TO_READ"

@@ -42,7 +42,8 @@ class ReadingStatusAdmin(admin.ModelAdmin):
     def google_link(self, obj):
         """Return a link to the book on Google Books."""
         return format_html(
-            '<a href="https://books.google.com/books?id={}" target="_blank">Google</a>',  # noqa: E501 pylint: disable=line-too-long
+            '<a href="https://books.google.com/books?id={}" '
+            'target="_blank">Google</a>',
             obj.book_id,
         )
     google_link.short_description = "Link"
@@ -76,7 +77,8 @@ class RatingAdmin(admin.ModelAdmin):
     def google_link(self, obj):
         """Return a link to the book on Google Books."""
         return format_html(
-            '<a href="https://books.google.com/books?id={}" target="_blank">Google</a>',  # noqa: E501 pylint: disable=line-too-long
+            '<a href="https://books.google.com/books?id={}" '
+            'target="_blank">Google</a>',
             obj.book_id,
         )
     google_link.short_description = "Link"

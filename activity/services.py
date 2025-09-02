@@ -2,8 +2,8 @@
 Service for managing reading statuses and rating.
 """
 from django.db.models import Avg
-from .models import ReadingStatus, Rating, Review
 from django.utils import timezone
+from .models import ReadingStatus, Rating, Review
 
 
 def statuses_map_for(user, book_ids):
@@ -46,7 +46,11 @@ def get_number_of_ratings(book_id: str) -> int:
 
 
 def archive_user_evaluations(user, book_id: str):
-    """Archive all user evaluations (ratings and reviews) for a specific book"""
+    """
+    Archive all user evaluations
+    (ratings and reviews)
+    for a specific book
+    """
     now = timezone.now()
     Rating.objects.filter(user=user, book_id=book_id, is_archived=False)\
                   .update(is_archived=True, archived_at=now)

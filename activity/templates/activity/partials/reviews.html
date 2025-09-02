@@ -9,7 +9,7 @@
       <!-- EDIT MODE -->
       {% if form and form.instance.pk %}
         <h4 class="mb-2">Edit your review</h4>
-        <form id="reviewForm" method="post" action="{% url 'add_review' book.id %}">
+        <form data-testid="edit-review-form" id="reviewForm" method="post" action="{% url 'add_review' book.id %}">
           {% csrf_token %}
           {{ form.non_field_errors }}
           {{ form.content.errors }}
@@ -24,7 +24,7 @@
       {% elif not my_review %}
         <h4 class="mb-2">Leave a review</h4>
         <p class="mb-2">Posting as: <strong>{{ user.username }}</strong></p>
-        <form id="reviewForm" method="post" action="{% url 'add_review' book.id %}" style="margin-top:1.0em;">
+        <form data-testid="create-review-form" id="reviewForm" method="post" action="{% url 'add_review' book.id %}" style="margin-top:1.0em;">
           {% csrf_token %}
           {{ form.non_field_errors }}
           {{ form.content.errors }}
@@ -50,17 +50,19 @@
               </div>
               <div class="ms-3">
                 <a class="nc-btn nc-btn--icon nc-btn--sm"
+                   data-testid="edit-my-review-button"
                    href="{% url 'book_detail' book.id %}?edit=1#review">
                   <i class="fa-solid fa-pen"></i>
                 </a>
                <form id="delete-review-{{ my_review.id }}"
-                    method="post"
-                    action="{% url 'delete_review' book.id my_review.id %}"
-                    class="d-none">
-                {% csrf_token %}
+                     method="post"
+                     action="{% url 'delete_review' book.id my_review.id %}"
+                     class="d-none">
+               {% csrf_token %}
               </form>
-
+              
               <button type="button"
+                      data-testid="delete-my-review-button"
                       class="nc-btn nc-btn--danger nc-btn--icon nc-btn--sm"
                       data-bs-toggle="modal"
                       data-bs-target="#confirmDeleteModal"
@@ -93,6 +95,7 @@
               {% if user.is_authenticated and review.user_id == user.id %}
                 <div class="ms-3">
                   <a class="nc-btn nc-btn--icon nc-btn--sm"
+                    data-testid="edit-review-button"
                     href="{% url 'book_detail' book.id %}?edit=1#review">
                     <i class="fa-solid fa-pen"></i>
                   </a>
@@ -103,6 +106,7 @@
                     {% csrf_token %}
                   </form>
                   <button type="button"
+                          data-testid="delete-review-button"
                           class="nc-btn nc-btn--danger nc-btn--icon nc-btn--sm"
                           data-bs-toggle="modal"
                           data-bs-target="#confirmDeleteModal"
@@ -126,7 +130,7 @@
     </div>
   {% include 'activity/partials/confirm_delete_modal.html' %}
   {% else %}
-    <p class="text-muted text-center mt-4" id="review-login-prompt">
+    <p class="text-muted text-center mt-4" data-testid="review-login-prompt">
       <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a>
       to write and read reviews
     </p>

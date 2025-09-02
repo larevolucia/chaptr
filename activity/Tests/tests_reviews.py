@@ -87,11 +87,15 @@ class ReviewFlowTests(TestCase):
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, 200)
 
-        self.assertContains(response, 'id="review-login-prompt"')
-        self.assertNotContains(response, 'id="reviewForm"')
+        self.assertContains(response, 'data-testid="review-login-prompt"')
+        self.assertNotContains(response, 'data-testid="create-review-form"')
+        self.assertNotContains(response, 'data-testid="edit-review-form"')
 
     @patch("books.views.fetch_book_by_id")
-    def test_authenticated_user_without_review_sees_form(self, mock_fetch):
+    def test_authenticated_user_without_review_sees_correct_form(
+        self,
+        mock_fetch
+    ):
         """
         Test that an authenticated user
         without a review sees the review form.
@@ -101,10 +105,39 @@ class ReviewFlowTests(TestCase):
 
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, 200)
+        # shouls see the create review form, not the edit form
+        self.assertNotContains(response, 'data-testid="edit-review-form"')
+        self.assertContains(response, 'data-testid="create-review-form"')
         # Form textarea for `content`
         self.assertContains(response, '<textarea', html=False)
         # Action points to the add_review URL
         self.assertContains(response, f'action="{self.add_review_url}"')
+
+    @patch("books.views.fetch_book_by_id")
+    def test_authenticated_user_with_review_sees_buttons(
+        self,
+        mock_fetch
+    ):
+        """
+        Test that an authenticated user
+        without a review sees the review form.
+        """
+        mock_fetch.return_value = self.fetch_stub
+        # Create an initial review
+        Review.objects.create(
+            user=self.alice,
+            book_id=self.book_id,
+            content="OK book"
+            )
+
+        self.login(self.alice)
+
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, 200)
+        # shouls see the edit  review buttons, not the create form
+        self.assertContains(response, 'data-testid="edit-my-review-button"')
+        self.assertContains(response, 'data-testid="delete-my-review-button"')
+        self.assertNotContains(response, 'data-testid="create-review-form"')
 
     @patch("books.views.fetch_book_by_id")
     def test_user_can_edit_review_without_creating_duplicate(self, mock_fetch):
@@ -264,7 +297,7 @@ class ReviewFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Modal markup is present
-        self.assertContains(response, 'id="confirmDeleteModal"')
+        self.assertContains(response, 'data-testid="confirm-delete-modal"')
         self.assertContains(response, 'class="modal fade"')
 
         # Delete button points to the modal

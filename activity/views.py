@@ -27,7 +27,13 @@ def set_reading_status(request, book_id: str):
     Set the current user's reading status for a Google Books volume.
     Expects POST 'status' in {TO_READ, READING, READ}.
     """
-    status = (request.POST.get("status") or request.GET.get("status") or "").upper()
+    status = (
+        request.POST.get("status")
+        or
+        request.GET.get("status")
+        or
+        ""
+        ).upper()
 
     if status == "NONE":
         ReadingStatus.objects.filter(
@@ -126,10 +132,19 @@ def add_review(request, book_id):
         HttpResponse: The response object.
     """
     fetch_or_refresh_book(book_id)
-    existing = Review.objects.filter(user=request.user, book_id=book_id, is_archived=False).first()
+    existing = Review.objects.filter(
+        user=request.user,
+        book_id=book_id,
+        is_archived=False
+        ).first()
 
     if request.method == "POST":
-        form = ReviewForm(request.POST, user=request.user, book_id=book_id, instance=existing)
+        form = ReviewForm(
+            request.POST,
+            user=request.user,
+            book_id=book_id,
+            instance=existing
+            )
         if form.is_valid():
             # Ensure a status exists if posting a review
             ReadingStatus.objects.get_or_create(
@@ -140,7 +155,12 @@ def add_review(request, book_id):
             content = (request.POST.get("content") or "").strip()
             if content:
                 upsert_active_review(request.user, book_id, content)
-                messages.success(request, "Updated your review." if existing else "Your review has been posted.")
+                messages.success(
+                    request,
+                    "Updated your review."
+                    if existing
+                    else "Your review has been posted."
+                    )
             return redirect("book_detail", book_id=book_id)
     else:
         instance = existing if request.GET.get("edit") and existing else None

@@ -57,7 +57,7 @@ class Rating(models.Model):
     """Stores a user's rating for a book."""
     is_archived = models.BooleanField(default=False)
     archived_at = models.DateTimeField(null=True, blank=True, editable=False)
-    
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

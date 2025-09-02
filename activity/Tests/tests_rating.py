@@ -134,7 +134,7 @@ class RatingViewTests(TestCase):
         rs = ReadingStatus.objects.get(user=self.user, book=self.book)
         self.assertEqual(rs.status, ReadingStatus.Status.READ)
 
-    def test_can_rate_regardless_of_existing_reading_status_and_preserve_it(self):  # noqa: E501
+    def test_can_rate_regardless_of_existing_reading_status(self):
         """
         If the user already has any reading status
         (TO_READ/READING/READ),
