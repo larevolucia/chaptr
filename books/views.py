@@ -65,7 +65,7 @@ def book_search(request):
         if request.GET:
             messages.info(request, "Type something to search.")
         return render(request, "books/home.html", {"genres": _genres()})
-
+    query_string = q_raw.lower().strip()
     query_for_api = build_q(q_raw, field)
 
     per_page = 12
@@ -114,7 +114,7 @@ def book_search(request):
             'paginator': paginator,
             'is_paginated': page_obj.has_other_pages(),
             'page_range': list(page_range),
-            'query': q_raw,
+            'query': query_string,
             'field': field,
         }
     )
