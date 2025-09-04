@@ -162,7 +162,7 @@ body:has(.search-row) { --search-overlap: 88px; }
 
 .hero-text {
   font-family: var(--brand-font);
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   letter-spacing: 0.5px;
   color: var(--background-color-light);
   margin-top: 1rem;
@@ -1074,6 +1074,13 @@ ul.errorlist {
 
 /* MEDIUM+ SCREEN */
 @media (min-width: 768px) {
+    .hero-title {
+    font-size: 2.8rem;
+  }
+
+  .hero-text {
+    font-size: 1.8rem;
+    } 
   .search-card {
     /* 4 cols: scope | query | filter | button */
     grid-template-areas: none; /* stop using named areas */
