@@ -29,5 +29,3 @@ urlpatterns = [
     path('', include("library.urls")),
     path("accounts/", include("allauth.urls")),
 ]
-
-
