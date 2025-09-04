@@ -10,33 +10,28 @@
 
 {% block header_search %} {% include "books/partials/search_form.html" %} {% endblock %}
 {% block hero %}
-<section class="position-relative text-white" role="banner" aria-label="Main site banner" style="height:clamp(320px, 60vh, 560px);">
-  <picture class="position-absolute top-0 start-0 w-100 h-100">
-       <source type="image/webp"
+<section class="hero-section position-relative text-white" role="banner" aria-label="Main site banner">
+  <picture class="hero-media">
+    <source type="image/webp"
             srcset="{% static 'images/home_banner_1200.webp' %} 1200w,
                     {% static 'images/home_banner_1600.webp' %} 1600w"
             sizes="100vw">
-
-    <img
-      src="{% static 'images/home_banner_1200.jpg' %}"
-      alt="Person in a gray hoodie reading a book"
-      width="1600" height="900"
-      decoding="async" loading="eager" fetchpriority="high"
-      class="w-100 h-100 d-block object-fit-cover">
+    <img src="{% static 'images/home_banner_1200.jpg' %}"
+         alt="Person in a gray hoodie reading a book"
+         width="1600" height="900"
+         decoding="async" loading="eager" fetchpriority="high">
   </picture>
 
-  <!-- Dark gradient overlay -->
-  <div class="position-absolute top-0 start-0 w-100 h-100" style="background:
-       linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.45));"></div>
+  <!-- Stronger, consistent dark scrim -->
+  <div class="hero-overlay"></div>
 
-  <!-- Hero Content -->
-  <div data-testid="hero-container" class="container position-relative py-5" style="z-index: 2">
+  <div data-testid="hero-container" class="container position-relative py-5" style="z-index:2">
     <div class="row justify-content-center text-center">
       <div class="col-lg-8">
-        <h1 data-testid="hero-title" class="hero-title">Your Next Chapter Awaits</h1>
-        <p data-testid="hero-text" class="hero-text">
-          Discover new stories, explore your favorite genres, and never run out of books to love.
-        </p>
+          <h1 data-testid="hero-title" class="hero-title">Your Next Chapter Awaits</h1>
+          <p data-testid="hero-text" class="hero-text">
+            Discover new stories, explore your favorite genres, and never run out of books to love.
+          </p>
       </div>
     </div>
   </div>
