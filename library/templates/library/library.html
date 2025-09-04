@@ -111,8 +111,8 @@
 
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="{% url 'book_detail' book.id %}#reviews">Write a review</a></li>
-                <li><a class="dropdown-item" href="{% url 'book_detail' book.id %}">Rate</a></li>
-
+                <li><a class="dropdown-item" href="{% url 'book_detail' book.id %}#rating-form-{{ book.id }}">Rate</a></li>
+                
                 <!-- Submenu: Change status -->
                 <li class="dropdown-submenu">
                   <a href="#"
