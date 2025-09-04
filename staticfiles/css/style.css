@@ -143,6 +143,7 @@ a.no-decoration{
   color: var(--background-color-light);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   margin-top: 3.5rem;
+  letter-spacing: .2px;
 }
 
 .hero-text {
@@ -151,6 +152,8 @@ a.no-decoration{
   letter-spacing: 0.5px;
   color: var(--background-color-light);
   margin-top: 1rem;
+  font-weight: 500;
+
 }
 
 /* --- HERO ACCESSIBILITY HELPERS --- */
@@ -166,20 +169,6 @@ a.no-decoration{
     radial-gradient(120% 100% at 50% 0%, rgba(0,0,0,.15) 0%, rgba(0,0,0,0) 60%),
     linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.45));
   /* Increase the .65 value to .7–.8 if needed to pass AA on smaller text */
-}
-
-/* Text styling tuned for contrast */
-
-.hero-title {
-  font-weight: 700;              /* large/bold qualifies for 3:1 */
-  letter-spacing: .2px;
-}
-
-.hero-text {
-  font-size: 1.125rem;           /* bump size for easier AA */
-  font-weight: 500;
-  max-width: 60ch;
-  margin-inline: auto;
 }
 
 /* -------------------------------
