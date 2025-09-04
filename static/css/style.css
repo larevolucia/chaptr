@@ -250,7 +250,9 @@ a.no-decoration{
   height: 192px;
   object-fit: cover;
 }
-
+.search-result-heading {
+  font-family: var(--primary-font);
+}
 /* -------------------------------
    BUTTONS
    Namespace: .nc-btn
@@ -438,7 +440,7 @@ a.nc-btn:hover, a.nc-btn:focus-visible { text-decoration: none; }
 
 .rating-widget .star {
   font-size: 1.6rem;
-  color: #ddd;          /* empty star */
+  color: #757575;         /* empty star */
   transition: color 0.2s;
   padding: 0 0.1rem;
 }

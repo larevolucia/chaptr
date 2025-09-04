@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<h2>Results for "{{ query }}"</h2>
+<h1 class="h2 search-result-heading">Results for "{{ query }}"</h2>
 {% if is_paginated %}
   <p class="text-muted small">
     Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ paginator.count }} results
@@ -47,7 +47,7 @@
           href="{% url 'book_detail' book.id %}"
           class="text-decoration-none text-body"
           >
-            <h5 class="mb-1">{{ book.title }}</h5>
+            <h2 class="mb-1 h5 search-result-heading text-start">{{ book.title }}</h5>
             <p class="mb-0 text-muted">By {{ book.authors }}</p>
           </a>
             {% include "activity/partials/book_rating_info.html" %}
