@@ -473,13 +473,38 @@ a.nc-btn:hover, a.nc-btn:focus-visible { text-decoration: none; }
   cursor: pointer;
 }
 
-.stars input[type="radio"] {
-  display:none
+.visually-hidden {
+  position:absolute !important;
+  width:1px; height:1px;
+  padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0 0 0 0); clip-path: inset(50%);
+  border:0;
 }
 
-.stars input[type="radio"]:checked ~ label {
-  color: #f2b01e;       /* highlight checked star */
+
+/* .stars input[type="radio"] {
+  display:none
+} */
+
+/* Keep radios in the accessibility tree & tab order */
+.stars input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
 }
+/* Visible focus ring on the star that corresponds to the focused radio */
+.stars input[type="radio"]:focus-visible + label.star {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
+  border-radius: 6px; /* helps the outline look tidy */
+}
+
+.stars input[type="radio"]:checked ~ label.star { color: #f2b01e; }
+
 
 .btn-remove-rating {
   background: transparent;
@@ -553,18 +578,14 @@ input[type="radio"] {
   outline: none;
 }
 
-/* When the stretched link inside a card is focused, style the whole card */
 .genre-card:has(.stretched-link:focus-visible) {
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--accent-color);
-
-  /* Strong outline like buttons */
   outline: 3px solid var(--accent-color);
   outline-offset: 2px;
 }
 
-/* Make sure the text changes color on focus, just like hover */
 .genre-card:has(.stretched-link:focus-visible) h3,
 .genre-card:has(.stretched-link:focus-visible) p {
   color: var(--accent-color);

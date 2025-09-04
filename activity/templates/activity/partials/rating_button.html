@@ -5,23 +5,32 @@
         <form id="rating-form-{{ book.id }}" method="post" action="{% url 'set_rating' book.id %}">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <div class="btn-group stars d-flex flex-row-reverse" role="group" aria-label="Rating">
+            <fieldset class="btn-group stars d-flex flex-row-reverse">
+                <legend class="visually-hidden">Rate this book</legend>
+
                 {% if current_rating > 0 %}
-                    <button type="button" class="nc-btn nc-btn--ghost nc-btn--icon nc-btn--sm btn-remove-rating" onclick="removeRating('{{ book.id }}')" title="Remove rating">
-                            ✕
+                    <button type="button" class="nc-btn nc-btn--ghost nc-btn--icon nc-btn--sm btn-remove-rating"
+                            onclick="removeRating('{{ book.id }}')" title="Remove rating" aria-label="Remove rating">
+                    ✕
                     </button>
                 {% endif %}
-                <input type="radio" name="rating" id="star-{{ book.id }}-5" value="5" {% if current_rating == 5 %}checked{% endif %}>
-                <label class="star" title="5 stars" for="star-{{ book.id }}-5">★</label>
-                <input type="radio" name="rating" id="star-{{ book.id }}-4" value="4" {% if current_rating == 4 %}checked{% endif %}>
-                <label class="star" title="4 stars" for="star-{{ book.id }}-4">★</label>
-                <input type="radio" name="rating" id="star-{{ book.id }}-3" value="3" {% if current_rating == 3 %}checked{% endif %}>
-                <label class="star" title="3 stars" for="star-{{ book.id }}-3">★</label>
-                <input type="radio" name="rating" id="star-{{ book.id }}-2" value="2" {% if current_rating == 2 %}checked{% endif %}>
-                <label class="star" title="2 stars" for="star-{{ book.id }}-2">★</label>
-                <input type="radio" name="rating" id="star-{{ book.id }}-1" value="1" {% if current_rating == 1 %}checked{% endif %}>
-                <label class="star" title="1 star" for="star-{{ book.id }}-1">★</label>
-            </div>
+
+                <input type="radio" name="rating" id="star-{{ book.id }}-5" value="5" aria-label="5 stars" {% if current_rating == 5 %}checked{% endif %}>
+                <label class="star" for="star-{{ book.id }}-5">★</label>
+
+                <input type="radio" name="rating" id="star-{{ book.id }}-4" value="4" aria-label="4 stars" {% if current_rating == 4 %}checked{% endif %}>
+                <label class="star" for="star-{{ book.id }}-4">★</label>
+
+                <input type="radio" name="rating" id="star-{{ book.id }}-3" value="3" aria-label="3 stars" {% if current_rating == 3 %}checked{% endif %}>
+                <label class="star" for="star-{{ book.id }}-3">★</label>
+
+                <input type="radio" name="rating" id="star-{{ book.id }}-2" value="2" aria-label="2 stars" {% if current_rating == 2 %}checked{% endif %}>
+                <label class="star" for="star-{{ book.id }}-2">★</label>
+
+                <input type="radio" name="rating" id="star-{{ book.id }}-1" value="1" aria-label="1 star" {% if current_rating == 1 %}checked{% endif %}>
+                <label class="star" for="star-{{ book.id }}-1">★</label>
+                </fieldset>
+
        </form>
        {% endwith %}
     {% else %}
