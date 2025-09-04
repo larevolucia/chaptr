@@ -12,6 +12,7 @@
     <meta name="description" content="{% block description %}{% endblock %}">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
     {% block meta %}{% endblock %}
+    {% block link %}{% endblock %}
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon_io/favicon.ico' %}">
@@ -30,7 +31,7 @@
     <a data-testid="skip-to-main" class="visually-hidden-focusable position-absolute top-0 start-0 m-2 p-2 bg-body border rounded"
      href="#main-content">Skip to main content</a>
     <!-- Site header -->
-    <header data-testid="header" class="site-header">
+    <nav data-testid="header" class="site-header" role="navigation">
       <div class="container py-3">
         <div class="d-flex align-items-center justify-content-between">
           <a class="navbar-brand brand-font fs-3 text-dark m-0" href="/">NextChaptr</a>
@@ -60,7 +61,7 @@
         </div>
         {% block header_search %}{% endblock %}
       </div>
-    </header>
+    </nav>
     <!-- Flash messages -->
     {% if messages %}
         <div class="message-overlay" aria-live="polite" aria-atomic="true">
