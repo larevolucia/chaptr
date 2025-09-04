@@ -537,7 +537,7 @@ input[type="radio"] {
 .genre-card.card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--accent-color);
+  border: 1.5px solid var(--accent-color);
 }
 
 /* subtle text color change on hover */
@@ -547,6 +547,25 @@ input[type="radio"] {
 .genre-card.card:hover p {
   color: var(--accent-color);
 }
+
+/* Remove browser default outline on the invisible stretched link */
+.genre-card .stretched-link:focus-visible {
+  outline: none;
+}
+
+.genre-card:has(.stretched-link:focus-visible) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--accent-color);
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.genre-card:has(.stretched-link:focus-visible) h3,
+.genre-card:has(.stretched-link:focus-visible) p {
+  color: var(--accent-color);
+}
+
 
 /* -------------------------------
    BOOKS PAGE
