@@ -1,4 +1,6 @@
 {% extends 'base.html' %} {% load static %} 
+{% block title %}Search Results for {{query}}{% endblock %}
+{% block description %}Book results for {{ query }}{% endblock %}
 
 {% block header_search %} {% include "books/partials/search_form.html" %} {% endblock %} 
 
@@ -6,8 +8,6 @@
     <script src="{% static 'js/rating.js' %}"></script>
     <script src="{% static 'js/delete_modal.js' %}"></script>
 {% endblock %}
-
-{% block title %}Search Results{% endblock %}
 
 {% block content %}
 <h2>Results for "{{ query }}"</h2>

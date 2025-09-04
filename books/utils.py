@@ -1,10 +1,41 @@
 """ Utilities for books app. """
 import re
+from html import unescape
 
 OPERATOR_RE = re.compile(
     r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|oclc):',
     re.I
     )
+
+
+def meta_description_from_volume(book: dict, max_len: int = 155) -> str:
+    """
+    Normalize, sanitize and slice book description
+    to create meta description tag
+    """
+    text = book.get("description") or ""
+
+    # Normalize and sanitize
+    text = unescape(text)                      # decode entities
+    text = re.sub(r"<[^>]+>", "", text)        # strip tags if any
+    text = re.sub(r"\s+", " ", text).strip()   # collapse whitespace
+
+    if not text:
+        title = book.get("title") or "Untitled"
+        authors = book.get("authors") or []
+        text = f"{title} — by {authors}." if authors else f"{title}."
+
+    if len(text) <= max_len:
+        return text
+
+    # Soft wrap on a nice boundary near max_len
+    slice_ = text[: max_len + 20]
+    # prefer a sentence end, then em dash, semicolon, colon, comma, then space
+    candidates = [". ", " — ", "; ", ": ", ", ", " "]
+    idx = max((slice_.rfind(c) for c in candidates), default=-1)
+    cut = slice_[:idx] if idx > 0 else text[:max_len]
+    cut = re.sub(r"[.,:;—\s]+$", "", cut)
+    return cut + "…"
 
 
 def _genres():

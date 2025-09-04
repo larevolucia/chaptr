@@ -1,4 +1,9 @@
-{% extends "base.html" %} {% load static %} {% block title %}Home{% endblock %}
+{% extends "base.html" %} 
+{% load static %} 
+{% block title %}Home{% endblock %}
+{% block description %}Discover your next favorite book with NextChaptr!{% endblock %}
+{% block keywords %}books, reading, library, novels, literature, ebooks{% endblock %}
+
 {% block header_search %} {% include "books/partials/search_form.html" %} {% endblock %}
 {% block hero %}
 <section

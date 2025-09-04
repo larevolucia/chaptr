@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load seo_extras %}
 
 {% block title %}{{ book.title }}{% if book.subtitle %}: {{ book.subtitle }}{% endif %}{% endblock %}
+{% block description %}{{ book|meta_desc:155 }}{% endblock %}
+{% block keywords %}{{ book.categories|join:", " }}{% endblock %}
 
 {% block header_search %}
   {% include "books/partials/search_form.html" %}

@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block title %}Your Library{% endblock %}
+{% block description %}Manage your reading progress with NextChaptr Library!{% endblock %}
+{% block keywords %}books, reading, library, novels, literature, ebooks{% endblock %}
+
 {% block header_search %}{% include "books/partials/search_form.html" %}{% endblock %}
 {% block extra_js %}
     <script src="{% static 'js/library.js' %}"></script>
