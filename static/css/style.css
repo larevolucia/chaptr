@@ -42,24 +42,50 @@ h1, h3 {
   font-family: var(--secondary-font);
   text-align: center;
 }
+h1 {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  margin: 0 0 .6em;
+}
+article h1,
+section h1,
+nav h1,
+aside h1 {
+  font-size: 1.875rem;
+}
+
 h2, h4 {
   font-family: var(--primary-font);
   color: var(--text-color-dark);
 }
 
+
 h2 {
+  font-size: 1.875rem; 
+  line-height: 1.25;
   text-align: center;
   margin-bottom: 0.5em;
 }
-
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  margin: 0 0 .5em;
+}
 h4 {
   text-align: left;
   font-size: 1.15rem;
+  line-height: 1.35;
   margin: 0.5em 0;
 }
 
 h5 {
   font-size: 1.1rem;
+   line-height: 1.4;
+}
+
+h6 {
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 p,
@@ -630,9 +656,6 @@ input[type="radio"] {
    LIBRARY LIST
 ---------------------------------- */
 .library-table td, .library-table th { vertical-align: middle; }
-@media (max-width: 575.98px) {
-  .library-table .nc-btn { padding: 0.5rem 0.75rem; } 
-}
 /* --- Multi-level dropdown (submenu) --- */
 .dropdown-submenu { position: relative; }
 
@@ -674,7 +697,7 @@ input[type="radio"] {
 }
 .table-sort:hover { text-decoration: none; }
 /* -------------------------------
-   DROPDOWN / STATUSES
+DROPDOWN / STATUSES
 ---------------------------------- */
 /* Override Bootstrap dropdown links to match site design */
 .dropdown-menu .dropdown-item {
@@ -729,7 +752,7 @@ input[type="radio"] {
 }
 
 /* -------------------------------
-   AUTH (LOGIN / SIGNUP / LOGOUT)
+AUTH (LOGIN / SIGNUP / LOGOUT)
 ---------------------------------- */
 /* Auth container */
 .auth-container {
@@ -844,7 +867,7 @@ ul.errorlist {
 }
 
 /* ================================
-   Allauth buttons 
+Allauth buttons 
 =================================== */
 
 /* Make the Allauth forms layout flex so we can right-align the action row */
@@ -874,24 +897,24 @@ ul.errorlist {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-
+  
   height: 2.5rem;
   padding: 0.6rem 1rem;
   border-radius: 12px;
-
+  
   font-family: var(--brand-font);
   font-weight: 600;
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
-
+  
   /* Primary fill tokens */
   background: var(--primary-color-dark);
   color: #fff;
   border: 1px solid var(--primary-color-dark);
-
+  
   transition: background-color .15s ease, color .15s ease,
-              border-color .15s ease, box-shadow .15s ease, transform .05s ease;
+  border-color .15s ease, box-shadow .15s ease, transform .05s ease;
 }
 
 /* Hover / active / focus match your .nc-btn interactions */
@@ -942,7 +965,7 @@ ul.errorlist {
 
 
 /* -------------------------------
-   EMAIL ADDRESSES
+EMAIL ADDRESSES
 ---------------------------------- */
 .email-list {
   margin: 1rem 0 0.5rem;
@@ -1005,7 +1028,7 @@ ul.errorlist {
 }
 
 /* -------------------------------
-   MESSAGES
+MESSAGES
 ---------------------------------- */
 
 /* Put flash messages on top, centered, without affecting layout */
@@ -1027,18 +1050,18 @@ ul.errorlist {
 
 
 /* -------------------------------
-   MEDIA QUERIES
+MEDIA QUERIES
 ---------------------------------- */
 
 /* SMALL SCREEN */
 @media (max-width: 767px) {
   .search-card {
     grid-template-areas:
-      "scope  query"
-      "filter query"
-      "button button";
+    "scope  query"
+    "filter query"
+    "button button";
   }
-
+  
   /* Explicit area assignment  */
   .search-card select[name="field"] {
     grid-area: scope;
@@ -1052,6 +1075,10 @@ ul.errorlist {
   .search-card button[type="submit"] {
     grid-area: button;
   }
+}
+
+@media (max-width: 575.98px) {
+  .library-table .nc-btn { padding: 0.5rem 0.75rem; } 
 }
 
 @media (min-width: 576px) {
@@ -1074,7 +1101,15 @@ ul.errorlist {
 
 /* MEDIUM+ SCREEN */
 @media (min-width: 768px) {
-    .hero-title {
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.625rem; }
+  article h1,
+  section h1,
+  nav h1,
+  aside h1 { font-size: 2rem; }
+
+  .hero-title {
     font-size: 2.8rem;
   }
 
