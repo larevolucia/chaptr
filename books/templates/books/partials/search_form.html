@@ -6,7 +6,7 @@
     <form class="search-card shadow"
         method="get" action="{% url 'book_search' %}" role="search" aria-label="Site search">
         <!-- Scope -->
-        <label class="visually-hidden" for="field">Search scope</label>
+        <label class="visually-hidden" for="search-field">Search scope</label>
         <select id="search-field" class="form-select" name="field" aria-label="Search scope">
             <option value="all">All</option>
             <option value="title">Title</option>
@@ -15,7 +15,7 @@
         </select>
 
         <!-- Query -->
-        <label class="visually-hidden" for="q">Search books</label>
+        <label class="visually-hidden" for="search-q">Search books</label>
         <input id="search-q" class="form-control" type="search" name="q" required
             placeholder="Search books, authors, genres…" aria-label="Search">
         
