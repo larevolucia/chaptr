@@ -1,11 +1,19 @@
 """ Utilities for books app. """
 import re
 from html import unescape
+from typing import Optional
 
 OPERATOR_RE = re.compile(
     r'\b(intitle|inauthor|inpublisher|subject|isbn|lccn|oclc):',
     re.I
     )
+
+
+def ensure_https(url: Optional[str]) -> Optional[str]:
+    """Force http:// → https:// once, leave None/https as-is."""
+    if not url:
+        return url
+    return re.sub(r"^http:", "https:", url, count=1)
 
 
 def meta_description_from_volume(book: dict, max_len: int = 155) -> str:

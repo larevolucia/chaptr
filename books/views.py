@@ -89,7 +89,8 @@ def book_search(request):
     labels = dict(ReadingStatus.Status.choices)
 
     for b in books:
-        status = (status_map.get(b["id"]) or {}).get("status")
+        status = (status_map.get(b["id"])
+                  or {}).get("status")
         b["user_status"] = status
         b["user_status_label"] = labels.get(status)
         b["user_rating"] = rating_map.get(b["id"], 0)

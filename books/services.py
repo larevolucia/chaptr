@@ -9,6 +9,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 from requests.exceptions import RequestException, HTTPError, Timeout
 from books.exceptions import BookFetchError
+from books.utils import ensure_https
 from .models import Book
 
 # --- Config API ----------------------------------------------------
@@ -88,17 +89,18 @@ def fetch_or_refresh_book(
         ) from e
 
     data = resp.json() or {}
+
     vi = data.get("volumeInfo", {}) or {}
-    links = vi.get("imageLinks", {}) or {}
+    image_links = vi.get("imageLinks", {}) or {}
+    thumbnail_url = (
+        image_links.get("thumbnail") or image_links.get("smallThumbnail")
+        )
+    thumbnail_url = ensure_https(thumbnail_url)
 
     # Populate model fields
     book.title = vi.get("title") or ""
     book.authors = vi.get("authors") or None
-    book.thumbnail_url = (
-        links.get("thumbnail")
-        or links.get("smallThumbnail")
-        or ""
-        )
+    book.thumbnail_url = thumbnail_url
     book.language = vi.get("language") or ""
     book.published_date_raw = vi.get("publishedDate") or ""
 
@@ -168,12 +170,16 @@ def search_google_books(query, *, start_index=0, max_results=12):
     books = []
 
     for item in items:
-        volume = item.get("volumeInfo", {})
+        vi = item.get("volumeInfo", {})
+        image_links = vi.get("imageLinks", {}) or {}
+        thumbnail_url = image_links.get("thumbnail")
+        thumbnail_url = ensure_https(thumbnail_url)
+
         books.append({
             "id": item.get("id"),
-            "title": volume.get("title"),
-            "authors": ', '.join(volume.get("authors", [])),
-            "thumbnail": volume.get("imageLinks", {}).get("thumbnail"),
+            "title": vi.get("title"),
+            "authors": ', '.join(vi.get("authors", [])),
+            "thumbnail": thumbnail_url,
         })
 
     # Avoid millions of pages
@@ -234,12 +240,16 @@ def fetch_book_by_id(book_id):
         ) from e
 
     vi = data.get("volumeInfo", {}) or {}
+    image_links = vi.get("imageLinks", {}) or {}
+    thumbnail_url = image_links.get("thumbnail")
+    thumbnail_url = ensure_https(thumbnail_url)
+
     return {
         "id": data.get("id"),
         "title": vi.get("title"),
         "subtitle": vi.get("subtitle"),
         "authors": ", ".join(vi.get("authors", [])),
-        "thumbnail": (vi.get("imageLinks", {}) or {}).get("thumbnail"),
+        "thumbnail": thumbnail_url,
         "publisher": vi.get("publisher"),
         "publishedDate": vi.get("publishedDate"),
         "pageCount": vi.get("pageCount"),
