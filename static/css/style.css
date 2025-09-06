@@ -7,7 +7,9 @@
   --primary-color-light: #b2dfdb; /* Light Teal Green */
   --accent-color: #B85450; /* Deep Orange */
   --danger-color: #DC3545; /* Deep Orange */
+  --secondary-color-light: #cfe8fe;
   --secondary-color: #1460a2;
+  --secondary-color-dark: #125691;
   --divider-color: #bdbdbd; /* Light Gray */
   --text-color-dark: #212121; /* Dark Gray */
   --text-color: #757575; /* Gray */
@@ -663,6 +665,11 @@ input[type="radio"] {
 /* -------------------------------
    LIBRARY LIST
 ---------------------------------- */
+.library-cover-img {
+  width: 48px;
+  height: 72px;
+  object-fit: cover;
+}
 .library-table td, .library-table th { vertical-align: middle; }
 /* --- Multi-level dropdown (submenu) --- */
 .dropdown-submenu { position: relative; }
@@ -694,7 +701,7 @@ input[type="radio"] {
 
 /* Variants */
 .status--to-read  { background: #fff4e5; color: #664d03; }  
-.status--reading  { background: var(--primary-color-light); color: var(--primary-color-dark); }
+.status--reading  { background: var(--secondary-color-light); color: var(--secondary-color-dark); }
 .status--read     { background: #e6f4ea; color: #0f5132; }
 .status--none     { background: #f2f4f7; color: #344054; }
 

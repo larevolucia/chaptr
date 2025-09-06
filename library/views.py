@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Case, When, Value, IntegerField
 from django.shortcuts import render
 from activity.models import ReadingStatus
+from books.utils import ensure_https
 
 VALID_STATUS = {
     "TO_READ": ReadingStatus.Status.TO_READ,
@@ -58,6 +59,12 @@ def library(request):
     for rs in rows:
         rs.user_status_label = labels.get(rs.status, "—")
         rs.user_status_class = status_class.get(rs.status, "status--none")
+
+        b = rs.book
+        # normalize http→https; if empty, fall back to canonical Google cover
+        thumbnail_url = ensure_https(getattr(b, "thumbnail_url", None))
+
+        b.thumbnail_url = thumbnail_url
 
     context = {
         "rows": rows,
