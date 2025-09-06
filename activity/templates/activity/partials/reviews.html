@@ -51,6 +51,8 @@
               <div class="ms-3">
                 <a class="nc-btn nc-btn--icon nc-btn--sm"
                    data-testid="edit-my-review-button"
+                   aria-label="Edit review"
+                   title="Edit"
                    href="{% url 'book_detail' book.id %}?edit=1#review">
                   <i class="fa-solid fa-pen"></i>
                 </a>
@@ -62,6 +64,8 @@
               </form>
               
               <button type="button"
+                      title="Delete"
+                      aria-label="Delete review"
                       data-testid="delete-my-review-button"
                       class="nc-btn nc-btn--danger nc-btn--icon nc-btn--sm"
                       data-bs-toggle="modal"
@@ -96,6 +100,8 @@
                 <div class="ms-3">
                   <a class="nc-btn nc-btn--icon nc-btn--sm"
                     data-testid="edit-review-button"
+                    title="Edit"
+                    aria-lable="Edit review"
                     href="{% url 'book_detail' book.id %}?edit=1#review">
                     <i class="fa-solid fa-pen"></i>
                   </a>
@@ -106,6 +112,8 @@
                     {% csrf_token %}
                   </form>
                   <button type="button"
+                          title="Delete"
+                          aria-label="Delete review"
                           data-testid="delete-review-button"
                           class="nc-btn nc-btn--danger nc-btn--icon nc-btn--sm"
                           data-bs-toggle="modal"
