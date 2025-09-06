@@ -419,6 +419,14 @@ body:has(.search-row) { --search-overlap: 88px; }
   --btn-text: #fff;
   --btn-border: var(--danger-color);
 }
+/* keep icons fully background-less, even on hover/active */
+.nc-btn--ghost,
+.nc-btn--ghost:hover,
+.nc-btn--ghost:active {
+  background: transparent;
+}
+/* subtle hover without backgrounds */
+.nc-btn--ghost:hover { opacity: .85; }
 
 /* Outline/ghost styles – replacement for Bootstrap "btn-outline-*" */
 .nc-btn--secondary {
