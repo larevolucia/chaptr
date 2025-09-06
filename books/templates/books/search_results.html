@@ -5,8 +5,8 @@
 {% block header_search %} {% include "books/partials/search_form.html" %} {% endblock %} 
 
 {% block extra_js %}
-    <script src="{% static 'js/rating.js' %}"></script>
-    <script src="{% static 'js/delete_modal.js' %}"></script>
+    <script src="{% static 'js/rating.js' %}" defer></script>
+    <script src="{% static 'js/delete_modal.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -30,14 +30,19 @@
           href="{% url 'book_detail' book.id %}"
           class="text-decoration-none text-body"
           >
-            <img
-              src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-              alt="{{ book.title }}"
-              loading="lazy"
-              class="mb-2 img-card-search"
-              width="128"
-              height="192"
-            />
+          <img
+            src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+            alt="{{ book.title }}"
+            width="128" height="192"
+            class="mb-2 img-card-search"
+            decoding="async"
+            sizes="(max-width: 480px) 50vw, 33vw"
+            {% if forloop.first %}
+              loading="eager" fetchpriority="high"
+            {% else %}
+              loading="lazy" fetchpriority="auto"
+            {% endif %}
+          >
       </a>
         {% include "activity/partials/reading_status_button.html" %}
       </div>
