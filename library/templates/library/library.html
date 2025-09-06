@@ -76,7 +76,7 @@
           </td>
           <td>
             <a href="{% url 'book_detail' book.id %}"
-               class="fw-semibold link-underline link-underline-opacity-0">
+               class="book-link">
               {{ book.title }}
             </a>
             <!-- show authors under title on very small screens -->
@@ -103,7 +103,7 @@
           </td>
           <td class="text-end">
             <div class="btn-group">
-              <a class="nc-btn nc-btn--ghost nc-btn--sm" href="{% url 'book_detail' book.id %}">
+              <a class="nc-btn nc-btn--ghost nc-btn--sm text-decoration-underline" href="{% url 'book_detail' book.id %}">
                 View
               </a>
               <button class="nc-btn nc-btn--muted nc-btn--sm dropdown-toggle dropdown-toggle-split"

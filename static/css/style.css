@@ -123,6 +123,25 @@ a.no-decoration{
   text-decoration: none;
 }
 
+/* Unify book title + action links */
+.book-link {
+  color: var(--secondary-color);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.book-link:hover,
+.book-link:focus {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+.book-link--sm {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+
 /* Ensure #main-content lands fully *below* header + search overlap */
 #main-content {
   scroll-margin-top: calc(var(--header-height) + var(--search-overlap) + 12px);
