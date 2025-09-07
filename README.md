@@ -188,6 +188,9 @@ Sprint 3:
    - [x] [View books grouped by reading status](#17)
    - [x] [Update reading status directly from dashboard](#18)
 - Testing and Bug Fixes
+   - [x] [Refactoring](#85)
+   - [x] [Accessibility & Performance](#87)
+   - [ ] [Documentation](#88)
 
 ---
 
@@ -207,19 +210,21 @@ A welcoming, responsive landing experience that introduces CHAPTR and funnels vi
 
 Book discovery is powered by the Google Books API, allowing users to explore a vast catalog with flexible search options.
 
-- **Keyword or Field-Specific Search**: Search by general keywords or refine by title, author, or genre.
-- **Smart Query Handling**: The system applies the correct Google Books operators automatically.
-- **Clean Results**: Results display thumbnails, titles, and authors in a browsable layout.
-- **Pagination**: Supports navigating through large result sets with ease.
-- **Resilient Design**: Handles API or network errors gracefully without breaking the user experience.
+* **Keyword or Field-Specific Search**: Search by general keywords or refine by title, author, or genre.
+* **Smart Query Handling**: The system applies the correct Google Books operators automatically.
+* **Clean Results**: Results display thumbnails, titles, and authors in a browsable layout.
+* **First-party cover images**: The app serves covers via a small `/cover/` proxy on our own domain to avoid third-party requests/cookies and improve Lighthouse privacy scores.
+* **Pagination**: Supports navigating through large result sets with ease.
+* **Resilient Design**: Handles API or network errors gracefully without breaking the user experience.
 * **Caching:** details are cached for \~1h to reduce API calls.
 
 ### Book Detail View
 Each book has a dedicated detail page with enriched information for readers.
 
-- **Comprehensive Metadata**: Includes title, subtitle, authors, publisher, publication date, page count, categories, description, and cover image.
-- **Performance Boost**: Uses Django caching to store details for one hour, reducing API calls while keeping data fresh.
-- **Seamless Access**: Directly linked from search results for a smooth browsing experience
+* **Comprehensive Metadata**: Includes title, subtitle, authors, publisher, publication date, page count, categories, description, and cover image.
+* **First-party cover images**: The app serves covers via a small `/cover/` proxy on our own domain to avoid third-party requests/cookies and improve Lighthouse privacy scores.
+* **Performance Boost**: Uses Django caching to store details for one hour, reducing API calls while keeping data fresh.
+* **Seamless Access**: Directly linked from search results for a smooth browsing experience
 
 ### Reading Status
 
@@ -256,6 +261,7 @@ Lets readers share longer-form thoughts on a book, with a clear, edit-friendly f
 A user’s personal library displays all books they are interested in, along with their reading status.
 
 * **Grouped by Status**: Books are organized into sections for *To Read*, *Reading*, and *Read*.
+* **First-party cover images**: The app serves covers via a small `/cover/` proxy on our own domain to avoid third-party requests/cookies and improve Lighthouse privacy scores.
 * **UX Note**: The “Remove from Library” action opens a confirm dialog that also tells you your rating and review for the book will be removed from your profile (they’ll be archived, not permanently deleted).
 * **Dynamic Updates**: The library view updates in real-time as users change book statuses.
 * **Link to Book Details**: Each book links to its detail page for more information.
@@ -264,27 +270,57 @@ A user’s personal library displays all books they are interested in, along wit
 
 Critical actions, such as removing a book from the library or deleting a review, are protected by confirmation modals to prevent accidental loss of data.
 
-- **Clear Messaging**: Modals clearly explain the consequences of the action.
-- **User Control**: Users can confirm or cancel the action, ensuring they have full control over their data.
-- **Reusable Component**: The modal is implemented as a reusable template partial for consistency across the site.
+* **Clear Messaging**: Modals clearly explain the consequences of the action.
+* **User Control**: Users can confirm or cancel the action, ensuring they have full control over their data.
+* **Reusable Component**: The modal is implemented as a reusable template partial for consistency across the site.
 
 ### Authentication (Login, Logout & Sign-Up)
 
 User authentication is powered by **Django Allauth**, providing a secure and reliable way to manage accounts.
 
-- **Sign-Up**: New users can easily create an account. The sign-up template has been customized to match the site’s brand style.
-- **Login / Logout**: Users can log in to access their personal features and log out securely when finished.
-- **Consistent UI**: Allauth templates have been adapted to the project’s design system, ensuring a seamless experience across authentication pages.
+* **Sign-Up**: New users can easily create an account. The sign-up template has been customized to match the site’s brand style.
+* **Login / Logout**: Users can log in to access their personal features and log out securely when finished.
+* **Consistent UI**: Allauth templates have been adapted to the project’s design system, ensuring a seamless experience across authentication pages.
 
-- Track reading progress with status updates
-- Rate and review books
-- Leave comments on books
-- User dashboard for managing reading activity
+### Reading Progress (Status Updates)
+
+Let users track where they are with any book using a simple three-state flow.
+
+* **Three statuses**: *To read*, *Reading*, *Read* (`TO_READ`, `READING`, `READ`). One status per `(user, book)`.
+* **Inline controls**: POSTing a valid status creates/updates a `ReadingStatus`; invalid choices show a friendly error and redirect back to the detail page.
+* **Remove from library**: Sending `status=NONE` deletes the status and **archives** any rating/review for that book (kept for analytics, hidden from UI).
+* **Book FK safety**: Status changes ensure a `Book` row exists via `fetch_or_refresh_book(...)`.
+* **Integrity & performance**: Unique constraint on `(user, book)` with helpful indexes for library queries.
+* **UX feedback**: Success/error messages confirm each action and return users to the originating page.
+
+
+### Rate Books
+
+Capture quick star ratings  per book.
+
+* **Star ratings (1–5)**: Authenticated users can create/update a rating; `rating=0` removes it. Values outside 1–5 show a validation message.
+* **Status invariant**: Posting a rating ensures a `ReadingStatus` exists (defaults to **READ** if missing). Existing statuses are respected.
+* **Archive on removal**: Removing a status archives the user’s rating (`is_archived=True`, timestamped) so they disappear from UI but stay available for analytics. Re-posting **unarchives** the most recent row.
+* **Averages & counts**: Helpers compute average rating and total ratings for display on the book detail.
+
+
+### Review Books
+
+Short, focused commentary is implemented via the **Review** model.
+
+* **Inline compose/edit/delete**: If you’ve never reviewed, you’ll see a textarea; if you have, your existing text appears with *Edit*/*Delete* controls handled by `ReviewForm` and dedicated views.
+* **Status invariant**: Posting a review ensures a `ReadingStatus` exists (defaults to **READ** if missing). Existing statuses are respected.
+* **Archive on removal**: Removing a status archives the user’s review (`is_archived=True`, timestamped) so they disappear from UI but stay available for analytics. Re-posting **unarchives** the most recent row.
+* **Ownership guard**: Only the author can delete their comment; unauthorized deletes return `403`.
+* **No duplicates**: A unique active review per `(user, book)` prevents multiple comments; reposting updates the same record.
+
 
 ### Admin Panel
 
-- **Books** admin shows minimal cached metadata (id, title, authors, thumb, language, published date, fetch markers).
-- **Reading statuses** admin shows `(user, book_id, title, status)` with a link to the Google Books page.
+* **Books** admin shows minimal cached metadata (id, title, authors, thumb, language, published date, fetch markers).
+* **Reading statuses** admin shows `(user, book_id, title, status)` with a link to the Google Books page.
+* **Rating** admin lists include denormalized book titles and quick links to Google Books and support searching by user, book ID and title.
+* **Review** admin lists support searching by user, book ID/title, and content, with date filters for moderation.
 
 
 ## Design
@@ -328,6 +364,12 @@ Primary key is the Google Books `volumeId`.
 
 **Methods:**
 * `needs_refresh(ttl_minutes=1440)`: checks if book metadata is stale.
+
+**Cover storage vs. display**  
+* The database stores the *remote* `thumbnail_url` only; image bytes are **not** stored. 
+At render time, templates use a first-party **cover proxy** to fetch and serve the image from our own origin. 
+This keeps the DB lightweight and eliminates third-party cookies. 
+(A future enhancement could add an `ImageField` to persist files if needed.)
 
 
 ### ReadingStatus
@@ -392,12 +434,23 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 
 ### apps/
 
-| App Name         | Responsibility                                                                |
-|------------------|-------------------------------------------------------------------------------|
-| `accounts`       | Accounts app current only for authentication, but will hold profile in future |
-| `books`          | Google Books search/detail, minimal cached `Book`, admin, service             |
-| `activity`       | Per-user `ReadingStatus`, `Rating`, `Review` persistence + admin              |
-| `library`        | Displays user-specific reading activity grouped by status.                    |
+| App Name         | Responsibility                                                                                      |
+|------------------|-----------------------------------------------------------------------------------------------------|
+| `accounts`       | Accounts app current only for authentication, but will hold profile in future                       |
+| `books`          | Google Books search/detail, minimal cached `Book`, admin, service,cover proxy endpoint (`/cover/`)  |
+| `activity`       | Per-user `ReadingStatus`, `Rating`, `Review` persistence + admin                                    |
+| `library`        | Displays user-specific reading activity grouped by status.                                          |
+
+### Image Delivery & Privacy
+
+To avoid third-party cookies flagged by Lighthouse, cover images are served **first-party**:
+
+- **Endpoint**: `GET /cover/?url=<encoded-remote-url>`  
+- **Behavior**: Server fetches the remote image (enforces HTTPS), whitelists Google hosts, and returns the bytes with long-lived caching headers.  
+- **Templates**: Use `book.cover_url` or fall back to a local placeholder.
+
+This affects **Search Results**, **Book Detail**, and **Library** templates and the corresponding views that now compute `cover_url` for each book.
+
 
 ### State Changes via Services
 
@@ -530,3 +583,4 @@ and provide confidence that both authentication flows and book-related features 
 - Django Allauth: [Django Allauth](https://django-allauth.readthedocs.io/en/latest/)
 - Conditional Requests: [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Conditional_requests)
 - Session Objects: [Requests Documentation](https://requests.readthedocs.io/en/latest/user/advanced/#conditional-requests)
+- Third-party Cookies: [Privacy Sandbox](https://privacysandbox.google.com/cookies/prepare/audit-cookies)
