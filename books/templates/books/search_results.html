@@ -30,18 +30,18 @@
           href="{% url 'book_detail' book.id %}"
           class="text-decoration-none text-body"
           >
-          <img
-            src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
-            alt="{{ book.title }}"
+          <img 
+            src="{{ book.cover_url }}"
+            alt="{{ book.title }} cover"
             width="128" height="192"
             class="mb-2 img-card-search"
             decoding="async"
             sizes="(max-width: 480px) 50vw, 33vw"
-            {% if forloop.first %}
-              loading="eager" fetchpriority="high"
-            {% else %}
-              loading="lazy" fetchpriority="auto"
-            {% endif %}
+              {% if forloop.first %}
+                loading="eager" fetchpriority="high"
+              {% else %}
+                loading="lazy" fetchpriority="auto"
+              {% endif %}
           >
       </a>
         {% include "activity/partials/reading_status_button.html" %}

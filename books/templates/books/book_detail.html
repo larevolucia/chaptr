@@ -21,13 +21,9 @@
   <div class="row g-4">
     <div class="col-md-3 d-flex flex-column justify-content-start align-items-center">
       <img 
-          {% if book.thumbnail %}
-            src="{{ book.thumbnail }}" 
-          {% else %}
-            src="{% static 'images/placeholder_cover.png' %}"
-          {% endif %}
-          class="img-fluid rounded border mb-3"
-          alt="{{ book.title }} cover" 
+            src="{{ book.cover_url }}"
+            alt="{{ book.title }} cover" 
+            class="img-fluid rounded border mb-3"
           loading="eager"
           >
       {% include "activity/partials/reading_status_button.html" %}

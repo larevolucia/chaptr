@@ -71,7 +71,7 @@
         {% with book=rs.book %}
         <tr>
           <td>
-            <img src="{% if book.thumbnail_url %}{{ book.thumbnail_url }}{% else %}{% static 'images/placeholder_cover.png' %}{% endif %}"
+            <img src="{{ book.cover_url }}"
                  alt="" class="rounded library-cover-img" loading="lazy">
           </td>
           <td>

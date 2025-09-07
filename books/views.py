@@ -7,13 +7,18 @@ This module exposes:
   and renders results.
 - Detail flow that fetches a single volume by ID with low-level caching.
 """
+from urllib.parse import urlparse, quote
+import requests
+from django.templatetags.static import static
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.core.cache import cache
-from django.http import Http404
+from django.views.decorators.cache import cache_page
+from django.http import Http404, HttpResponse
 from django.db.utils import ProgrammingError, OperationalError
+from django.urls import reverse
 from activity.models import Rating, ReadingStatus, Review
 from activity.forms import ReviewForm
 from activity.services import (
@@ -88,9 +93,17 @@ def book_search(request):
 
     labels = dict(ReadingStatus.Status.choices)
 
+    proxy_base = reverse("cover_proxy")
+    placeholder = static("images/placeholder_cover.png")
     for b in books:
         status = (status_map.get(b["id"])
                   or {}).get("status")
+        thumb = (b.get("thumbnail") or "").strip()
+        b["cover_url"] = (
+            f"{proxy_base}?url={quote(thumb, safe='')}"
+            if thumb
+            else placeholder
+        )
         b["user_status"] = status
         b["user_status_label"] = labels.get(status)
         b["user_rating"] = rating_map.get(b["id"], 0)
@@ -151,6 +164,13 @@ def book_detail(request, book_id):
             raise Http404("Book not found.") from e
         cache.set(cache_key, book, timeout=60*60)
 
+    thumb = (book.get("thumbnail") or "").strip()
+    placeholder = static("images/placeholder_cover.png")
+    book["cover_url"] = (
+        f"{reverse('cover_proxy')}?url={quote(thumb, safe='')}"
+        if thumb
+        else placeholder
+    )
     book["user_status"] = None
     book["user_status_label"] = None
     book["user_rating"] = 0
@@ -246,3 +266,32 @@ def book_detail(request, book_id):
             "edit_mode": edit_mode,
         }
     )
+
+
+# whitelist
+ALLOWED_HOSTS = {
+    "books.google.com",
+    "books.googleusercontent.com",
+    "nextchaptr-f17e381cb655.herokuapp.com"
+    }
+
+
+@cache_page(60 * 60 * 24 * 30)  # 30 days
+def cover_proxy(request):
+    """
+    Don't forward Set-Cookie
+    return as a clean first-party response
+    """
+    url = request.GET.get("url", "")
+    host = urlparse(url).hostname or ""
+    if host not in ALLOWED_HOSTS:
+        raise Http404()
+
+    r = requests.get(url.replace("http://", "https://"), timeout=10)
+    if r.status_code != 200:
+        raise Http404()
+
+    content_type = r.headers.get("Content-Type", "image/jpeg")
+    resp = HttpResponse(r.content, content_type=content_type)
+    resp["Cache-Control"] = "public, max-age=2592000, immutable"
+    return resp

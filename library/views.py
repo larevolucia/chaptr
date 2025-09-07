@@ -1,7 +1,10 @@
 """ Views for the library app."""
+from urllib.parse import quote
 from django.contrib.auth.decorators import login_required
 from django.db.models import Case, When, Value, IntegerField
 from django.shortcuts import render
+from django.urls import reverse
+from django.templatetags.static import static
 from activity.models import ReadingStatus
 from books.utils import ensure_https
 
@@ -56,15 +59,22 @@ def library(request):
         ReadingStatus.Status.READING: "status--reading",
         ReadingStatus.Status.READ: "status--read",
     }
+    proxy_base = reverse("cover_proxy")
+
     for rs in rows:
         rs.user_status_label = labels.get(rs.status, "—")
         rs.user_status_class = status_class.get(rs.status, "status--none")
 
         b = rs.book
-        # normalize http→https; if empty, fall back to canonical Google cover
-        thumbnail_url = ensure_https(getattr(b, "thumbnail_url", None))
+        # keep normalized URL available if you ever need it server-side
+        thumb = ensure_https(getattr(b, "thumbnail_url", "") or "")
+        b.thumbnail_url = thumb
 
-        b.thumbnail_url = thumbnail_url
+        # Build first-party cover URL; if empty, point to a local placeholder
+        b.cover_url = (
+            f"{proxy_base}?url={quote(thumb, safe='')}" if thumb
+            else static("images/placeholder_cover.png")
+        )
 
     context = {
         "rows": rows,
