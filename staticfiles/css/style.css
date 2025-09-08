@@ -681,6 +681,12 @@ input[type="radio"] {
   text-align: left;
 }
 
+.book-description-content{
+  color: var(--text-color);
+  margin-bottom: 2.5rem;
+}
+
+
 /* -------------------------------
    LIBRARY LIST
 ---------------------------------- */

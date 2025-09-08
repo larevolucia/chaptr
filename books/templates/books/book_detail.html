@@ -4,8 +4,8 @@
 {% load seo_extras %}
 
 {% block title %}{{ book.title }}{% if book.subtitle %}: {{ book.subtitle }}{% endif %}{% endblock %}
-{% block description %}{{ book|meta_desc:155 }}{% endblock %}
-{% block keywords %}{{ book.categories|join:", " }}{% endblock %}
+{% block description %}{{ book|meta_desc:155|striptags|escape }}{% endblock %}
+{% block keywords %}{{ book.categories|join:", "|striptags|escape }}{% endblock %}
 
 {% block header_search %}
   {% include "books/partials/search_form.html" %}
@@ -48,7 +48,9 @@
 
       {% if book.description %}
         <h2 class="h5 mt-4 book-description">Description</h2>
-        <p>{{ book.description|safe }}</p>
+        <div class="book-description-content">
+          {{ book.description|safe }}
+        </div>
       {% endif %}
     </div>
   </div>
