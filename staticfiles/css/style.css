@@ -180,10 +180,9 @@ body:has(.search-row) { --search-overlap: 88px; }
 }
 
 .btn-toggle-navbar {
-  background-color: none;
   border: none;
   color: var(--primary-color-dark);
-  background-color: inherit;
+  background-color: transparent;
   padding: 0;
   cursor: pointer;
   font-size: 1.65rem;
@@ -419,11 +418,13 @@ body:has(.search-row) { --search-overlap: 88px; }
 
 .nc-btn--accent {
   --btn-bg: var(--accent-color);
-  --btn-bg-hover: color-mix(in oklab, var(--accent-color) 90%, black);
-  --btn-bg-active: color-mix(in oklab, var(--accent-color) 80%, black);
+  --btn-bg-hover: #A64C48;
+  --btn-bg-active: #934340;
   --btn-text: #fff;
   --btn-border: var(--accent-color);
 }
+
+
 
 .nc-btn--muted {
   --btn-bg: #f2f4f7;
@@ -435,8 +436,8 @@ body:has(.search-row) { --search-overlap: 88px; }
 
 .nc-btn--danger {
   --btn-bg: var(--danger-color);
-  --btn-bg-hover: color-mix(in oklab, var(--danger-color) 90%, black);
-  --btn-bg-active: color-mix(in oklab, var(--danger-color) 80%, black);
+  --btn-bg-hover: #C8303F;
+  --btn-bg-active: #B22B38;
   --btn-text: #fff;
   --btn-border: var(--danger-color);
 }
@@ -546,7 +547,7 @@ a.nc-btn:hover, a.nc-btn:focus-visible { text-decoration: none; }
   position:absolute !important;
   width:1px; height:1px;
   padding:0; margin:-1px; overflow:hidden;
-  clip:rect(0 0 0 0); clip-path: inset(50%);
+  clip-path: inset(50%);
   border:0;
 }
 
@@ -561,7 +562,6 @@ a.nc-btn:hover, a.nc-btn:focus-visible { text-decoration: none; }
   opacity: 0;
   width: 1px; height: 1px;
   margin: -1px; padding: 0; border: 0;
-  clip: rect(0 0 0 0);
   clip-path: inset(50%);
   overflow: hidden;
 }
@@ -769,13 +769,18 @@ DROPDOWN / STATUSES
 
 .dropdown-menu .dropdown-item.danger-color:hover,
 .dropdown-menu .dropdown-item.danger-color:focus {
-  background-color: color-mix(in oklab, var(--danger-color) 90%, white);
+  background-color: #E04958; 
   color: var(--background-color-light);
 }
 
 .dropdown-menu .dropdown-item.danger-color:active {
   background-color: var(--danger-color);
   color: #fff;
+}
+
+.dropdown-menu .dropdown-item.danger-color:hover,
+.dropdown-menu .dropdown-item.danger-color:focus {
+  color: var(--background-color-light);
 }
 
 
