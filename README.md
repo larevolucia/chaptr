@@ -5,6 +5,101 @@
 Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users to manage their reading lists (To Read, Reading, Read), rate completed books, and engage through comments in a clean, distraction-free interface.
 
 ---
+## Table of Contents
+Here’s a clean, nested Table of Contents you can drop at the top of your README:
+
+---
+
+## Table of Contents
+
+* [NextChaptr](#nextchaptr)
+
+  * [Target Audience](#target-audience)
+  * [Site Goal](#site-goal)
+  * [Requirements Overview](#requirements-overview)
+
+    * [Epic 1: Book Discovery and Browsing](#epic-1-book-discovery-and-browsing)
+
+      * [Search for books by title, author](#search-for-books-by-title-author)
+      * [View book details](#view-book-details)
+      * [View review on books](#view-review-on-books)
+      * [Prompt login when guests try to interact](#prompt-login-when-guests-try-to-interact)
+    * [Epic 2: User Authentication and Permissions](#epic-2-user-authentication-and-permissions)
+
+      * [Register an account](#register-an-account)
+      * [Log in and log out securely](#log-in-and-log-out-securely)
+      * [Restrict book interactions to authenticated users](#restrict-book-interactions-to-authenticated-users)
+    * [Epic 3: Book Interaction and Reading Progress](#epic-3-book-interaction-and-reading-progress)
+
+      * [Mark books as To Read, Reading, or Read](#mark-books-as-to-read-reading-or-read)
+      * [Rate books](#rate-books)
+      * [Leave a review](#leave-a-review)
+      * [Edit, and delete reviews](#edit-and-delete-reviews)
+    * [Epic 4: User Library](#epic-4-user-library)
+
+      * [View books grouped by reading status](#view-books-grouped-by-reading-status)
+      * [Update reading status directly from library](#update-reading-status-directly-from-library)
+  * [Bug Fixes](#bug-fixes)
+  * [Project Board](#project-board)
+  * [Sprint Planning](#sprint-planning)
+
+    * [Sprint 0: Project Setup](#sprint-0-project-setup)
+    * [Sprint Breakdown](#sprint-breakdown)
+
+      * [Sprint 1](#sprint-1)
+      * [Sprint 2](#sprint-2)
+      * [Sprint 3](#sprint-3)
+      * [Sprint 4](#sprint-4)
+  * [Features](#features)
+
+    * [Homepage (Banner, Intro & Quick Browse)](#homepage-banner-intro--quick-browse)
+    * [Search & Browse (API First)](#search--browse-api-first)
+    * [Book Detail View](#book-detail-view)
+    * [Reading Status](#reading-status)
+    * [Rating System](#rating-system)
+    * [Review System](#review-system)
+    * [Library](#library)
+    * [Confirmation Modals](#confirmation-modals)
+    * [Authentication (Login, Logout & Sign-Up)](#authentication-login-logout--sign-up)
+    * [Reading Progress (Status Updates)](#reading-progress-status-updates)
+    * [Rate Books](#rate-books-1)
+    * [Review Books](#review-books)
+    * [Admin Panel](#admin-panel)
+  * [Design](#design)
+
+    * [Wireframes](#wireframes)
+  * [Models](#models)
+
+    * [User](#user)
+    * [Book](#book)
+    * [ReadingStatus](#readingstatus)
+    * [Rating](#rating)
+    * [Review](#review)
+  * [Django Project Structure](#django-project-structure)
+
+    * [apps/](#apps)
+    * [Image Delivery & Privacy](#image-delivery--privacy)
+    * [State Changes via Services](#state-changes-via-services)
+    * [Design Rationale](#design-rationale)
+  * [Testing](#testing)
+
+    * [Coverage](#coverage)
+    * [Approach](#approach)
+  * [Deployment](#deployment)
+
+    * [1. Clone the Repository](#1-clone-the-repository)
+    * [2. Set Up a Virtual Environment](#2-set-up-a-virtual-environment)
+    * [3. Install Dependencies](#3-install-dependencies)
+    * [4. Configure Environment Variables](#4-configure-environment-variables)
+
+      * [Google Books API](#google-books-api)
+      * [Django Secrets](#django-secrets)
+      * [Email Settings (Optional)](#email-settings-optional)
+    * [5. Collect Static Files](#5-collect-static-files)
+    * [6. Deploy to Heroku](#6-deploy-to-heroku)
+  * [Credits & References](#credits--references)
+
+---
 
 ## Target Audience
 
@@ -140,6 +235,40 @@ Below is a summary of the planned development scope using Agile epics, user stor
 
 ---
 
+## Bug Fixes
+
+**[500 Error in Signup](https://github.com/larevolucia/chaptr/issues/84)**
+Mandatory confirmation e-mail was not being sent due to issues with Gmail credentials. Resolved by regenerating the credentials and updating both on `.env` and on Heroku config vars.
+
+**[Admin search for Activity gives 500 error](https://github.com/larevolucia/chaptr/issues/78)**
+Search on admin panel was returning 500 error. Resolved by correcting the search fields formatting.
+
+**[Internal Server Error](https://github.com/larevolucia/chaptr/issues/89)**
+Prod environment was returning 500 error due to missing variables after code refactoring. Resolved by adding `GOOGLE_BOOKS_SEARCH_URL`, `GOOGLE_BOOKS_VOLUME_URL` to variables to Heroku config var.
+
+**[Books tests_views failing after activity changes](https://github.com/larevolucia/chaptr/issues/79)**
+Book views crashed in tests because `RequestFactory` requests lack `request.user`, causing `AttributeError` in `book_search`/`book_detail`; fixed by defaulting to `AnonymousUser` (e.g. `user = getattr(request, "user", AnonymousUser())`) before any `is_authenticated` checks in `books/views.py`.
+
+**[API Response for totalItems is inconsistent](https://github.com/larevolucia/chaptr/issues/81)**
+Pagination was breaking due to Google Books API returning inflated `totalItems` (e.g., 1,000,000); fixed by capping results to the actual fetched items and adjusting pagination logic.
+
+**[Message "no reviews yet" after reviews](https://github.com/larevolucia/chaptr/issues/77)**
+Authenticated users saw “No reviews yet” after their own review due to template logic; fixed by refactoring the reviews partial to render the user’s review first and only show the empty-state when neither `my_review` nor any `reviews` exist.
+
+**[Cover Fallback not displaying](https://github.com/larevolucia/chaptr/issues/55)**
+Cover fallback was not working on production. Resolved by removing static files from `.gitignore` and adjusting directory and path for correct folder.
+
+**[Notifications make the screen jump down](https://github.com/larevolucia/chaptr/issues/70)**
+Notifications caused layout shift because alerts were statically positioned in the flow. Fixed by converting them to fixed-position overlay toasts (no layout margins, high z-index), so messages float without pushing page content.
+
+**[Log-in via search_results redirects to empty search](https://github.com/larevolucia/chaptr/issues/69)**
+Login from book search redirected users to an empty results page because the `next` parameter wasn’t preserved. Fixed by passing the original search query in the login redirect so users return to their search results.
+
+**[Models inconsistency](https://github.com/larevolucia/chaptr/issues/69)**
+Removing a book from the library only cleared its reading status, leaving review/rating behind. Fixed by cascading cleanup on status removal, archiving associated review and rating records to keep activity consistent.
+
+---
+
 ## Project Board
 
 All issues are tracked on the GitHub project board:  
@@ -187,6 +316,8 @@ Sprint 3:
 - Epic 4: User Dashboard
    - [x] [View books grouped by reading status](#17)
    - [x] [Update reading status directly from dashboard](#18)
+
+Sprint 4:
 - Testing and Bug Fixes
    - [x] [Refactoring](#85)
    - [x] [Accessibility & Performance](#87)
@@ -511,6 +642,8 @@ Key functions:
 
 ***NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s TestCase** framework with mocking for external dependenciess, such as Google Books API.
 
+Detais testings documentation can be found at [tests.md](documentation/tests.md)
+
 ### Coverage
 
 * **Authentication Tests (Allauth)**
@@ -607,6 +740,126 @@ and provide confidence that both authentication flows and book-related features 
 
 ---
 
+## Deployment
+
+### 1. Clone the Repository
+
+Clone the project locally:
+
+```bash
+git clone https://github.com/larevolucia/chaptr.git
+cd chaptr
+```
+
+Verify your Python version:
+
+```bash
+python3 --version
+```
+
+> **Note:** This project requires Python 3.12+  (check `.python-version`).
+
+---
+
+### 2. Set Up a Virtual Environment
+
+It’s recommended to use a virtual environment:
+
+```bash
+python3 -m venv venv
+# Activate:
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
+```
+
+---
+
+### 3. Install Dependencies
+
+Install project requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 4. Configure Environment Variables
+
+Create a `.env` file in the project root with the following variables:
+
+#### Google Books API
+
+The app integrates with the **Google Books API**.
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a new project ([guide](https://developers.google.com/workspace/guides/create-project)).
+3. Enable the **Google Books API** (`APIs & Services > Library`).
+4. Generate an **API Key** (`APIs & Services > Credentials`).
+
+Add the key and URLs to `.env`:
+
+```bash
+GOOGLE_BOOKS_API_KEY=<YOUR_KEY>
+GOOGLE_BOOKS_SEARCH_URL=https://www.googleapis.com/books/v1/volumes
+GOOGLE_BOOKS_VOLUME_URL=https://www.googleapis.com/books/v1/volumes/{}
+```
+
+#### Django Secrets
+
+Also include your Django secrets:
+
+```bash
+SECRET_KEY=<YOUR_DJANGO_SECRET_KEY>
+DATABASE_URL=<YOUR_DATABASE_URL>
+```
+
+#### Email Settings (Optional)
+
+For local testing you can disable email confirmation by editing `settings.py`:
+
+```python
+ACCOUNT_EMAIL_VERIFICATION = "none"
+```
+
+For production email (example with Gmail App Password):
+
+```bash
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=<YOUR_EMAIL_ADDRESS>
+EMAIL_HOST_PASSWORD=<YOUR_APP_PASSWORD>
+DEFAULT_FROM_EMAIL=<YOUR_EMAIL_ADDRESS>
+```
+
+---
+
+### 5. Collect Static Files
+
+Before deploying, make sure static files are collected (using [WhiteNoise](https://whitenoise.readthedocs.io/)):
+
+```bash
+python manage.py collectstatic --noinput
+```
+
+---
+
+### 6. Deploy to Heroku
+
+1. Create a new Heroku app
+2. Add the **Heroku Python buildpack** under **Settings > Buildpacks**.
+3. Add environment variables from `.env` to **Heroku Config Vars**:
+4. Deploy
+
+---
+
+That’s it! The app should now be live on Heroku.
+
+---
 
 ## Credits & References
 
