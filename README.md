@@ -75,8 +75,8 @@ Here’s a clean, nested Table of Contents you can drop at the top of your READM
     * [Design Rationale](#design-rationale)
   * [Testing](#testing)
 
-    * [Coverage](#coverage)
-    * [Approach](#approach)
+    * [Automated Test Coverage](#automated-test-coverage)
+    * [Automated Test Approach](#automated-test-approach)
   * [Deployment](#deployment)
 
     * [1. Clone the Repository](#1-clone-the-repository)
@@ -636,7 +636,7 @@ Key functions:
 
 Detais testings documentation can be found at [tests.md](documentation/tests.md)
 
-### Coverage
+### Automated Test Coverage
 
 * **Authentication Tests (Allauth)**
 
@@ -716,7 +716,7 @@ Detais testings documentation can be found at [tests.md](documentation/tests.md)
    * __Book details__: Users can click on a book to view its details.
    * __Access control__: Only authenticated users can access their library; unauthenticated users are redirected to the login page.
 
-### Approach
+### Autoamted Test Approach
 
 * **Isolation**: External API calls are mocked to ensure tests run quickly and deterministically.
 * **Resilience**: Cache is cleared between tests to avoid cross-test interference.
@@ -729,6 +729,80 @@ python manage.py test --settings=chaptr.settings_test
 ```
 
 and provide confidence that both authentication flows and book-related features behave as expected under different conditions.
+
+
+----
+
+### Manual Testing
+
+**Book Discovery & Search**
+| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
+|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
+| Navigate Genre tile 	| Click on "Classics"	tile                        | Search `/search/?field=subject&q=classics`	          |   ✅   |
+| Search by Title	      | Select "title" and type "Little Women"          | Search `/search/?field=title&q=Little+Women`	        |   ✅   |
+| Search by Author     	| Select "author" and type "John Grishman	        | Search `/search/?field=author&q=John+Grisham`	        |   ✅   |
+| Search by Genre	      | Select "genre" and type "political"            	| Search `/search/?field=subject&q=political`         	|   ✅   |
+| General Search	      | Select "all" and type "Fellowship of the Ring"	| Search `/search/?field=all&q=Fellowship+of+the+ring`	|   ✅   |
+| View Book Detail	    | Click on "The Fellowship of the Ring"         	| Page renders with basic metadata (author, description, publisher, pages, categories, pablishing date)	|   ✅   |
+| Login to add book   	| Click on 'Login to add'	| Redirects to `accounts/login` with `/?next=/search` data |   ✅    |
+| Login to rate book	  | Click on stars to add a rating	| Redirects to `accounts/login` with `/?next=/search/` data |   ✅    |
+| Login to review book	  | Click on 'Log in' hyperlink | Redirects to `accounts/login` with `?next=/books/` data |   ✅    |
+
+
+**Authentication**
+| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
+|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
+| Sign-up              	| Added temp-email, username & password           | Redirect to `/accounts/confirm-email/` and receive e-mail  |   ✅   |
+| Email verification    | Click on verify your e-mail link, redirect to `/accounts/confirm-email/` and click confirm       | Alert  `You have confirmed {account}`, redirects to login        |   ✅   |
+| Log-in                | Enter username and password                     | Display success message and redirects to  `/library/`	        |   ✅   |
+| Log-out               | Click on header icon, open menu and click on Sign-out          | Redirects to `/accounts/logout/`	        |   ✅   |
+| Log-out button        | On `/accounts/logout` click on `sign out` button               | Successfully signs out and alert user    |   ✅   |
+
+
+**Library**
+| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
+|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
+| First Log-in        	| Enter username and password                     | Redirects to  `/library/` and show empty library message |   ✅   |
+| Sort Titles        	  | On a library with multiple books with various status, click on the Status header                     | Reorganizes the book by status (desc: to-read/reading/read ) |   ✅   |
+| Filter Titles        	| On a library with multiple books with various status, click "Read" filter                      | Shows only books with status "Read". |   ✅   |
+| Change Status        	| On Library, navigate to a book with status "To Read", click on arrow down next to "view"> Change Status > Select "Reading"  | Updates status and send a confirmation to user |   ✅   |
+| Review Book         	| On Library, navigate to a book, click on arrow down next to "view"> Write a Review                     | Redirects to  book page #reviews |   ✅   |
+| Rate Book           	| On Library, navigate to a book, click on arrow down next to "view"> Rate                     | Redirects to  book page |   ✅   |
+| Remove Book         	|  On Library, navigate to a book, click on arrow down next to "view"> Change Status > Remove from Library                     | Confirmation modal is shown with correct content |   ✅   |
+
+
+**Review**
+| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
+|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
+| Review Form  | Search "title:jellyfish age backwards" and navigate to first item  `/books/wYswEAAAQBAJ/`	| Sees reviews and form.	|   ✅   |
+| Leave Review (no status)| At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` write and submit review "awesome"	| Sees reviews and form. | Pages updates, alert is sent and status is READ.	|   ✅   |
+| Edit Review  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` click on edit button, write "not so awesome" and save	| Review is updated, alert is sent	|   ✅   |
+| Delete Review  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` click on delete button	| Confirmation modal is shown	with correct messaging |   ✅   |
+| Cancel Delete Confirmation  | Click on 'Cancel' | Review is not deleted 	|   ✅   |
+| Confirm Delete   | Click on 'Yes, proceed' | Review is deleted and success alert is sent. |   ✅   |
+
+**Rating**
+| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
+|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
+| See Rating Avg  | Search "title:jellyfish age backwards" and navigate to first item  `/books/wYswEAAAQBAJ/`	| Rating Average displayed	|   ✅   |
+| Rate Book  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/`, click on starts to give rating	(4) | Avg rating, number of ratings updates. Starts change to yellow according to rating. Success alert sent.	|   ✅   |
+| Update Rating  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/`, give a different rating (3)	| Avg rating updates, number of ratings remains the same. Starts change to yellow according to rating. Success alert sent.	|   ✅   |
+| Delete Rating  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/`, click on the x button	| Avg rating updates, number of ratings updates. Starts change gray-out version. Info alert sent.	|   ✅   |
+
+**Status Update**
+| Test Case	                   | Input	                                  | Expected Outcome                          	          | Status |
+|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
+| Set Status on Search         | Search "old man and the see, click on "To Read" button on result item      | Status updated, success alert sent.                          	          |   ✅   |
+| Change Status on Search      | On previous item, change from "To Read" to "Reading"      | Status updated, success alert sent.                          	          |   ✅   |
+| Remove Status on Search      | On previous item, remove from library         | Confirmation modal is shown with correct content  |   ✅   |
+| Cancel Status Removal        | On confirmation modal, click on 'Cancel'      | Item maintain their status  |   ✅   |
+| Confirm Status Removal       | On confirmation modal, click on 'Yes, proceed'          | Confirmation modal closes and status is cleared   |   ✅   |
+
+
+---
+
+
+
 
 ---
 
