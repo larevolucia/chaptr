@@ -19,7 +19,7 @@
   </div>
 
   {% if rows %}
-  <div class="table-responsive">
+  <div class="table-responsive library-table-wrap">
     <!-- Mobile: Status filter -->
     <div class="mb-3 d-sm-none">
       <form method="get" class="d-flex align-items-center gap-2">
@@ -47,7 +47,7 @@
           href="?status=READ&sort={{ sort }}&dir={{ direction }}">Read</a>
       </div>
     </div>
-    <table data-testid="library-table" class="table table-sm align-middle library-table">
+    <table data-testid="table table-sm align-middle library-table" class="table table-sm align-middle library-table">
       <thead>
         <tr class="small text-uppercase text-muted">
           <th style="width:64px;">Cover</th>
@@ -102,7 +102,7 @@
             {{ rs.updated_at|date:"M j, Y" }}
           </td>
           <td class="text-end">
-            <div class="btn-group">
+            <div class="btn-group position-static">
               <a class="nc-btn nc-btn--ghost nc-btn--sm text-decoration-underline" href="{% url 'book_detail' book.id %}">
                 View
               </a>
