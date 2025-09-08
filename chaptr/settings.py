@@ -89,7 +89,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Email verification
 
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-# ACCOUNT_EMAIL_VERIFICATION = 'none' dev
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # prod
 
 
