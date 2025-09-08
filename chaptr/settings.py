@@ -22,6 +22,8 @@ if os.path.isfile('env.py'):
 
 load_dotenv()
 
+IS_PROD = os.environ.get("ENV") == "prod"
+
 # Get the Google Books API key from environment variables
 # Make sure to set GOOGLE_BOOKS_API_KEY in your .env file
 GOOGLE_BOOKS_API_KEY = os.environ.get("GOOGLE_BOOKS_API_KEY")
@@ -75,10 +77,9 @@ INSTALLED_APPS = [
 
 
 SITE_ID = 1
-if DEBUG:
-    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
-else:
-    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https" if IS_PROD else "http"
+SECURE_SSL_REDIRECT = IS_PROD
+
 LOGIN_REDIRECT_URL = '/library/'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -159,7 +160,8 @@ WSGI_APPLICATION = 'chaptr.wsgi.application'
 
 
 DATABASES = {
-     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    "default": dj_database_url.config(default=f"sqlite:///{BASE_DIR/'db.sqlite3'}")
+    #  'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
 CSRF_TRUSTED_ORIGINS = [
@@ -203,7 +205,11 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+            "BACKEND": (
+                "whitenoise.storage.CompressedManifestStaticFilesStorage"
+                if IS_PROD
+                else "django.contrib.staticfiles.storage.StaticFilesStorage"
+            ),
     },
 }
 
