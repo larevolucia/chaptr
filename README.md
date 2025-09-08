@@ -791,7 +791,7 @@ and provide confidence that both authentication flows and book-related features 
 
 **Status Update**
 | Test Case	                   | Input	                                  | Expected Outcome                          	          | Status |
-|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
+|:-----------------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
 | Set Status on Search         | Search "old man and the see, click on "To Read" button on result item      | Status updated, success alert sent.                          	          |   ✅   |
 | Change Status on Search      | On previous item, change from "To Read" to "Reading"      | Status updated, success alert sent.                          	          |   ✅   |
 | Remove Status on Search      | On previous item, remove from library         | Confirmation modal is shown with correct content  |   ✅   |
@@ -827,10 +827,9 @@ and provide confidence that both authentication flows and book-related features 
 **Lighthouse**
 | Page	                   | Warning	                                             | Fix                          	          |
 |:-------------------------|:------------------------------------------------------|:----------------------------------------|
-|Home                      | Deprecation / Warning Source Heroku other 1st party Found an <h1> tag within an <article>, <aside>, <nav>, or <section> which does not have a specified font-size | Added specific font-sizes on CSS |
-| Search Results / Book Details | Mixed content, where some resources are loaded over HTTP despite the initial request being served over HTTPS
- | Google Books API returned the cover as http. Introduced a `ensure_https` to secure the urls from Google. |
-| Third Party Cookies      | Cover being render by google api was sending third-party cookies. To solve, a view and url with `cover_proxy` was created. |
+|Home                      | Deprecation / Warning Source Heroku other 1st party Found an `<h1>` tag within an `<article>`, `<aside>`, `<nav>`, or `<section>` which does not have a specified font-size | Added specific font-sizes on CSS |
+| Search Results + Book Details | Mixed content, where some resources are loaded over HTTP despite the initial request being served over HTTPS | Google Books API returned the cover as http. Introduced a `ensure_https` to secure the urls from Google. |
+| Search Results + Book Details | Third Party Cookies      | Cover being render by google api was sending third-party cookies. To solve, a view and url with `cover_proxy` was created. |
 
 ---
 
