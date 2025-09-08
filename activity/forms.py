@@ -13,6 +13,7 @@ class ReviewForm(forms.ModelForm):
             "content": forms.Textarea(attrs={
                 "rows": 5,
                 "placeholder": "Write your thoughts about this book...",
+                "aria-label": "Write your thoughts about this book...",
                 "class": "form-control",
             }),
         }
