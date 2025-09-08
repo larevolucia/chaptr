@@ -206,6 +206,9 @@ A welcoming, responsive landing experience that introduces CHAPTR and funnels vi
 * **Primary Actions Up Front**: Prominent entry points to start searching books or sign up/log in, keeping the first‑run path obvious.
 * **Browse by Genre**: Category tiles allow users to jump straight to a filtered search view for a given genre.
 
+![Home Page](documentation/images/home/home_visitor.png)
+
+
 ### Search & Browse (API First)
 
 Book discovery is powered by the Google Books API, allowing users to explore a vast catalog with flexible search options.
@@ -218,6 +221,10 @@ Book discovery is powered by the Google Books API, allowing users to explore a v
 * **Resilient Design**: Handles API or network errors gracefully without breaking the user experience.
 * **Caching:** details are cached for \~1h to reduce API calls.
 
+![Search Page](documentation/images/search/search_visitor.png)
+
+![Search Behavior](documentation/images/search/search_to_book_navigation.gif)
+
 ### Book Detail View
 Each book has a dedicated detail page with enriched information for readers.
 
@@ -226,6 +233,10 @@ Each book has a dedicated detail page with enriched information for readers.
 * **Performance Boost**: Uses Django caching to store details for one hour, reducing API calls while keeping data fresh.
 * **Seamless Access**: Directly linked from search results for a smooth browsing experience
 
+![Book Details](documentation/images/book_detail/details_visitor.png)
+
+![Remove from Library](documentation/images/book_detail/remove_details.gif)
+
 ### Reading Status
 
 Lets users track their progress with any book, directly from search results or detail pages.
@@ -233,6 +244,10 @@ Lets users track their progress with any book, directly from search results or d
 * **Simple Progress Tracking**: Mark books as *To Read*, *Reading*, or *Read*.
 * **Integrated Placement**: Status buttons are shown beneath the cover art on both search results and book detail views, by implementing a template partial.
 * **Lightweight Persistence**: Status/ratings/reviews are coordinated through a small service layer.
+
+![Reading Status in Book Detail](documentation/images/book_detail/reading_status_details.gif)
+
+![Reading Status in Search](documentation/images/search/status_change_search.gif)
 
 
 ### Rating System
@@ -245,6 +260,13 @@ Provides a quick way for readers to rate books and share feedback with the commu
 * **User Feedback**: Notifications confirm when a rating is saved or updated.
 * **Flexible Control**: Ratings can be removed at any time.
 
+![Rating in Search](documentation/images/search/rating_search.gif)
+
+![Rating in Book Details](documentation/images/book_detail/rating_details.gif)
+
+![Remove Rating](documentation/images/book_detail/remove_rating_details.gif)
+
+
 ### Review System
 
 Lets readers share longer-form thoughts on a book, with a clear, edit-friendly flow on the detail page.
@@ -256,6 +278,12 @@ Lets readers share longer-form thoughts on a book, with a clear, edit-friendly f
 * **Archive on Status Removal**: Removing a book from your library archives your review (hidden from profile/UI; available for future analytics).
 * **Clean Presentation**: Reviews appear under the book details. Your own review isn’t duplicated in the list.
 
+![Add and edit a Review](documentation/images/book_detail/add_edit_review_details.gif)
+
+![Delete a Review](documentation/images/book_detail/delete_review_details.gif)
+
+
+
 ### Library
 
 A user’s personal library displays all books they are interested in, along with their reading status.
@@ -265,6 +293,15 @@ A user’s personal library displays all books they are interested in, along wit
 * **UX Note**: The “Remove from Library” action opens a confirm dialog that also tells you your rating and review for the book will be removed from your profile (they’ll be archived, not permanently deleted).
 * **Dynamic Updates**: The library view updates in real-time as users change book statuses.
 * **Link to Book Details**: Each book links to its detail page for more information.
+
+![Responsive Library](documentation/images/library/responsive_library.gif)
+
+![Reading Status in Library](documentation/images/library/status_change_library.gif)
+
+![Status Filtering](documentation/images/library/status_filtering_library.gif)
+
+![Status Sorting](documentation/images/library/status_sorting_library.gif)
+
 
 ### Confirmation Modals
 
@@ -327,9 +364,9 @@ Short, focused commentary is implemented via the **Review** model.
 
 ### Wireframes
 
-![Mobile Logged-In Wireframes](documentation/Mobile_Logged-In.png)
+![Mobile Logged-In Wireframes](documentation/images/wireframes/Mobile_Logged-In.png)
 
-![Mobile Vistor Wireframes](documentation/Mobile_Visitor.png)
+![Mobile Vistor Wireframes](documentation/images/wireframes/Mobile_Visitor.png)
 
 ---
 
