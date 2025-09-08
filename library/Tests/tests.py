@@ -118,7 +118,7 @@ class LibraryViewTests(TestCase):
     def test_library_page_with_books(self):
         """
         If the user has books in their library,
-        they should see them organized by status.
+        they should see the book table and not the empty library message
         """
         self.client.login(username="alice", password="pass1234")
 
@@ -131,7 +131,7 @@ class LibraryViewTests(TestCase):
     def test_library_page_with_only_to_read_book(self):
         """
         If the user has only books on their to-read list,
-        they shouldn't see other collection headers.
+        they shouldn't see empty library message.
         """
         self.client.login(username="alice", password="pass1234")
 
@@ -144,7 +144,7 @@ class LibraryViewTests(TestCase):
     def test_library_page_with_only_reading_book(self):
         """
         If the user has only books on their reading list,
-        they shouldn't see other collection headers.
+        they shouldn't see empty library message.
         """
         self.client.login(username="alice", password="pass1234")
 
@@ -157,7 +157,7 @@ class LibraryViewTests(TestCase):
     def test_library_page_with_only_read_book(self):
         """
         If the user has only books on their reading list,
-        they shouldn't see other collection headers.
+        they shouldn't see empty library message.
         """
         self.client.login(username="alice", password="pass1234")
 

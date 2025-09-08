@@ -82,7 +82,10 @@ class BookSearchViewTests(TestCase):
     def test_book_search_uses_built_query(self, mock_search):
         """Test that the search view uses the built query."""
         mock_search.return_value = ([], 0)
-        req = self.rf.get("/books/search", {"field": "author", "q": "emily bronte"})  # noqa: E501
+        req = self.rf.get(
+            "/books/search",
+            {"field": "author", "q": "emily bronte"}
+            )
         resp = book_search(req)
         self.assertEqual(resp.status_code, 200)
         # ensure build_q result was used

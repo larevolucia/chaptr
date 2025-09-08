@@ -120,7 +120,7 @@ class ReviewFlowTests(TestCase):
     ):
         """
         Test that an authenticated user
-        without a review sees the review form.
+        without a review sees edit and delete buttons.
         """
         mock_fetch.return_value = self.fetch_stub
         # Create an initial review

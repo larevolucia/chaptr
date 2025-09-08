@@ -107,7 +107,8 @@ class RatingViewTests(TestCase):
     def test_user_can_rate_book_with_no_reading_status(self):
         """
         Test that authenticated users can rate a book
-        with no reading status.
+        with no reading status and reading status is
+        created as READ.
         """
         self.client.force_login(self.user)
         # Ensure no reading status exists
