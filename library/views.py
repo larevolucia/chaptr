@@ -71,7 +71,7 @@ def library(request):
 
         # Build first-party cover URL; if empty, point to a local placeholder
         b.cover_url = (
-            f"{reverse('cover_proxy', args=[b['id']])}" if thumb
+            f"{reverse('cover_proxy', args=[b.id])}" if thumb
             else static("images/placeholder_cover.png")
         )
 
