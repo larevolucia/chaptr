@@ -90,18 +90,30 @@ Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users
 ---
 
 ## Target Audience
-
 Chaptr is built for individual readers who want a focused, user-friendly space to log their reading habits without social clutter or complex features.
 
+- __Avid Individual Readers__: independent book enthusiasts seeking a simple and focused platform to log their reading journey.
+- __Personal Growth & Self-Reflection Users__: individuals who find value in tracking reading patterns to gain insights into their interests, habits, and achievements.
+- __Busy Readers & Lifelong Learners__: individuals looking to organize their reading lists, track progress effortlessly, and fit reading into their daily routines through a lightweight, distraction-free platform.
 ---
 
 ## Site Goal
 
-To create a fully functional, database-backed full-stack application that:
-- Demonstrates CRUD operations across multiple models
-- Integrates external APIs (Google Books)
-- Implements authentication, permissions, and user-specific data
-- Prioritizes UX, accessibility, and responsive design
+**Promote Literacy**
+
+- Provide a simple, engaging platform that motivates users to read consistently.
+- Support users in building sustainable reading habits by tracking progress.
+
+**Promote Culture & Community**
+
+- Highlight the cultural value of reading as both a personal and shared experience.
+- Encourage conversations around books, authors, and ideas to strengthen a sense of community.
+
+**Support Reading Management in Busy Routines**
+
+- Help users organize their reading lists and track progress at a glance.
+- Make it easier to balance reading with daily responsibilities by offering a lightweight, distraction-free space.
+
 
 ---
 
@@ -473,7 +485,7 @@ The font pairing balances readability and personality. **Bitter** ensures a comf
 The color palette draws inspiration from nature, creating a cozy atmosphere with a calming effect, much like the feeling of reading.
 Green tones are used as primary color and blue as secondary. Terracota tone is used as an accent color. 
 
-[Color Palete](documentation/color_palette.png)
+![Color Palete](documentation/color_palette.png)
 
 ### Wireframes
 
