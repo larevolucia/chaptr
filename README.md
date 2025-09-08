@@ -42,14 +42,6 @@ Here’s a clean, nested Table of Contents you can drop at the top of your READM
   * [Bug Fixes](#bug-fixes)
   * [Project Board](#project-board)
   * [Sprint Planning](#sprint-planning)
-
-    * [Sprint 0: Project Setup](#sprint-0-project-setup)
-    * [Sprint Breakdown](#sprint-breakdown)
-
-      * [Sprint 1](#sprint-1)
-      * [Sprint 2](#sprint-2)
-      * [Sprint 3](#sprint-3)
-      * [Sprint 4](#sprint-4)
   * [Features](#features)
 
     * [Homepage (Banner, Intro & Quick Browse)](#homepage-banner-intro--quick-browse)
