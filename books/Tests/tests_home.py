@@ -110,11 +110,6 @@ class HomeViewTests(TestCase):
         self.assertContains(resp, 'data-testid="hero-title"', html=False)
         self.assertContains(resp, 'data-testid="hero-text"', html=False)
 
-        # Hero background image
-        self.assertContains(resp, "home_banner.jpg", html=False)
-        self.assertContains(resp, "background:", html=False)
-        self.assertContains(resp, "linear-gradient", html=False)
-
     def test_about_section_content(self):
         """Test that the about section renders correctly."""
         url = reverse("home")

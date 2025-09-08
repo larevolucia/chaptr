@@ -59,7 +59,6 @@ def library(request):
         ReadingStatus.Status.READING: "status--reading",
         ReadingStatus.Status.READ: "status--read",
     }
-    proxy_base = reverse("cover_proxy")
 
     for rs in rows:
         rs.user_status_label = labels.get(rs.status, "—")
@@ -72,7 +71,7 @@ def library(request):
 
         # Build first-party cover URL; if empty, point to a local placeholder
         b.cover_url = (
-            f"{proxy_base}?url={quote(thumb, safe='')}" if thumb
+            f"{reverse('cover_proxy', args=[b['id']])}" if thumb
             else static("images/placeholder_cover.png")
         )
 

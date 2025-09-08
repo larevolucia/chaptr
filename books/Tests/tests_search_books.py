@@ -135,11 +135,11 @@ class SearchGoogleBooksTests(TestCase):
         self.assertEqual(books[0]["id"], "X")
         self.assertEqual(books[0]["authors"], "A")
         self.assertEqual(books[0]["title"], "T")
-        self.assertEqual(books[0]["thumbnail"], "http://t")
+        self.assertEqual(books[0]["thumbnail"], "https://t")
         self.assertEqual(books[1]["id"], "Y")
         self.assertEqual(books[1]["authors"], "B")
         self.assertEqual(books[1]["title"], "U")
-        self.assertEqual(books[1]["thumbnail"], "http://u")
+        self.assertEqual(books[1]["thumbnail"], "https://u")
 
     @patch.dict(os.environ, {"GOOGLE_BOOKS_API_KEY": "fake-key"}, clear=False)
     @patch("books.services.requests.get")

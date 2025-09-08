@@ -93,14 +93,13 @@ def book_search(request):
 
     labels = dict(ReadingStatus.Status.choices)
 
-    proxy_base = reverse("cover_proxy")
     placeholder = static("images/placeholder_cover.png")
     for b in books:
         status = (status_map.get(b["id"])
                   or {}).get("status")
         thumb = (b.get("thumbnail") or "").strip()
         b["cover_url"] = (
-            f"{proxy_base}?url={quote(thumb, safe='')}"
+            f"{reverse('cover_proxy', args=[b['id']])}"
             if thumb
             else placeholder
         )
@@ -167,7 +166,7 @@ def book_detail(request, book_id):
     thumb = (book.get("thumbnail") or "").strip()
     placeholder = static("images/placeholder_cover.png")
     book["cover_url"] = (
-        f"{reverse('cover_proxy')}?url={quote(thumb, safe='')}"
+        f"{reverse('cover_proxy', args=[book['id']])}"
         if thumb
         else placeholder
     )
@@ -277,17 +276,19 @@ ALLOWED_HOSTS = {
 
 
 @cache_page(60 * 60 * 24 * 30)  # 30 days
-def cover_proxy(request):
+def cover_proxy(request, book_id):
     """
-    Don't forward Set-Cookie
-    return as a clean first-party response
+    Serve a Google Books cover by ID.
     """
-    url = request.GET.get("url", "")
+    url = (
+        f"https://books.google.com/books/content"
+        f"?id={book_id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+    )
     host = urlparse(url).hostname or ""
     if host not in ALLOWED_HOSTS:
         raise Http404()
 
-    r = requests.get(url.replace("http://", "https://"), timeout=10)
+    r = requests.get(url, timeout=10)
     if r.status_code != 200:
         raise Http404()
 

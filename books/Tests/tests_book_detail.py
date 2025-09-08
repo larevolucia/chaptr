@@ -55,7 +55,7 @@ class BookDetailViewTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertIn(b"Wuthering heights", resp.content)
         self.assertIn(b"Emily Bronte", resp.content)
-        self.assertIn(b"http://thumb", resp.content)
+        self.assertIn(b"/cover/AkVWPbrWKGEC", resp.content)
         self.assertIn(b"1992-01-01", resp.content)
         self.assertIn(b"206", resp.content)
         self.assertIn(b"Poetry", resp.content)
