@@ -824,14 +824,13 @@ and provide confidence that both authentication flows and book-related features 
 | 766        | Value Error : background-color color-mix is not a background-color    | changed to transparent |
 | 549, 564   | The property clip is deprecated    | Removed clip and kept clip-path |
 
-
-**WebAim**
-
-**Accessibility Checker**
-
 **Lighthouse**
-
-
+| Page	                   | Warning	                                             | Fix                          	          |
+|:-------------------------|:------------------------------------------------------|:----------------------------------------|
+|Home                      | Deprecation / Warning Source Heroku other 1st party Found an <h1> tag within an <article>, <aside>, <nav>, or <section> which does not have a specified font-size | Added specific font-sizes on CSS |
+| Search Results / Book Details | Mixed content, where some resources are loaded over HTTP despite the initial request being served over HTTPS
+ | Google Books API returned the cover as http. Introduced a `ensure_https` to secure the urls from Google. |
+| Third Party Cookies      | Cover being render by google api was sending third-party cookies. To solve, a view and url with `cover_proxy` was created. |
 
 ---
 
