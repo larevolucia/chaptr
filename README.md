@@ -563,7 +563,7 @@ Key functions:
 These tests run automatically with:
 
 ```bash
-python manage.py test
+python manage.py test --settings=chaptr.settings_test
 ```
 
 and provide confidence that both authentication flows and book-related features behave as expected under different conditions.
