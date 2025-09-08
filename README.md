@@ -5,10 +5,6 @@
 Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users to manage their reading lists (To Read, Reading, Read), rate completed books, and engage through comments in a clean, distraction-free interface.
 
 ---
-## Table of Contents
-Here’s a clean, nested Table of Contents you can drop at the top of your README:
-
----
 
 ## Table of Contents
 
@@ -115,115 +111,115 @@ Below is a summary of the planned development scope using Agile epics, user stor
 
 ---
 
-### Epic 1: [Book Discovery and Browsing](#1)
+### Epic 1: [Book Discovery and Browsing](https://github.com/larevolucia/chaptr/issues/1)
 
 **Goal**: Enable users to explore the book catalog using a search interface powered by the Google Books API.
 
-#### [Search for books by title, author](#6)
+#### [Search for books by title, author](https://github.com/larevolucia/chaptr/issues/6)
 
 **Technical Tasks**
-- [Implement search form and view](#19)
-- [Integrate Google Books API](#20)
-- [Display search results](#21)
+- [Implement search form and view](https://github.com/larevolucia/chaptr/issues/19)
+- [Integrate Google Books API](https://github.com/larevolucia/chaptr/issues/20)
+- [Display search results](https://github.com/larevolucia/chaptr/issues/21)
 
-#### [View book details](#7)
-
-**Technical Tasks**
-- [Create book detail view](#22)
-- [Style Book Detail Page](#23)
-- [Populate data from API or local cache](#24)
-
-#### [View review on books](#8)
+#### [View book details](https://github.com/larevolucia/chaptr/issues/7)
 
 **Technical Tasks**
-- [Create review model and form](#43)
-- [Display reviews in template](#44)
+- [Create book detail view](https://github.com/larevolucia/chaptr/issues/22)
+- [Style Book Detail Page](https://github.com/larevolucia/chaptr/issues/23)
+- [Populate data from API or local cache](https://github.com/larevolucia/chaptr/issues/24)
 
-#### [Prompt login when guests try to interact](#9)
+#### [View review on books](https://github.com/larevolucia/chaptr/issues/8)
 
 **Technical Tasks**
-- [Add Login Checks to Views](#25)
-- [Add Login Prompt Messaging](#26)
+- [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
+- [Display reviews in template](https://github.com/larevolucia/chaptr/issues/44)
+
+#### [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)
+
+**Technical Tasks**
+- [Add Login Checks to Views](https://github.com/larevolucia/chaptr/issues/25)
+- [Add Login Prompt Messaging](https://github.com/larevolucia/chaptr/issues/26)
 
 ---
 
-### Epic 2: [User Authentication and Permissions](#2)
+### Epic 2: [User Authentication and Permissions](https://github.com/larevolucia/chaptr/issues/2)
 
 **Goal**: Set up account registration, login/logout, and protect user actions.
 
-#### [Register an account](#10)
+#### [Register an account](https://github.com/larevolucia/chaptr/issues/10)
 
 **Technical Tasks:**
-- [Create Registration Form and View](#29)
-- [Handle Form Validation and Feedback](#30)
-- [Link Registration in Navbar](#31)
+- [Create Registration Form and View](https://github.com/larevolucia/chaptr/issues/29)
+- [Handle Form Validation and Feedback](https://github.com/larevolucia/chaptr/issues/30)
+- [Link Registration in Navbar](https://github.com/larevolucia/chaptr/issues/31)
 
-#### [Log in and log out securely](#11)
-
-**Technical Tasks:**
-- [Create login and logout views](#32)
-- [Update navbar based on auth status](#33)
-- [Handle redirection after login/logout](#34)
-
-#### [Restrict book interactions to authenticated users](#12)
+#### [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
 
 **Technical Tasks:**
-- [Add `@login_required` to protected views](#36)
-- [Update templates to show/hide based on login messages](#35)
+- [Create login and logout views](https://github.com/larevolucia/chaptr/issues/32)
+- [Update navbar based on auth status](https://github.com/larevolucia/chaptr/issues/33)
+- [Handle redirection after login/logout](https://github.com/larevolucia/chaptr/issues/34)
+
+#### [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
+
+**Technical Tasks:**
+- [Add `@login_required` to protected views](https://github.com/larevolucia/chaptr/issues/36)
+- [Update templates to show/hide based on login messages](https://github.com/larevolucia/chaptr/issues/35)
 
 ---
 
-### Epic 3: [Book Interaction and Reading Progress](#3)
+### Epic 3: [Book Interaction and Reading Progress](https://github.com/larevolucia/chaptr/issues/3)
 
 **Goal**: Allow users to track their reading activity, rate books, and comment.
 
-#### [Mark books as To Read, Reading, or Read](#13)
+#### [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)
 
 **Technical Tasks:**
-- [Create reading status and comment models](#37)
-- [Add forms for status, rating, and commenting](#38)
-- [Display and update user content](#39)
+- [Create reading status and comment models](https://github.com/larevolucia/chaptr/issues/37)
+- [Add forms for status, rating, and commenting](https://github.com/larevolucia/chaptr/issues/38)
+- [Display and update user content](https://github.com/larevolucia/chaptr/issues/39)
 
-#### [Rate books](#14)
-
-**Technical Tasks:**
-- [Add rating field to reading model or separate model](#40)
-- [Create form and view logic for adding/updating rating](#41)
-- [Show rating summary on book detail](#42)
-
-#### [Leave a review](#15)
+#### [Rate books](https://github.com/larevolucia/chaptr/issues/14)
 
 **Technical Tasks:**
-- [Create review model and form](#43)
-- [Display reviews in template](#44)
+- [Add rating field to reading model or separate model](https://github.com/larevolucia/chaptr/issues/40)
+- [Create form and view logic for adding/updating rating](https://github.com/larevolucia/chaptr/issues/41)
+- [Show rating summary on book detail](https://github.com/larevolucia/chaptr/issues/42)
 
-#### [Edit, and delete reviews](#16)
+#### [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
 
 **Technical Tasks:**
-- [Validate review ownership](#45)
-- [Implement update and delete views for reviews](#46)
-- [Add conditional logic in template for ownership](#47)
-- [Add messaging or UI confirmation for deletion](#48)
+- [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
+- [Display reviews in template](https://github.com/larevolucia/chaptr/issues/44)
+
+#### [Edit, and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
+
+**Technical Tasks:**
+- [Validate review ownership](https://github.com/larevolucia/chaptr/issues/45)
+- [Implement update and delete views for reviews](https://github.com/larevolucia/chaptr/issues/46)
+- [Add conditional logic in template for ownership](https://github.com/larevolucia/chaptr/issues/47)
+- [Add messaging or UI confirmation for deletion](https://github.com/larevolucia/chaptr/issues/48)
 
 ---
 
-### Epic 4: [User Library](#4)
+### Epic 4: [User Library](https://github.com/larevolucia/chaptr/issues/4)
 
 **Goal**: Provide users with a personalized library to manage their reading activity.
 
-#### [View books grouped by reading status](#17)
+#### [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)
 
 **Technical Tasks:**
-- [Create library view with user authentication](#49)
-- [Build style library template](#50)
-- [Query and display grouped book data](#51)
+- [Create library view with user authentication](https://github.com/larevolucia/chaptr/issues/49)
+- [Build style library template](https://github.com/larevolucia/chaptr/issues/50)
+- [Query and display grouped book data](https://github.com/larevolucia/chaptr/issues/51)
 
-#### [Update reading status directly from library](#18)
+#### [Update reading status directly from library](https://github.com/larevolucia/chaptr/issues/18)
 
 **Technical Tasks:**
-- [Add inline status update controls](#52)
-- [Implement Status Update Logic in View](#53)
-- [Show success messages after updates](#54)
+- [Add inline status update controls](https://github.com/larevolucia/chaptr/issues/52)
+- [Implement Status Update Logic in View](https://github.com/larevolucia/chaptr/issues/53)
+- [Show success messages after updates](https://github.com/larevolucia/chaptr/issues/54)
 
 ---
 
@@ -281,39 +277,39 @@ Sprints are organized to deliver features incrementally, with each sprint focusi
 ### Sprint Breakdown
 Sprint 1:
 - Epic 1: Book Discovery and Browsing
-   - [x] [Search for books by title, author, genre](#6)
-   - [x] [View book details](#7)
-   - [x] [Homepage - MVP](#56)
+   - [x] [Search for books by title, author, genre](https://github.com/larevolucia/chaptr/issues/6)
+   - [x] [View book details](https://github.com/larevolucia/chaptr/issues/7)
+   - [x] [Homepage - MVP](https://github.com/larevolucia/chaptr/issues/56)
 
 - Epic 2: User Authentication and Permissions
-   - [x] [Register an account](#10)
-   - [x] [Log in and log out securely](#11)
+   - [x] [Register an account](https://github.com/larevolucia/chaptr/issues/10)
+   - [x] [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
 
 Sprint 2:
 - Epic 1: Book Discovery and Browsing
-   - [x] [Prompt login when guests try to interact](#9)
-   - [x] [Homepage - Stretch](#56)
+   - [x] [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)
+   - [x] [Homepage - Stretch](https://github.com/larevolucia/chaptr/issues/56)
 - Epic 2: User Authentication and Permissions
-   - [x] [Restrict book interactions to authenticated users](#12)
+   - [x] [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
 - Epic 3: Book Interaction and Reading Progress
-   - [x] [Mark books as To Read, Reading, or Read](#13)
-   - [x] [Rate books](#14)
-   - [x] [Leave a review](#15)
+   - [x] [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)
+   - [x] [Rate books](https://github.com/larevolucia/chaptr/issues/14)
+   - [x] [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
 
 Sprint 3:
 - Epic 1: Book Discovery and Browsing
-   - [x] [View reviews on books](#8)
+   - [x] [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
 - Epic 3: Book Interaction and Reading Progress
-   - [x] [Edit, and delete reviews](#16)
+   - [x] [Edit, and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
 - Epic 4: User Dashboard
-   - [x] [View books grouped by reading status](#17)
-   - [x] [Update reading status directly from dashboard](#18)
+   - [x] [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)
+   - [x] [Update reading status directly from dashboard](https://github.com/larevolucia/chaptr/issues/18)
 
 Sprint 4:
 - Testing and Bug Fixes
-   - [x] [Refactoring](#85)
-   - [x] [Accessibility & Performance](#87)
-   - [ ] [Documentation](#88)
+   - [x] [Refactoring](https://github.com/larevolucia/chaptr/issues/85)
+   - [x] [Accessibility & Performance](https://github.com/larevolucia/chaptr/issues/87)
+   - [ ] [Documentation](https://github.com/larevolucia/chaptr/issues/88)
 
 ---
 
@@ -358,15 +354,18 @@ Each book has a dedicated detail page with enriched information for readers.
 
 ![Book Details](documentation/images/book_detail/details_visitor.png)
 
-![Remove from Library](documentation/images/book_detail/remove_details.gif)
 
-### Reading Status
+### Reading Progress (Status Updates)
 
-Lets users track their progress with any book, directly from search results or detail pages.
+Let users track where they are with any book using a simple three-state flow.
 
-* **Simple Progress Tracking**: Mark books as *To Read*, *Reading*, or *Read*.
-* **Integrated Placement**: Status buttons are shown beneath the cover art on both search results and book detail views, by implementing a template partial.
-* **Lightweight Persistence**: Status/ratings/reviews are coordinated through a small service layer.
+* **Three statuses**: *To read*, *Reading*, *Read* (`TO_READ`, `READING`, `READ`). One status per `(user, book)`.
+* **Inline controls**: POSTing a valid status creates/updates a `ReadingStatus`; invalid choices show a friendly error and redirect back to the detail page.
+* **Remove from library**: Sending `status=NONE` deletes the status and **archives** any rating/review for that book (kept for analytics, hidden from UI).
+* **Book FK safety**: Status changes ensure a `Book` row exists via `fetch_or_refresh_book(...)`.
+* **Integrity & performance**: Unique constraint on `(user, book)` with helpful indexes for library queries.
+* **UX feedback**: Success/error messages confirm each action and return users to the originating page.
+
 
 ![Reading Status in Book Detail](documentation/images/book_detail/reading_status_details.gif)
 
@@ -377,13 +376,13 @@ Lets users track their progress with any book, directly from search results or d
 
 Provides a quick way for readers to rate books and share feedback with the community.
 
-* **Star-Based Ratings**: Authenticated users can assign a rating from 1–5 stars.
-* **Status Invariant**: Rating a book ensures a status row exists (defaults to **Read** if missing).
-**Archive on Status Removal**: Removing a book from your library archives your rating (it disappears from your profile but can be used avg and future analytics).
+* **Star ratings (1–5)**: Authenticated users can create/update a rating; `rating=0` removes it. Values outside 1–5 show a validation message.
+* **Status invariant**: Posting a rating ensures a `ReadingStatus` exists (defaults to **READ** if missing). Existing statuses are respected.
+* **Archive on removal**: Removing a status archives the user’s rating (`is_archived=True`, timestamped) so they disappear from UI but stay available for analytics. Re-posting **unarchives** the most recent row.
+* **Averages & counts**: Helpers compute average rating and total ratings for display on the book detail.
 * **User Feedback**: Notifications confirm when a rating is saved or updated.
 * **Flexible Control**: Ratings can be removed at any time.
 
-![Rating in Search](documentation/images/search/rating_search.gif)
 
 ![Rating in Book Details](documentation/images/book_detail/rating_details.gif)
 
@@ -398,14 +397,11 @@ Lets readers share longer-form thoughts on a book, with a clear, edit-friendly f
 * **Inline Compose, Edit & Delete**: If you haven’t reviewed, a form appears. If you have, your review shows with an *Edit* and *Delete* buttons.
 * **One-Per-Book Guarantee**: A unique `(user, book)` constraint updates on re-submit (no duplicates).
 * **Status Invariant**: Posting a review ensures a status row exists (defaults to **Read** if missing).
-* **Archive on Status Removal**: Removing a book from your library archives your review (hidden from profile/UI; available for future analytics).
-* **Clean Presentation**: Reviews appear under the book details. Your own review isn’t duplicated in the list.
+* **Archive on removal**: Removing a status archives the user’s review (`is_archived=True`, timestamped) so they disappear from UI but stay available for analytics. Re-posting **unarchives** the most recent row.
+* **No duplicates**: A unique active review per `(user, book)` prevents multiple comments; reposting updates the same record.
+* **Ownership guard**: Only the author can delete their comment; unauthorized deletes return `403`.
 
 ![Add and edit a Review](documentation/images/book_detail/add_edit_review_details.gif)
-
-![Delete a Review](documentation/images/book_detail/delete_review_details.gif)
-
-
 
 ### Library
 
@@ -434,6 +430,8 @@ Critical actions, such as removing a book from the library or deleting a review,
 * **User Control**: Users can confirm or cancel the action, ensuring they have full control over their data.
 * **Reusable Component**: The modal is implemented as a reusable template partial for consistency across the site.
 
+![Delete a Review](documentation/images/book_detail/delete_review_details.gif)
+
 ### Authentication (Login, Logout & Sign-Up)
 
 User authentication is powered by **Django Allauth**, providing a secure and reliable way to manage accounts.
@@ -442,37 +440,18 @@ User authentication is powered by **Django Allauth**, providing a secure and rel
 * **Login / Logout**: Users can log in to access their personal features and log out securely when finished.
 * **Consistent UI**: Allauth templates have been adapted to the project’s design system, ensuring a seamless experience across authentication pages.
 
-### Reading Progress (Status Updates)
+![Log in](documentation/images/auth/login.png)
+![Sign Up](documentation/images/auth/signup.png)
 
-Let users track where they are with any book using a simple three-state flow.
+### Custom Error Pages
 
-* **Three statuses**: *To read*, *Reading*, *Read* (`TO_READ`, `READING`, `READ`). One status per `(user, book)`.
-* **Inline controls**: POSTing a valid status creates/updates a `ReadingStatus`; invalid choices show a friendly error and redirect back to the detail page.
-* **Remove from library**: Sending `status=NONE` deletes the status and **archives** any rating/review for that book (kept for analytics, hidden from UI).
-* **Book FK safety**: Status changes ensure a `Book` row exists via `fetch_or_refresh_book(...)`.
-* **Integrity & performance**: Unique constraint on `(user, book)` with helpful indexes for library queries.
-* **UX feedback**: Success/error messages confirm each action and return users to the originating page.
+Custom error pages were created to keep the brand styles.
 
+* **Error**: Page informs user the type of error.
+* **Redirect**: Buttons are included for the user to go back to home or previous page.
+* **Incident number**: Incident numbers are included for communication with help center.
 
-### Rate Books
-
-Capture quick star ratings  per book.
-
-* **Star ratings (1–5)**: Authenticated users can create/update a rating; `rating=0` removes it. Values outside 1–5 show a validation message.
-* **Status invariant**: Posting a rating ensures a `ReadingStatus` exists (defaults to **READ** if missing). Existing statuses are respected.
-* **Archive on removal**: Removing a status archives the user’s rating (`is_archived=True`, timestamped) so they disappear from UI but stay available for analytics. Re-posting **unarchives** the most recent row.
-* **Averages & counts**: Helpers compute average rating and total ratings for display on the book detail.
-
-
-### Review Books
-
-Short, focused commentary is implemented via the **Review** model.
-
-* **Inline compose/edit/delete**: If you’ve never reviewed, you’ll see a textarea; if you have, your existing text appears with *Edit*/*Delete* controls handled by `ReviewForm` and dedicated views.
-* **Status invariant**: Posting a review ensures a `ReadingStatus` exists (defaults to **READ** if missing). Existing statuses are respected.
-* **Archive on removal**: Removing a status archives the user’s review (`is_archived=True`, timestamped) so they disappear from UI but stay available for analytics. Re-posting **unarchives** the most recent row.
-* **Ownership guard**: Only the author can delete their comment; unauthorized deletes return `403`.
-* **No duplicates**: A unique active review per `(user, book)` prevents multiple comments; reposting updates the same record.
+![Sign Up](documentation/images/error/404.png)
 
 
 ### Admin Panel
@@ -485,7 +464,20 @@ Short, focused commentary is implemented via the **Review** model.
 
 ## Design
 
+### Fonts
+
+The font pairing balances readability and personality. **Bitter** ensures a comfortable reading experience, **Roboto** adds modern clarity for the interface, and **Abril Fatface** brings a touch of elegance for emphasis.
+
+### Color Palete
+
+The color palette draws inspiration from nature, creating a cozy atmosphere with a calming effect, much like the feeling of reading.
+Green tones are used as primary color and blue as secondary. Terracota tone is used as an accent color. 
+
+[Color Palete](documentation/color_palette.png)
+
 ### Wireframes
+
+As a mobile-first approach, wireframes focused on the smaller screens. Tablets and desktop design kept the same design but making better use of wider screen, particularly for tables.
 
 ![Mobile Logged-In Wireframes](documentation/images/wireframes/Mobile_Logged-In.png)
 
@@ -523,7 +515,7 @@ Primary key is the Google Books `volumeId`.
 * Index on `title` for faster search.
 
 **Methods:**
-* `needs_refresh(ttl_minutes=1440)`: checks if book metadata is stale.
+* `needs_refresh(ttl_minutes=1440)`: checks if book metadata has expired, with a default time-to-live of 24 hours.
 
 **Cover storage vs. display**  
 * The database stores the *remote* `thumbnail_url` only; image bytes are **not** stored. 
@@ -634,7 +626,7 @@ Key functions:
 
 ***NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s TestCase** framework with mocking for external dependenciess, such as Google Books API.
 
-Detais testings documentation can be found at [tests.md](documentation/tests.md)
+Detais testings documentation can be found at [tests.md](documentation/TESTS.md)
 
 ### Automated Test Coverage
 
@@ -775,7 +767,7 @@ and provide confidence that both authentication flows and book-related features 
 | Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
 |:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
 | Review Form  | Search "title:jellyfish age backwards" and navigate to first item  `/books/wYswEAAAQBAJ/`	| Sees reviews and form.	|   ✅   |
-| Leave Review (no status)| At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` write and submit review "awesome"	| Sees reviews and form. | Pages updates, alert is sent and status is READ.	|   ✅   |
+| Leave Review (no status)| At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` write and submit review "awesome"	| Pages updates, alert is sent and status is READ.	|   ✅   |
 | Edit Review  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` click on edit button, write "not so awesome" and save	| Review is updated, alert is sent	|   ✅   |
 | Delete Review  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` click on delete button	| Confirmation modal is shown	with correct messaging |   ✅   |
 | Cancel Delete Confirmation  | Click on 'Cancel' | Review is not deleted 	|   ✅   |
@@ -967,3 +959,4 @@ That’s it! The app should now be live on Heroku.
 - Conditional Requests: [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Conditional_requests)
 - Session Objects: [Requests Documentation](https://requests.readthedocs.io/en/latest/user/advanced/#conditional-requests)
 - Third-party Cookies: [Privacy Sandbox](https://privacysandbox.google.com/cookies/prepare/audit-cookies)
+- Custom error handling [StackOverflow](https://stackoverflow.com/questions/40758711/how-to-set-a-default-handler-for-csrf-verification-failed-in-django)
