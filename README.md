@@ -801,6 +801,35 @@ and provide confidence that both authentication flows and book-related features 
 
 ---
 
+### Linters and Validation
+
+**[HTML W3C Validator](https://validator.w3.org/)**
+| Page	                   | Warning	                                             | Fix                          	          |
+|:-------------------------|:------------------------------------------------------|:----------------------------------------|
+| Home                     |Error: Parse Error. `</body>↩</html>↩`     | Removed empty space after `</html>` in `base.html` |
+| Home                     |The navigation role is unnecessary for element nav     | Removed from `base.html` |
+| Home                     |The region role is unnecessary for element section     | Removed from `home.html` |
+| Home                     |The region role is unnecessary for element section.    | Removed from `home.html` |
+| Home                     |The contentinfo role is unnecessary for element footer | Removed from `base.html` |
+| Search Results           |End tag h2 seen, but there were open elements. | Corrected </h2> to </h1> |
+| Search Results           |The sizes attribute must only be specified if the srcset attribute is also specified. | removed sizes |
+| Search Results           | End tag h5 seen, but there were open elements. | Corrected </h5> to </h1> |
+| Book Detail              | Error: Unclosed element div.| Closed the </div> |
+| Book Detail              | Parse Error | wrapped {{ book.description|safe }} on a <div> |
+
+**[Jigsaw](https://jigsaw.w3.org/)**
+| Line	     | Warning	                                             | Fix                          	          |
+|------------|:------------------------------------------------------|:----------------------------------------|
+| 183        | Value Error : background-color none is not a background-color value : none     | changed to transparent |
+| 766        | Value Error : background-color color-mix is not a background-color    | changed to transparent |
+| 549, 564   | The property clip is deprecated    | Removed clip and kept clip-path |
+
+
+**WebAim**
+
+**Accessibility Checker**
+
+**Lighthouse**
 
 
 
