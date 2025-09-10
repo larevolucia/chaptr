@@ -10,21 +10,21 @@ Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users
 
 - [Target Audience](#target-audience)
 - [Site Goal](#site-goal)
+- [Features](#features)
+- [Design](#design)
+- [Models](#models)
+- [Django Project Structure](#django-project-structure)
 - [Requirements Overview](#requirements-overview)
   - [Epic 1: Book Discovery and Browsing](#epic-1-book-discovery-and-browsing)
   - [Epic 2: User Authentication and Permissions](#epic-2-user-authentication-and-permissions)
   - [Epic 3: Book Interaction and Reading Progress](#epic-3-book-interaction-and-reading-progress)
   - [Epic 4: User Library](#epic-4-user-library)
-- [Bug Fixes](#bug-fixes)
-- [Project Board](#project-board)
-- [Sprint Planning](#sprint-planning)
-- [Features](#features)
-- [Design](#design)
-- [Models](#models)
-- [Django Project Structure](#django-project-structure)
 - [Testing](#testing)
+- [Bug Fixes](#bug-fixes)
+- [Sprint Planning](#sprint-planning)
 - [Deployment](#deployment)
 - [Credits & References](#credits--references)
+- [Acknoledgements](#acknoledgements)
 
 ---
 
@@ -54,351 +54,6 @@ NextChaptr is built for readers who want a focused, user-friendly space to log t
 
 - Help users organize their reading lists and track progress at a glance.
 - Offer a lightweight, distraction-free space to balance reading with daily responsibilities.
-
----
-
-## Requirements Overview
-
-Below is a summary of the planned development scope using Agile epics, user stories, and tasks.
-
----
-
-### Epic 1: [Book Discovery and Browsing](https://github.com/larevolucia/chaptr/issues/1)
-
-**Goal**: Enable users to explore the book catalog using a search interface powered by the Google Books API.
-
-#### [Search for books by title, author](https://github.com/larevolucia/chaptr/issues/6)
-
-**Technical Tasks**
-- [Implement search form and view](https://github.com/larevolucia/chaptr/issues/19)
-- [Integrate Google Books API](https://github.com/larevolucia/chaptr/issues/20)
-- [Display search results](https://github.com/larevolucia/chaptr/issues/21)
-
-#### [View book details](https://github.com/larevolucia/chaptr/issues/7)
-
-**Technical Tasks**
-- [Create book detail view](https://github.com/larevolucia/chaptr/issues/22)
-- [Style Book Detail Page](https://github.com/larevolucia/chaptr/issues/23)
-- [Populate data from API or local cache](https://github.com/larevolucia/chaptr/issues/24)
-
-#### [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
-
-**Technical Tasks**
-- [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
-- [Display reviews in template](https://github.com/larevolucia/chaptr/issues/44)
-
-#### [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)
-
-**Technical Tasks**
-- [Add login checks to views](https://github.com/larevolucia/chaptr/issues/25)
-- [Add login prompt messaging](https://github.com/larevolucia/chaptr/issues/26)
-
----
-
-### Epic 2: [User Authentication and Permissions](https://github.com/larevolucia/chaptr/issues/2)
-
-**Goal**: Set up account registration, login/logout, and protect user actions.
-
-#### [Register an account](https://github.com/larevolucia/chaptr/issues/10)
-
-**Technical Tasks**
-- [Create registration form and view](https://github.com/larevolucia/chaptr/issues/29)
-- [Handle form validation and feedback](https://github.com/larevolucia/chaptr/issues/30)
-- [Link registration in navbar](https://github.com/larevolucia/chaptr/issues/31)
-
-#### [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
-
-**Technical Tasks**
-- [Create login and logout views](https://github.com/larevolucia/chaptr/issues/32)
-- [Update navbar based on auth status](https://github.com/larevolucia/chaptr/issues/33)
-- [Handle redirection after login/logout](https://github.com/larevolucia/chaptr/issues/34)
-
-#### [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
-
-**Technical Tasks**
-- [Add `@login_required` to protected views](https://github.com/larevolucia/chaptr/issues/36)
-- [Update templates to show/hide based on login state](https://github.com/larevolucia/chaptr/issues/35)
-
----
-
-### Epic 3: [Book Interaction and Reading Progress](https://github.com/larevolucia/chaptr/issues/3)
-
-**Goal**: Allow users to track their reading activity, rate books, and comment.
-
-#### [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)
-
-**Technical Tasks**
-- [Create reading status and review models](https://github.com/larevolucia/chaptr/issues/37)
-- [Add forms for status, rating, and reviewing](https://github.com/larevolucia/chaptr/issues/38)
-- [Display and update user content](https://github.com/larevolucia/chaptr/issues/39)
-
-#### [Rate books](https://github.com/larevolucia/chaptr/issues/14)
-
-**Technical Tasks**
-- [Add rating field to reading model or separate model](https://github.com/larevolucia/chaptr/issues/40)
-- [Create form and view logic for adding/updating rating](https://github.com/larevolucia/chaptr/issues/41)
-- [Show rating summary on book detail](https://github.com/larevolucia/chaptr/issues/42)
-
-#### [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
-
-**Technical Tasks**
-- [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
-- [Display reviews in template](https://github.com/larevolucia/chaptr/issues/44)
-
-#### [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
-
-**Technical Tasks**
-- [Validate review ownership](https://github.com/larevolucia/chaptr/issues/45)
-- [Implement update and delete views for reviews](https://github.com/larevolucia/chaptr/issues/46)
-- [Add conditional logic in templates for ownership](https://github.com/larevolucia/chaptr/issues/47)
-- [Add messaging and UI confirmation for deletion](https://github.com/larevolucia/chaptr/issues/48)
-
----
-
-### Epic 4: [User Library](https://github.com/larevolucia/chaptr/issues/4)
-
-**Goal**: Provide users with a personalized library to manage their reading activity.
-
-#### [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)
-
-**Technical Tasks**
-- [Create library view with user authentication](https://github.com/larevolucia/chaptr/issues/49)
-- [Build styled library template](https://github.com/larevolucia/chaptr/issues/50)
-- [Query and display grouped book data](https://github.com/larevolucia/chaptr/issues/51)
-
-#### [Update reading status directly from library](https://github.com/larevolucia/chaptr/issues/18)
-
-**Technical Tasks**
-- [Add inline status update controls](https://github.com/larevolucia/chaptr/issues/52)
-- [Implement status update logic in view](https://github.com/larevolucia/chaptr/issues/53)
-- [Show success messages after updates](https://github.com/larevolucia/chaptr/issues/54)
-
----
-
-## Bug Fixes
-
-**[500 Error in signup](https://github.com/larevolucia/chaptr/issues/84)**  
-Mandatory confirmation email was not being sent due to issues with Gmail credentials. Resolved by regenerating the credentials and updating both `.env` and Heroku config vars.
-
-**[Admin search for Activity gives 500 error](https://github.com/larevolucia/chaptr/issues/78)**  
-Admin search returned a 500 error. Resolved by correcting search field formatting.
-
-**[Internal Server Error](https://github.com/larevolucia/chaptr/issues/89)**  
-Production returned a 500 error due to missing variables after refactoring. Resolved by adding `GOOGLE_BOOKS_SEARCH_URL` and `GOOGLE_BOOKS_VOLUME_URL` to Heroku config vars.
-
-**[Books tests_views failing after activity changes](https://github.com/larevolucia/chaptr/issues/79)**  
-Book views crashed in tests because `RequestFactory` requests lack `request.user`, causing `AttributeError` in `book_search`/`book_detail`. Fixed by defaulting to `AnonymousUser` (e.g., `user = getattr(request, "user", AnonymousUser())`) before any `is_authenticated` checks in `books/views.py`.
-
-**[API response for totalItems is inconsistent](https://github.com/larevolucia/chaptr/issues/81)**  
-Pagination broke due to Google Books API returning inflated `totalItems`. Fixed by capping results to the fetched items and adjusting pagination logic.
-
-**[Message "No reviews yet" after reviews](https://github.com/larevolucia/chaptr/issues/77)**  
-Authenticated users saw “No reviews yet” after their own review due to template logic. Fixed by rendering the user’s review first and only showing the empty state when neither `my_review` nor any `reviews` exist.
-
-**[Cover fallback not displaying](https://github.com/larevolucia/chaptr/issues/55)**  
-Cover fallback failed in production. Resolved by removing static files from `.gitignore` and correcting directory paths.
-
-**[Notifications make the screen jump down](https://github.com/larevolucia/chaptr/issues/70)**  
-Alerts caused layout shift. Fixed by converting them to fixed-position toasts (high z-index), so messages float without pushing content.
-
-**[Login via search results redirects to empty search](https://github.com/larevolucia/chaptr/issues/69)**  
-Login from search redirected to an empty results page because the `next` parameter wasn’t preserved. Fixed by passing the original query in the login redirect.
-
-**[Models inconsistency](https://github.com/larevolucia/chaptr/issues/69)**  
-Removing a book only cleared its reading status, leaving review/rating behind. Fixed by cascading cleanup on status removal and archiving associated review and rating records.
-
-**[Search returns duplicated results](https://github.com/larevolucia/chaptr/issues/91)**  
-Search results showed duplicates when the query was too specific. Fixed by de-duplicating results before pagination.
-
----
-
-### [Linters and Validation Fixes](https://github.com/larevolucia/chaptr/issues/87)
-
-**[HTML W3C Validator](https://validator.w3.org/)**
-
-| Page            | Warning / Error                                                           | Fix                                                     |
-|:----------------|:--------------------------------------------------------------------------|:--------------------------------------------------------|
-| Home            | Error: Parse Error. `</body>↩</html>↩`                                   | Removed extra whitespace after `</html>` in `base.html` |
-| Home            | The `navigation` role is unnecessary for `nav`                            | Removed from `base.html`                                |
-| Home            | The `region` role is unnecessary for `section`                            | Removed from `home.html`                                |
-| Home            | The `contentinfo` role is unnecessary for `footer`                        | Removed from `base.html`                                |
-| Search Results  | End tag `h2` seen, but there were open elements                           | Corrected `</h2>` to `</h1>`                            |
-| Search Results  | `sizes` must only be specified if `srcset` is specified                   | Removed `sizes`                                         |
-| Search Results  | End tag `h5` seen, but there were open elements                           | Corrected `</h5>` to `</h1>`                            |
-| Search Results  | Duplicated book id error                                                  | De-duplicated search output in `books/views.py`         |
-| Book Detail     | Error: Unclosed `div`                                                     | Closed the `div`                                        |
-| Book Detail     | Parse error                                                               | Wrapped `{{ book.description|safe }}` in a `<div>`      |
-| Book Detail     | Duplicate ID `confirmDeleteModal`                                         | Removed included modal partial from `reviews.html`      |
-
-<details>
-<summary>Home (auth)</summary>
-
-![HTML Validator Home](documentation/images/validators/html/home_auth.png)
-</details>
-
-<details>
-<summary>Home (visitor)</summary>
-
-![HTML Validator Home](documentation/images/validators/html/home_visitor.png)
-</details>
-
-<details>
-<summary>Search Results (auth)</summary>
-
-![HTML Validator Search Results](documentation/images/validators/html/genre_science_fiction_auth.png)
-</details>
-
-<details>
-<summary>Search Results (visitor)</summary>
-
-![HTML Validator Search Results](documentation/images/validators/html/search_jellyfish_visitor.png)
-</details>
-
-<details>
-<summary>Book Detail (auth)</summary>
-
-![HTML Validator Book Page - Insomnia (other user activity)](documentation/images/validators/html/insomnia_book_page_auth.png)  
-![HTML Validator Book Page - Jellyfish Age Backwards (same user activity)](documentation/images/validators/html/jellyfish_age_backwards_book_page_auth.png)  
-![HTML Validator Book Page - Time in Fiction (no activity)](documentation/images/validators/html/time_in_fiction_book_page_auth.png)
-</details>
-
-<details>
-<summary>Book Detail (visitor)</summary>
-
-![HTML Validator Book Page - Runaway Jury](documentation/images/validators/html/runaway_jury_book_page_visitor.png)  
-![HTML Validator Book Page - Jellyfish Age Backwards](documentation/images/validators/html/jellyfish_age_backwards_book_page_visitor.png)
-</details>
-
-<details>
-<summary>Library (auth)</summary>
-
-![HTML Validator Library (with books)](documentation/images/validators/html/library.png)  
-![HTML Validator Library (empty state)](documentation/images/validators/html/library.png)
-</details>
-
-**[Jigsaw](https://jigsaw.w3.org/)**
-
-| Line | Warning                                                   | Fix                    |
-|-----:|:----------------------------------------------------------|:-----------------------|
-|  183 | `background-color: none` is not a valid value             | Changed to `transparent` |
-|  766 | `background-color: color-mix(...)` not valid here         | Changed to `transparent` |
-| 549, 564 | The `clip` property is deprecated                     | Removed `clip`; kept `clip-path` |
-
-<details>
-<summary>CSS</summary>
-
-![Jigsaw CSS](documentation/images/validators/css/jigsaw.png)
-</details>
-
-**Lighthouse**
-
-| Page                         | Warning / Issue                                                                                          | Fix                                                                                 |
-|:-----------------------------|:----------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------|
-| Home                         | Deprecation/Warning: `<h1>` inside an `article/aside/nav/section` without explicit font-size             | Added explicit font-sizes in CSS                                                    |
-| Search Results & Book Detail | Mixed content: some resources loaded over HTTP while the page is HTTPS                                   | Introduced `ensure_https` to secure Google Books cover URLs                         |
-| Search Results & Book Detail | Third-party cookies via Google cover images                                                              | Implemented a `/cover/` proxy view and URL to serve images first-party              |
-
-<details>
-<summary>Home</summary>
-
-![Home Desktop Auth](documentation/images/validators/lighthouse/home_desktop_auth.png)  
-![Home Desktop Visitor](documentation/images/validators/lighthouse/home_desktop_visitor.png)  
-![Home Mobile Auth](documentation/images/validators/lighthouse/home_mobile_auth.png)  
-![Home Mobile Visitor](documentation/images/validators/lighthouse/home_mobile_visitor.png)
-</details>
-
-<details>
-<summary>Search</summary>
-
-![Search Desktop Auth](documentation/images/validators/lighthouse/search_desktop_auth.png)  
-![Search Desktop Visitor](documentation/images/validators/lighthouse/search_desktop_visitor.png)  
-![Search Mobile Auth](documentation/images/validators/lighthouse/search_mobile_auth.png)  
-![Search Mobile Visitor](documentation/images/validators/lighthouse/search_mobile_visitor.png)
-</details>
-
-<details>
-<summary>Book Page</summary>
-
-![Book Detail Desktop Auth](documentation/images/validators/lighthouse/book_detail_desktop_auth.png)  
-![Book Detail Desktop Visitor](documentation/images/validators/lighthouse/book_detail_desktop_visitor.png)  
-![Book Detail Mobile Auth](documentation/images/validators/lighthouse/book_detail_mobile_auth.png)  
-![Book Detail Mobile Visitor](documentation/images/validators/lighthouse/book_detail_mobile_visitor.png)
-</details>
-
-<details>
-<summary>Library</summary>
-
-![Empty Library Desktop](documentation/images/validators/lighthouse/library_desktop_empty.png)  
-![Library Desktop](documentation/images/validators/lighthouse/library_desktop_full.png)  
-![Empty Library Mobile](documentation/images/validators/lighthouse/library_mobile_empty.png)  
-![Library Mobile](documentation/images/validators/lighthouse/library_mobile_full.png)
-</details>
-
-### [PEP8](https://pep8ci.herokuapp.com/#)
-
-All files passed PEP8 validation. Screenshots can be found in the [PEP8 folder](documentation/images/validators/pep8/).
-
----
-
-## Project Board
-
-All issues are tracked on the GitHub project board:  
-https://github.com/larevolucia/chaptr/projects/12
-
-## Sprint Planning
-
-Sprints deliver features incrementally, each focusing on specific epics and user stories. The sprint timebox is one week.
-
-### Sprint 0: Project Setup
-
-- [x] Create epics, user stories, and tasks in GitHub  
-- [x] Set up Django project and apps  
-- [x] Configure Google Books API integration  
-- [x] Deploy initial version to Heroku  
-- [x] Set up Postgres database  
-- [x] Set up basic templates and static files
-
-### Sprint Breakdown
-
-**Sprint 1**
-
-- Epic 1: Book Discovery and Browsing  
-  - [x] [Search for books by title, author, genre](https://github.com/larevolucia/chaptr/issues/6)  
-  - [x] [View book details](https://github.com/larevolucia/chaptr/issues/7)  
-  - [x] [Homepage – MVP](https://github.com/larevolucia/chaptr/issues/56)
-
-- Epic 2: User Authentication and Permissions  
-  - [x] [Register an account](https://github.com/larevolucia/chaptr/issues/10)  
-  - [x] [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
-
-**Sprint 2**
-
-- Epic 1: Book Discovery and Browsing  
-  - [x] [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)  
-  - [x] [Homepage – Stretch](https://github.com/larevolucia/chaptr/issues/56)
-- Epic 2: User Authentication and Permissions  
-  - [x] [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
-- Epic 3: Book Interaction and Reading Progress  
-  - [x] [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)  
-  - [x] [Rate books](https://github.com/larevolucia/chaptr/issues/14)  
-  - [x] [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
-
-**Sprint 3**
-
-- Epic 1: Book Discovery and Browsing  
-  - [x] [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
-- Epic 3: Book Interaction and Reading Progress  
-  - [x] [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
-- Epic 4: User Dashboard  
-  - [x] [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)  
-  - [x] [Update reading status directly from dashboard](https://github.com/larevolucia/chaptr/issues/18)
-
-**Sprint 4**
-
-- Testing and Bug Fixes  
-  - [x] [Refactoring](https://github.com/larevolucia/chaptr/issues/85)  
-  - [x] [Accessibility & Performance](https://github.com/larevolucia/chaptr/issues/87)  
-  - [ ] [Documentation](https://github.com/larevolucia/chaptr/issues/88)
 
 ---
 
@@ -743,6 +398,124 @@ Key functions:
 
 ---
 
+## Requirements Overview
+
+Below is a summary of the planned development scope using Agile epics, user stories, and tasks.
+
+---
+
+### Epic 1: [Book Discovery and Browsing](https://github.com/larevolucia/chaptr/issues/1)
+
+**Goal**: Enable users to explore the book catalog using a search interface powered by the Google Books API.
+
+#### [Search for books by title, author](https://github.com/larevolucia/chaptr/issues/6)
+
+**Technical Tasks**
+- [Implement search form and view](https://github.com/larevolucia/chaptr/issues/19)
+- [Integrate Google Books API](https://github.com/larevolucia/chaptr/issues/20)
+- [Display search results](https://github.com/larevolucia/chaptr/issues/21)
+
+#### [View book details](https://github.com/larevolucia/chaptr/issues/7)
+
+**Technical Tasks**
+- [Create book detail view](https://github.com/larevolucia/chaptr/issues/22)
+- [Style Book Detail Page](https://github.com/larevolucia/chaptr/issues/23)
+- [Populate data from API or local cache](https://github.com/larevolucia/chaptr/issues/24)
+
+#### [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
+
+**Technical Tasks**
+- [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
+- [Display reviews in template](https://github.com/larevolucia/chaptr/issues/44)
+
+#### [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)
+
+**Technical Tasks**
+- [Add login checks to views](https://github.com/larevolucia/chaptr/issues/25)
+- [Add login prompt messaging](https://github.com/larevolucia/chaptr/issues/26)
+
+---
+
+### Epic 2: [User Authentication and Permissions](https://github.com/larevolucia/chaptr/issues/2)
+
+**Goal**: Set up account registration, login/logout, and protect user actions.
+
+#### [Register an account](https://github.com/larevolucia/chaptr/issues/10)
+
+**Technical Tasks**
+- [Create registration form and view](https://github.com/larevolucia/chaptr/issues/29)
+- [Handle form validation and feedback](https://github.com/larevolucia/chaptr/issues/30)
+- [Link registration in navbar](https://github.com/larevolucia/chaptr/issues/31)
+
+#### [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
+
+**Technical Tasks**
+- [Create login and logout views](https://github.com/larevolucia/chaptr/issues/32)
+- [Update navbar based on auth status](https://github.com/larevolucia/chaptr/issues/33)
+- [Handle redirection after login/logout](https://github.com/larevolucia/chaptr/issues/34)
+
+#### [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
+
+**Technical Tasks**
+- [Add `@login_required` to protected views](https://github.com/larevolucia/chaptr/issues/36)
+- [Update templates to show/hide based on login state](https://github.com/larevolucia/chaptr/issues/35)
+
+---
+
+### Epic 3: [Book Interaction and Reading Progress](https://github.com/larevolucia/chaptr/issues/3)
+
+**Goal**: Allow users to track their reading activity, rate books, and comment.
+
+#### [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)
+
+**Technical Tasks**
+- [Create reading status and review models](https://github.com/larevolucia/chaptr/issues/37)
+- [Add forms for status, rating, and reviewing](https://github.com/larevolucia/chaptr/issues/38)
+- [Display and update user content](https://github.com/larevolucia/chaptr/issues/39)
+
+#### [Rate books](https://github.com/larevolucia/chaptr/issues/14)
+
+**Technical Tasks**
+- [Add rating field to reading model or separate model](https://github.com/larevolucia/chaptr/issues/40)
+- [Create form and view logic for adding/updating rating](https://github.com/larevolucia/chaptr/issues/41)
+- [Show rating summary on book detail](https://github.com/larevolucia/chaptr/issues/42)
+
+#### [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
+
+**Technical Tasks**
+- [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
+- [Display reviews in template](https://github.com/larevolucia/chaptr/issues/44)
+
+#### [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
+
+**Technical Tasks**
+- [Validate review ownership](https://github.com/larevolucia/chaptr/issues/45)
+- [Implement update and delete views for reviews](https://github.com/larevolucia/chaptr/issues/46)
+- [Add conditional logic in templates for ownership](https://github.com/larevolucia/chaptr/issues/47)
+- [Add messaging and UI confirmation for deletion](https://github.com/larevolucia/chaptr/issues/48)
+
+---
+
+### Epic 4: [User Library](https://github.com/larevolucia/chaptr/issues/4)
+
+**Goal**: Provide users with a personalized library to manage their reading activity.
+
+#### [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)
+
+**Technical Tasks**
+- [Create library view with user authentication](https://github.com/larevolucia/chaptr/issues/49)
+- [Build styled library template](https://github.com/larevolucia/chaptr/issues/50)
+- [Query and display grouped book data](https://github.com/larevolucia/chaptr/issues/51)
+
+#### [Update reading status directly from library](https://github.com/larevolucia/chaptr/issues/18)
+
+**Technical Tasks**
+- [Add inline status update controls](https://github.com/larevolucia/chaptr/issues/52)
+- [Implement status update logic in view](https://github.com/larevolucia/chaptr/issues/53)
+- [Show success messages after updates](https://github.com/larevolucia/chaptr/issues/54)
+
+---
+
 ## Testing
 
 **NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s `TestCase`** framework with mocking for external dependencies such as the Google Books API.
@@ -905,6 +678,231 @@ These tests provide confidence that authentication flows and book-related featur
 
 ---
 
+## Bug Fixes
+
+**[500 Error in signup](https://github.com/larevolucia/chaptr/issues/84)**  
+Mandatory confirmation email was not being sent due to issues with Gmail credentials. Resolved by regenerating the credentials and updating both `.env` and Heroku config vars.
+
+**[Admin search for Activity gives 500 error](https://github.com/larevolucia/chaptr/issues/78)**  
+Admin search returned a 500 error. Resolved by correcting search field formatting.
+
+**[Internal Server Error](https://github.com/larevolucia/chaptr/issues/89)**  
+Production returned a 500 error due to missing variables after refactoring. Resolved by adding `GOOGLE_BOOKS_SEARCH_URL` and `GOOGLE_BOOKS_VOLUME_URL` to Heroku config vars.
+
+**[Books tests_views failing after activity changes](https://github.com/larevolucia/chaptr/issues/79)**  
+Book views crashed in tests because `RequestFactory` requests lack `request.user`, causing `AttributeError` in `book_search`/`book_detail`. Fixed by defaulting to `AnonymousUser` (e.g., `user = getattr(request, "user", AnonymousUser())`) before any `is_authenticated` checks in `books/views.py`.
+
+**[API response for totalItems is inconsistent](https://github.com/larevolucia/chaptr/issues/81)**  
+Pagination broke due to Google Books API returning inflated `totalItems`. Fixed by capping results to the fetched items and adjusting pagination logic.
+
+**[Message "No reviews yet" after reviews](https://github.com/larevolucia/chaptr/issues/77)**  
+Authenticated users saw “No reviews yet” after their own review due to template logic. Fixed by rendering the user’s review first and only showing the empty state when neither `my_review` nor any `reviews` exist.
+
+**[Cover fallback not displaying](https://github.com/larevolucia/chaptr/issues/55)**  
+Cover fallback failed in production. Resolved by removing static files from `.gitignore` and correcting directory paths.
+
+**[Notifications make the screen jump down](https://github.com/larevolucia/chaptr/issues/70)**  
+Alerts caused layout shift. Fixed by converting them to fixed-position toasts (high z-index), so messages float without pushing content.
+
+**[Login via search results redirects to empty search](https://github.com/larevolucia/chaptr/issues/69)**  
+Login from search redirected to an empty results page because the `next` parameter wasn’t preserved. Fixed by passing the original query in the login redirect.
+
+**[Models inconsistency](https://github.com/larevolucia/chaptr/issues/69)**  
+Removing a book only cleared its reading status, leaving review/rating behind. Fixed by cascading cleanup on status removal and archiving associated review and rating records.
+
+**[Search returns duplicated results](https://github.com/larevolucia/chaptr/issues/91)**  
+Search results showed duplicates when the query was too specific. Fixed by de-duplicating results before pagination.
+
+---
+
+### [Linters and Validation Fixes](https://github.com/larevolucia/chaptr/issues/87)
+
+**[HTML W3C Validator](https://validator.w3.org/)**
+
+| Page            | Warning / Error                                                           | Fix                                                     |
+|:----------------|:--------------------------------------------------------------------------|:--------------------------------------------------------|
+| Home            | Error: Parse Error. `</body>↩</html>↩`                                   | Removed extra whitespace after `</html>` in `base.html` |
+| Home            | The `navigation` role is unnecessary for `nav`                            | Removed from `base.html`                                |
+| Home            | The `region` role is unnecessary for `section`                            | Removed from `home.html`                                |
+| Home            | The `contentinfo` role is unnecessary for `footer`                        | Removed from `base.html`                                |
+| Search Results  | End tag `h2` seen, but there were open elements                           | Corrected `</h2>` to `</h1>`                            |
+| Search Results  | `sizes` must only be specified if `srcset` is specified                   | Removed `sizes`                                         |
+| Search Results  | End tag `h5` seen, but there were open elements                           | Corrected `</h5>` to `</h1>`                            |
+| Search Results  | Duplicated book id error                                                  | De-duplicated search output in `books/views.py`         |
+| Book Detail     | Error: Unclosed `div`                                                     | Closed the `div`                                        |
+| Book Detail     | Parse error                                                               | Wrapped `{{ book.description|safe }}` in a `<div>`      |
+| Book Detail     | Duplicate ID `confirmDeleteModal`                                         | Removed included modal partial from `reviews.html`      |
+
+<details>
+<summary>Home (auth)</summary>
+
+![HTML Validator Home](documentation/images/validators/html/home_auth.png)
+</details>
+
+<details>
+<summary>Home (visitor)</summary>
+
+![HTML Validator Home](documentation/images/validators/html/home_visitor.png)
+</details>
+
+<details>
+<summary>Search Results (auth)</summary>
+
+![HTML Validator Search Results](documentation/images/validators/html/genre_science_fiction_auth.png)
+</details>
+
+<details>
+<summary>Search Results (visitor)</summary>
+
+![HTML Validator Search Results](documentation/images/validators/html/search_jellyfish_visitor.png)
+</details>
+
+<details>
+<summary>Book Detail (auth)</summary>
+
+![HTML Validator Book Page - Insomnia (other user activity)](documentation/images/validators/html/insomnia_book_page_auth.png)  
+![HTML Validator Book Page - Jellyfish Age Backwards (same user activity)](documentation/images/validators/html/jellyfish_age_backwards_book_page_auth.png)  
+![HTML Validator Book Page - Time in Fiction (no activity)](documentation/images/validators/html/time_in_fiction_book_page_auth.png)
+</details>
+
+<details>
+<summary>Book Detail (visitor)</summary>
+
+![HTML Validator Book Page - Runaway Jury](documentation/images/validators/html/runaway_jury_book_page_visitor.png)  
+![HTML Validator Book Page - Jellyfish Age Backwards](documentation/images/validators/html/jellyfish_age_backwards_book_page_visitor.png)
+</details>
+
+<details>
+<summary>Library (auth)</summary>
+
+![HTML Validator Library (with books)](documentation/images/validators/html/library.png)  
+![HTML Validator Library (empty state)](documentation/images/validators/html/library.png)
+</details>
+
+**[Jigsaw](https://jigsaw.w3.org/)**
+
+| Line | Warning                                                   | Fix                    |
+|-----:|:----------------------------------------------------------|:-----------------------|
+|  183 | `background-color: none` is not a valid value             | Changed to `transparent` |
+|  766 | `background-color: color-mix(...)` not valid here         | Changed to `transparent` |
+| 549, 564 | The `clip` property is deprecated                     | Removed `clip`; kept `clip-path` |
+
+<details>
+<summary>CSS</summary>
+
+![Jigsaw CSS](documentation/images/validators/css/jigsaw.png)
+</details>
+
+**Lighthouse**
+
+| Page                         | Warning / Issue                                                                                          | Fix                                                                                 |
+|:-----------------------------|:----------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------|
+| Home                         | Deprecation/Warning: `<h1>` inside an `article/aside/nav/section` without explicit font-size             | Added explicit font-sizes in CSS                                                    |
+| Search Results & Book Detail | Mixed content: some resources loaded over HTTP while the page is HTTPS                                   | Introduced `ensure_https` to secure Google Books cover URLs                         |
+| Search Results & Book Detail | Third-party cookies via Google cover images                                                              | Implemented a `/cover/` proxy view and URL to serve images first-party              |
+
+<details>
+<summary>Home</summary>
+
+![Home Desktop Auth](documentation/images/validators/lighthouse/home_desktop_auth.png)  
+![Home Desktop Visitor](documentation/images/validators/lighthouse/home_desktop_visitor.png)  
+![Home Mobile Auth](documentation/images/validators/lighthouse/home_mobile_auth.png)  
+![Home Mobile Visitor](documentation/images/validators/lighthouse/home_mobile_visitor.png)
+</details>
+
+<details>
+<summary>Search</summary>
+
+![Search Desktop Auth](documentation/images/validators/lighthouse/search_desktop_auth.png)  
+![Search Desktop Visitor](documentation/images/validators/lighthouse/search_desktop_visitor.png)  
+![Search Mobile Auth](documentation/images/validators/lighthouse/search_mobile_auth.png)  
+![Search Mobile Visitor](documentation/images/validators/lighthouse/search_mobile_visitor.png)
+</details>
+
+<details>
+<summary>Book Page</summary>
+
+![Book Detail Desktop Auth](documentation/images/validators/lighthouse/book_detail_desktop_auth.png)  
+![Book Detail Desktop Visitor](documentation/images/validators/lighthouse/book_detail_desktop_visitor.png)  
+![Book Detail Mobile Auth](documentation/images/validators/lighthouse/book_detail_mobile_auth.png)  
+![Book Detail Mobile Visitor](documentation/images/validators/lighthouse/book_detail_mobile_visitor.png)
+</details>
+
+<details>
+<summary>Library</summary>
+
+![Empty Library Desktop](documentation/images/validators/lighthouse/library_desktop_empty.png)  
+![Library Desktop](documentation/images/validators/lighthouse/library_desktop_full.png)  
+![Empty Library Mobile](documentation/images/validators/lighthouse/library_mobile_empty.png)  
+![Library Mobile](documentation/images/validators/lighthouse/library_mobile_full.png)
+</details>
+
+### [PEP8](https://pep8ci.herokuapp.com/#)
+
+All files passed PEP8 validation. Screenshots can be found in the [PEP8 folder](documentation/images/validators/pep8/).
+
+---
+
+## Sprint Planning
+
+Sprints deliver features incrementally, each focusing on specific epics and user stories. The sprint timebox is one week.
+
+All issues are tracked on the GitHub project board:  
+https://github.com/larevolucia/chaptr/projects/12
+
+### Sprint 0: Project Setup
+
+- [x] Create epics, user stories, and tasks in GitHub  
+- [x] Set up Django project and apps  
+- [x] Configure Google Books API integration  
+- [x] Deploy initial version to Heroku  
+- [x] Set up Postgres database  
+- [x] Set up basic templates and static files
+
+### Sprint Breakdown
+
+**Sprint 1**
+
+- Epic 1: Book Discovery and Browsing  
+  - [x] [Search for books by title, author, genre](https://github.com/larevolucia/chaptr/issues/6)  
+  - [x] [View book details](https://github.com/larevolucia/chaptr/issues/7)  
+  - [x] [Homepage – MVP](https://github.com/larevolucia/chaptr/issues/56)
+
+- Epic 2: User Authentication and Permissions  
+  - [x] [Register an account](https://github.com/larevolucia/chaptr/issues/10)  
+  - [x] [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
+
+**Sprint 2**
+
+- Epic 1: Book Discovery and Browsing  
+  - [x] [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)  
+  - [x] [Homepage – Stretch](https://github.com/larevolucia/chaptr/issues/56)
+- Epic 2: User Authentication and Permissions  
+  - [x] [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
+- Epic 3: Book Interaction and Reading Progress  
+  - [x] [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)  
+  - [x] [Rate books](https://github.com/larevolucia/chaptr/issues/14)  
+  - [x] [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
+
+**Sprint 3**
+
+- Epic 1: Book Discovery and Browsing  
+  - [x] [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
+- Epic 3: Book Interaction and Reading Progress  
+  - [x] [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
+- Epic 4: User Dashboard  
+  - [x] [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)  
+  - [x] [Update reading status directly from dashboard](https://github.com/larevolucia/chaptr/issues/18)
+
+**Sprint 4**
+
+- Testing and Bug Fixes  
+  - [x] [Refactoring](https://github.com/larevolucia/chaptr/issues/85)  
+  - [x] [Accessibility & Performance](https://github.com/larevolucia/chaptr/issues/87)  
+  - [ ] [Documentation](https://github.com/larevolucia/chaptr/issues/88)
+
+---
+
 ## Deployment
 
 ### 1. Clone the Repository
@@ -1031,3 +1029,7 @@ That’s it! The app should now be live on Heroku.
 * Third-party Cookies: [Privacy Sandbox](https://privacysandbox.google.com/cookies/prepare/audit-cookies)
 * Custom error handling: [Stack Overflow](https://stackoverflow.com/questions/40758711/how-to-set-a-default-handler-for-csrf-verification-failed-in-django)
 
+## Acknoledgements
+
+Many thanks to my mentor, who always pushed me a little further,especially when I felt there was nothing more I could do. 
+I’m also grateful to my colleagues, who generously offered their professional advice and guidance throughout this journey.
