@@ -291,43 +291,46 @@ Search results showing duplicates when query is too specific. Fixed by deduplica
 | Book Detail              | Duplicate ID confirmDeleteModal | remove include modal partial from `reviews.html` |
 
 <details>
-<summary>**Home (auth)**</summary>
+<summary>Home (auth)</summary>
 
   ![HTML Valitador Home](documentation/images/validators/html/home_auth.png)
 </details>
 
 <details>
-<summary>**Home (visitor)**</summary>
+<summary>Home (visitor)</summary>
 
   ![HTML Valitador Home](documentation/images/validators/html/home_visitor.png)
 </details>
+
 <details>
-<summary>**Search Results (auth)**</summary>
+<summary>Search Results (auth)</summary>
 
   ![HTML Valitador Search Results](documentation/images/validators/html/genre_science_fiction_auth.png)
 </details>
 
 <details>
-<summary>**Search Results (visitor)**</summary>
+<summary>Search Results (visitor)</summary>
 
   ![HTML Valitador Search Results](documentation/images/validators/html/search_jellyfish_visitor.png)
 </details>
 
 <details>
-<summary>**Book Detail (auth)**</summary>
+<summary>Book Detail (auth)</summary>
 
   ![HTML Valitador Book Page- Insomnia (other user activity)](documentation/images/validators/html/insomnia_book_page_auth.png)
   ![HTML Valitador Book Page - Jellyfish Age Backwards (same user activity)](documentation/images/validators/html/jellyfish_age_backwards_book_page_auth.png)
   ![HTML Valitador Book Page - Time in Fiction (no activity)](documentation/images/validators/html/time_in_fiction_book_page_auth.png)
 </details>
-<summary>**Book Detail (visitor)**</summary>
+
+<details>
+<summary>Book Detail (visitor)</summary>
 
   ![HTML Valitador Book Page -  Runaway Jury](documentation/images/validators/html/runaway_jury_book_page_visitor.png)
   ![HTML Valitador Book Page - Jellyfish Age Backwards](documentation/images/validators/html/jellyfish_age_backwards_book_page_visitor.png)
 </details>
 
 <details>
-<summary>**Library (auth)**</summary>
+<summary>Library (auth)</summary>
 
   ![HTML Valitador Library (with books)](documentation/images/validators/html/library.png)
   ![HTML Valitador Library (empty state)](documentation/images/validators/html/library.png)
