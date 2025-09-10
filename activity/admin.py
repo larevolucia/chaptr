@@ -18,7 +18,7 @@ BOOK_TITLE = Subquery(
 class ReadingStatusAdmin(admin.ModelAdmin):
     """Admin interface for tracking user reading activity."""
     list_display = (
-        "user", "book_id", "book_title", "status", "updated_at", "google_link"
+        "user", "book_id", "book_title", "status", "updated_at", "google_link",
     )
     list_filter = ("status",)
     search_fields = ("user__username", "book__id", "book__title")
@@ -53,7 +53,13 @@ class ReadingStatusAdmin(admin.ModelAdmin):
 class RatingAdmin(admin.ModelAdmin):
     """Admin interface for tracking user reading activity."""
     list_display = (
-        "user", "book_id", "book_title", "rating", "updated_at", "google_link"
+        "user",
+        "book_id",
+        "book_title",
+        "rating",
+        "updated_at",
+        "google_link",
+        "archived_status"
         )
     list_filter = ("rating",)
     search_fields = ("user__username", "book__id", "book__title")
@@ -83,12 +89,29 @@ class RatingAdmin(admin.ModelAdmin):
         )
     google_link.short_description = "Link"
 
+    def archived_status(self, obj):
+        """Return archived status with timestamp."""
+        if obj.is_archived:
+            if obj.archived_at:
+                return format_html(
+                    "✓ <span style='color: #666; font-size: 0.9em;'>({})</span>",
+                    obj.archived_at.strftime("%Y-%m-%d")
+                )
+            return "✓"
+        return "—"
+
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     """Admin interface for managing book reviews."""
     list_display = (
-        "user", "book_id", "book_title", "content", "created_at", "updated_at"
+        "user",
+        "book_id",
+        "book_title",
+        "content",
+        "created_at",
+        "updated_at",
+        "archived_status"
     )
     list_filter = ("created_at", "updated_at")
     search_fields = ("user__username", "book__id", "book__title", "content")
@@ -108,3 +131,14 @@ class ReviewAdmin(admin.ModelAdmin):
 
     book_title.admin_order_field = "_book_title"
     book_title.short_description = "Title"
+
+    def archived_status(self, obj):
+        """Return archived status with timestamp."""
+        if obj.is_archived:
+            if obj.archived_at:
+                return format_html(
+                    "✓ <span style='color: #666; font-size: 0.9em;'>({})</span>",
+                    obj.archived_at.strftime("%Y-%m-%d")
+                )
+            return "✓"
+        return "—"
