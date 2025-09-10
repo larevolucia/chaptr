@@ -1,4 +1,7 @@
-from .settings import *
+"""Test setting"""
+from .settings import STORAGES
 
 
-STORAGES["staticfiles"]["BACKEND"] = "django.contrib.staticfiles.storage.StaticFilesStorage"
+STORAGES["staticfiles"]["BACKEND"] = (
+    "django.contrib.staticfiles.storage.StaticFilesStorage"
+    )

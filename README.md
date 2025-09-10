@@ -388,6 +388,9 @@ Search results showing duplicates when query is too specific. Fixed by deduplica
   ![Library Mobile](documentation/images/validators/lighthouse/library_mobile_full.png)
 </details>
 
+### [Pep8](https://pep8ci.herokuapp.com/#)
+- All files passed PEP8 validation. Screenshots can be found at [Pep8 folder](documentation/images/validators/pep8/)
+
 ---
 
 ## Project Board

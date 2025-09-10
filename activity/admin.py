@@ -94,7 +94,9 @@ class RatingAdmin(admin.ModelAdmin):
         if obj.is_archived:
             if obj.archived_at:
                 return format_html(
-                    "✓ <span style='color: #666; font-size: 0.9em;'>({})</span>",
+                    "✓ <span style='color: #666; font-size: 0.9em;'>"
+                    "({})"
+                    "</span>",
                     obj.archived_at.strftime("%Y-%m-%d")
                 )
             return "✓"
@@ -137,7 +139,9 @@ class ReviewAdmin(admin.ModelAdmin):
         if obj.is_archived:
             if obj.archived_at:
                 return format_html(
-                    "✓ <span style='color: #666; font-size: 0.9em;'>({})</span>",
+                    "✓ <span style='color: #666; font-size: 0.9em;'>"
+                    "({})"
+                    "</span>",
                     obj.archived_at.strftime("%Y-%m-%d")
                 )
             return "✓"

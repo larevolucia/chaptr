@@ -7,7 +7,7 @@ This module exposes:
   and renders results.
 - Detail flow that fetches a single volume by ID with low-level caching.
 """
-from urllib.parse import urlparse, quote
+from urllib.parse import urlparse
 import requests
 from django.templatetags.static import static
 from django.core.paginator import Paginator
@@ -298,7 +298,8 @@ def cover_proxy(request, book_id):
     """
     url = (
         f"https://books.google.com/books/content"
-        f"?id={book_id}&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+        f"?id={book_id}&printsec=frontcover&img=1&"
+        f"zoom=1&edge=curl&source=gbs_api"
     )
     host = urlparse(url).hostname or ""
     if host not in ALLOWED_HOSTS:

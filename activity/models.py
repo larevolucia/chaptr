@@ -1,4 +1,9 @@
-"""Represents the user's reading status for a book."""
+"""
+Models represent user's activity with a given book:
+- ReadingStatus: user added to its library as TO READ, READING or READ
+- Rating: User gave a 1-5 rating
+- Review: User creates a content review
+"""
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
