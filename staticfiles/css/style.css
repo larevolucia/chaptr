@@ -424,8 +424,6 @@ body:has(.search-row) { --search-overlap: 88px; }
   --btn-border: var(--accent-color);
 }
 
-
-
 .nc-btn--muted {
   --btn-bg: #f2f4f7;
   --btn-bg-hover: #e4e7ec;
@@ -776,11 +774,6 @@ DROPDOWN / STATUSES
 .dropdown-menu .dropdown-item.danger-color:active {
   background-color: var(--danger-color);
   color: #fff;
-}
-
-.dropdown-menu .dropdown-item.danger-color:hover,
-.dropdown-menu .dropdown-item.danger-color:focus {
-  color: var(--background-color-light);
 }
 
 
