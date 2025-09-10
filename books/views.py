@@ -36,6 +36,19 @@ from books.utils import _genres, build_q
 # Create your views here.
 
 
+def _dedupe_by_id(items):
+    """ Deduplicate book by id """
+    seen = set()  # remembers which ids are already kept
+    output = []
+    for b in items:
+        _id = b.get("id")  # pull its id
+        if not _id or _id in seen:  # if id is missing/falsy OR already seen
+            continue  # skip
+        seen.add(_id)  # mark this id as seen
+        output.append(b)   # keep the first instance of id
+    return output
+
+
 def home(request):
     """
     Render the landing page for the books app.
@@ -85,6 +98,9 @@ def book_search(request):
         start_index=start_index,
         max_results=per_page
         )
+
+    # remove accidental duplicates from the API
+    books = _dedupe_by_id(books)
 
     ids = [r["id"] for r in books]
     user = getattr(request, "user", AnonymousUser())
