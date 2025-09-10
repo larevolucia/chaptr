@@ -293,44 +293,44 @@ Search results showing duplicates when query is too specific. Fixed by deduplica
 <details>
 <summary>**Home (auth)**</summary>
 
-  [!HTML Valitador Home](documentation/images/validators/html/home_auth.png)
+  ![HTML Valitador Home](documentation/images/validators/html/home_auth.png)
 </details>
 
 <details>
 <summary>**Home (visitor)**</summary>
 
-  [!HTML Valitador Home](documentation/images/validators/html/home_visitor.png)
+  ![HTML Valitador Home](documentation/images/validators/html/home_visitor.png)
 </details>
 <details>
 <summary>**Search Results (auth)**</summary>
 
-  [!HTML Valitador Search Results](documentation/images/validators/html/genre_science_fiction_auth.png)
+  ![HTML Valitador Search Results](documentation/images/validators/html/genre_science_fiction_auth.png)
 </details>
 
 <details>
 <summary>**Search Results (visitor)**</summary>
 
-  [!HTML Valitador Search Results](documentation/images/validators/html/search_jellyfish_visitor.png)
+  ![HTML Valitador Search Results](documentation/images/validators/html/search_jellyfish_visitor.png)
 </details>
 
 <details>
 <summary>**Book Detail (auth)**</summary>
 
-  [!HTML Valitador Book Page- Insomnia (other user activity)](documentation/images/validators/html/insomnia_book_page_auth.png)
-  [!HTML Valitador Book Page - Jellyfish Age Backwards (same user activity)](documentation/images/validators/html/jellyfish_age_backwards_book_page_auth.png)
-  [!HTML Valitador Book Page - Time in Fiction (no activity)](documentation/images/validators/html/time_in_fiction_book_page_auth.png)
+  ![HTML Valitador Book Page- Insomnia (other user activity)](documentation/images/validators/html/insomnia_book_page_auth.png)
+  ![HTML Valitador Book Page - Jellyfish Age Backwards (same user activity)](documentation/images/validators/html/jellyfish_age_backwards_book_page_auth.png)
+  ![HTML Valitador Book Page - Time in Fiction (no activity)](documentation/images/validators/html/time_in_fiction_book_page_auth.png)
 </details>
 <summary>**Book Detail (visitor)**</summary>
 
-  [!HTML Valitador Book Page -  Runaway Jury](documentation/images/validators/html/runaway_jury_book_page_visitor.png)
-  [!HTML Valitador Book Page - Jellyfish Age Backwards](documentation/images/validators/html/jellyfish_age_backwards_book_page_visitor.png)
+  ![HTML Valitador Book Page -  Runaway Jury](documentation/images/validators/html/runaway_jury_book_page_visitor.png)
+  ![HTML Valitador Book Page - Jellyfish Age Backwards](documentation/images/validators/html/jellyfish_age_backwards_book_page_visitor.png)
 </details>
 
 <details>
 <summary>**Library (auth)**</summary>
 
-  [!HTML Valitador Library (with books)](documentation/images/validators/html/library.png)
-  [!HTML Valitador Library (empty state)](documentation/images/validators/html/library.png)
+  ![HTML Valitador Library (with books)](documentation/images/validators/html/library.png)
+  ![HTML Valitador Library (empty state)](documentation/images/validators/html/library.png)
 </details>
 
 **[Jigsaw](https://jigsaw.w3.org/)**
@@ -343,7 +343,7 @@ Search results showing duplicates when query is too specific. Fixed by deduplica
 <details>
 <summary>CSS</summary>
 
-  [!HTML Valitador Library (with books)](documentation/images/validators/css/jigsaw.png)
+  ![HTML Valitador Library (with books)](documentation/images/validators/css/jigsaw.png)
 </details>
 
 **Lighthouse**
@@ -650,7 +650,7 @@ As a mobile-first approach, wireframes focused on the smaller screens. Tablets a
 The data model balances **external metadata** (from Google Books) with **internal user interactions**.
 Books are only stored locally if a user explicitly saves or interacts with them, keeping the database lightweight.
 
-[!Models ERD](documentation/images/ERD/models.jpg)
+![Models ERD](documentation/images/ERD/models.jpg)
 
 ### User 
 Uses Django’s built-in `User` model for authentication and ownership of records.
@@ -790,7 +790,7 @@ Key functions:
 
 Detais testings documentation can be found at [TESTS.md](documentation/TESTS.md)
 
-[!Automated Test Results](documentation/images/validators/automated_tests.png)
+![Automated Test Results](documentation/images/validators/automated_tests.png)
 
 ### Automated Test Coverage
 
