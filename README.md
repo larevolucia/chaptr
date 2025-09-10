@@ -1,119 +1,59 @@
 # NextChaptr
 
-**NextChaptr** is a minimalist book-tracking web app built to help readers organize and reflect on their reading journey. Developed as a full-stack project, it highlights key features such as book categorization, rating, and commenting using modern web technologies.
+**NextChaptr** is a minimalist book-tracking web app that helps readers organize and reflect on their reading journey. Developed as a full-stack project, it highlights key features such as book categorization, rating, and reviewing with modern web technologies.
 
-Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users to manage their reading lists (To Read, Reading, Read), rate completed books, and engage through comments in a clean, distraction-free interface.
+Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users to manage reading lists (*To Read*, *Reading*, *Read*), rate completed books, and engage through reviews in a clean, distraction-free interface.
 
 ---
 
 ## Table of Contents
 
-* [NextChaptr](#nextchaptr)
-
-  * [Target Audience](#target-audience)
-  * [Site Goal](#site-goal)
-  * [Requirements Overview](#requirements-overview)
-
-    * [Epic 1: Book Discovery and Browsing](#epic-1-book-discovery-and-browsing)
-
-      * [Search for books by title, author](#search-for-books-by-title-author)
-      * [View book details](#view-book-details)
-      * [View review on books](#view-review-on-books)
-      * [Prompt login when guests try to interact](#prompt-login-when-guests-try-to-interact)
-    * [Epic 2: User Authentication and Permissions](#epic-2-user-authentication-and-permissions)
-
-      * [Register an account](#register-an-account)
-      * [Log in and log out securely](#log-in-and-log-out-securely)
-      * [Restrict book interactions to authenticated users](#restrict-book-interactions-to-authenticated-users)
-    * [Epic 3: Book Interaction and Reading Progress](#epic-3-book-interaction-and-reading-progress)
-
-      * [Mark books as To Read, Reading, or Read](#mark-books-as-to-read-reading-or-read)
-      * [Rate books](#rate-books)
-      * [Leave a review](#leave-a-review)
-      * [Edit, and delete reviews](#edit-and-delete-reviews)
-    * [Epic 4: User Library](#epic-4-user-library)
-
-      * [View books grouped by reading status](#view-books-grouped-by-reading-status)
-      * [Update reading status directly from library](#update-reading-status-directly-from-library)
-  * [Bug Fixes](#bug-fixes)
-  * [Project Board](#project-board)
-  * [Sprint Planning](#sprint-planning)
-  * [Features](#features)
-
-    * [Homepage (Banner, Intro & Quick Browse)](#homepage-banner-intro--quick-browse)
-    * [Search & Browse (API First)](#search--browse-api-first)
-    * [Book Detail View](#book-detail-view)
-    * [Reading Status](#reading-status)
-    * [Rating System](#rating-system)
-    * [Review System](#review-system)
-    * [Library](#library)
-    * [Confirmation Modals](#confirmation-modals)
-    * [Authentication (Login, Logout & Sign-Up)](#authentication-login-logout--sign-up)
-    * [Reading Progress (Status Updates)](#reading-progress-status-updates)
-    * [Rate Books](#rate-books-1)
-    * [Review Books](#review-books)
-    * [Admin Panel](#admin-panel)
-  * [Design](#design)
-
-    * [Wireframes](#wireframes)
-  * [Models](#models)
-
-    * [User](#user)
-    * [Book](#book)
-    * [ReadingStatus](#readingstatus)
-    * [Rating](#rating)
-    * [Review](#review)
-  * [Django Project Structure](#django-project-structure)
-
-    * [apps/](#apps)
-    * [Image Delivery & Privacy](#image-delivery--privacy)
-    * [State Changes via Services](#state-changes-via-services)
-    * [Design Rationale](#design-rationale)
-  * [Testing](#testing)
-
-    * [Automated Test Coverage](#automated-test-coverage)
-    * [Automated Test Approach](#automated-test-approach)
-  * [Deployment](#deployment)
-
-    * [1. Clone the Repository](#1-clone-the-repository)
-    * [2. Set Up a Virtual Environment](#2-set-up-a-virtual-environment)
-    * [3. Install Dependencies](#3-install-dependencies)
-    * [4. Configure Environment Variables](#4-configure-environment-variables)
-
-      * [Google Books API](#google-books-api)
-      * [Django Secrets](#django-secrets)
-      * [Email Settings (Optional)](#email-settings-optional)
-    * [5. Collect Static Files](#5-collect-static-files)
-    * [6. Deploy to Heroku](#6-deploy-to-heroku)
-  * [Credits & References](#credits--references)
+- [Target Audience](#target-audience)
+- [Site Goal](#site-goal)
+- [Requirements Overview](#requirements-overview)
+  - [Epic 1: Book Discovery and Browsing](#epic-1-book-discovery-and-browsing)
+  - [Epic 2: User Authentication and Permissions](#epic-2-user-authentication-and-permissions)
+  - [Epic 3: Book Interaction and Reading Progress](#epic-3-book-interaction-and-reading-progress)
+  - [Epic 4: User Library](#epic-4-user-library)
+- [Bug Fixes](#bug-fixes)
+- [Project Board](#project-board)
+- [Sprint Planning](#sprint-planning)
+- [Features](#features)
+- [Design](#design)
+- [Models](#models)
+- [Django Project Structure](#django-project-structure)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Credits & References](#credits--references)
 
 ---
 
 ## Target Audience
-Chaptr is built for individual readers who want a focused, user-friendly space to log their reading habits without social clutter or complex features.
 
-- __Avid Individual Readers__: independent book enthusiasts seeking a simple and focused platform to log their reading journey.
-- __Personal Growth & Self-Reflection Users__: individuals who find value in tracking reading patterns to gain insights into their interests, habits, and achievements.
-- __Busy Readers & Lifelong Learners__: individuals looking to organize their reading lists, track progress effortlessly, and fit reading into their daily routines through a lightweight, distraction-free platform.
+NextChaptr is built for readers who want a focused, user-friendly space to log their reading habits without social clutter or unnecessary complexity.
+
+- **Avid Individual Readers**: book enthusiasts seeking a simple, streamlined platform to log their reading journey.
+- **Personal Growth & Self-Reflection Users**: individuals who track reading patterns for insights into interests, habits, and achievements.
+- **Busy Readers & Lifelong Learners**: people looking to organize reading lists, track progress effortlessly, and fit reading into daily routines.
+
 ---
 
 ## Site Goal
 
 **Promote Literacy**
 
-- Provide a simple, engaging platform that motivates users to read consistently.
-- Support users in building sustainable reading habits by tracking progress.
+- Provide a simple, engaging platform that motivates users to read more consistently.
+- Support users in building sustainable reading habits through progress tracking.
 
 **Promote Culture & Community**
 
 - Highlight the cultural value of reading as both a personal and shared experience.
-- Encourage conversations around books, authors, and ideas to strengthen a sense of community.
+- Encourage conversations around books, authors, and ideas to foster community.
 
 **Support Reading Management in Busy Routines**
 
 - Help users organize their reading lists and track progress at a glance.
-- Make it easier to balance reading with daily responsibilities by offering a lightweight, distraction-free space.
-
+- Offer a lightweight, distraction-free space to balance reading with daily responsibilities.
 
 ---
 
@@ -141,7 +81,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Style Book Detail Page](https://github.com/larevolucia/chaptr/issues/23)
 - [Populate data from API or local cache](https://github.com/larevolucia/chaptr/issues/24)
 
-#### [View review on books](https://github.com/larevolucia/chaptr/issues/8)
+#### [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
 
 **Technical Tasks**
 - [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
@@ -150,8 +90,8 @@ Below is a summary of the planned development scope using Agile epics, user stor
 #### [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)
 
 **Technical Tasks**
-- [Add Login Checks to Views](https://github.com/larevolucia/chaptr/issues/25)
-- [Add Login Prompt Messaging](https://github.com/larevolucia/chaptr/issues/26)
+- [Add login checks to views](https://github.com/larevolucia/chaptr/issues/25)
+- [Add login prompt messaging](https://github.com/larevolucia/chaptr/issues/26)
 
 ---
 
@@ -161,23 +101,23 @@ Below is a summary of the planned development scope using Agile epics, user stor
 
 #### [Register an account](https://github.com/larevolucia/chaptr/issues/10)
 
-**Technical Tasks:**
-- [Create Registration Form and View](https://github.com/larevolucia/chaptr/issues/29)
-- [Handle Form Validation and Feedback](https://github.com/larevolucia/chaptr/issues/30)
-- [Link Registration in Navbar](https://github.com/larevolucia/chaptr/issues/31)
+**Technical Tasks**
+- [Create registration form and view](https://github.com/larevolucia/chaptr/issues/29)
+- [Handle form validation and feedback](https://github.com/larevolucia/chaptr/issues/30)
+- [Link registration in navbar](https://github.com/larevolucia/chaptr/issues/31)
 
 #### [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
 
-**Technical Tasks:**
+**Technical Tasks**
 - [Create login and logout views](https://github.com/larevolucia/chaptr/issues/32)
 - [Update navbar based on auth status](https://github.com/larevolucia/chaptr/issues/33)
 - [Handle redirection after login/logout](https://github.com/larevolucia/chaptr/issues/34)
 
 #### [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
 
-**Technical Tasks:**
+**Technical Tasks**
 - [Add `@login_required` to protected views](https://github.com/larevolucia/chaptr/issues/36)
-- [Update templates to show/hide based on login messages](https://github.com/larevolucia/chaptr/issues/35)
+- [Update templates to show/hide based on login state](https://github.com/larevolucia/chaptr/issues/35)
 
 ---
 
@@ -187,31 +127,31 @@ Below is a summary of the planned development scope using Agile epics, user stor
 
 #### [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)
 
-**Technical Tasks:**
-- [Create reading status and comment models](https://github.com/larevolucia/chaptr/issues/37)
-- [Add forms for status, rating, and commenting](https://github.com/larevolucia/chaptr/issues/38)
+**Technical Tasks**
+- [Create reading status and review models](https://github.com/larevolucia/chaptr/issues/37)
+- [Add forms for status, rating, and reviewing](https://github.com/larevolucia/chaptr/issues/38)
 - [Display and update user content](https://github.com/larevolucia/chaptr/issues/39)
 
 #### [Rate books](https://github.com/larevolucia/chaptr/issues/14)
 
-**Technical Tasks:**
+**Technical Tasks**
 - [Add rating field to reading model or separate model](https://github.com/larevolucia/chaptr/issues/40)
 - [Create form and view logic for adding/updating rating](https://github.com/larevolucia/chaptr/issues/41)
 - [Show rating summary on book detail](https://github.com/larevolucia/chaptr/issues/42)
 
 #### [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
 
-**Technical Tasks:**
+**Technical Tasks**
 - [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
 - [Display reviews in template](https://github.com/larevolucia/chaptr/issues/44)
 
-#### [Edit, and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
+#### [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
 
-**Technical Tasks:**
+**Technical Tasks**
 - [Validate review ownership](https://github.com/larevolucia/chaptr/issues/45)
 - [Implement update and delete views for reviews](https://github.com/larevolucia/chaptr/issues/46)
-- [Add conditional logic in template for ownership](https://github.com/larevolucia/chaptr/issues/47)
-- [Add messaging or UI confirmation for deletion](https://github.com/larevolucia/chaptr/issues/48)
+- [Add conditional logic in templates for ownership](https://github.com/larevolucia/chaptr/issues/47)
+- [Add messaging and UI confirmation for deletion](https://github.com/larevolucia/chaptr/issues/48)
 
 ---
 
@@ -221,178 +161,182 @@ Below is a summary of the planned development scope using Agile epics, user stor
 
 #### [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)
 
-**Technical Tasks:**
+**Technical Tasks**
 - [Create library view with user authentication](https://github.com/larevolucia/chaptr/issues/49)
-- [Build style library template](https://github.com/larevolucia/chaptr/issues/50)
+- [Build styled library template](https://github.com/larevolucia/chaptr/issues/50)
 - [Query and display grouped book data](https://github.com/larevolucia/chaptr/issues/51)
 
 #### [Update reading status directly from library](https://github.com/larevolucia/chaptr/issues/18)
 
-**Technical Tasks:**
+**Technical Tasks**
 - [Add inline status update controls](https://github.com/larevolucia/chaptr/issues/52)
-- [Implement Status Update Logic in View](https://github.com/larevolucia/chaptr/issues/53)
+- [Implement status update logic in view](https://github.com/larevolucia/chaptr/issues/53)
 - [Show success messages after updates](https://github.com/larevolucia/chaptr/issues/54)
 
 ---
 
 ## Bug Fixes
 
-**[500 Error in Signup](https://github.com/larevolucia/chaptr/issues/84)**
-Mandatory confirmation e-mail was not being sent due to issues with Gmail credentials. Resolved by regenerating the credentials and updating both on `.env` and on Heroku config vars.
+**[500 Error in signup](https://github.com/larevolucia/chaptr/issues/84)**  
+Mandatory confirmation email was not being sent due to issues with Gmail credentials. Resolved by regenerating the credentials and updating both `.env` and Heroku config vars.
 
-**[Admin search for Activity gives 500 error](https://github.com/larevolucia/chaptr/issues/78)**
-Search on admin panel was returning 500 error. Resolved by correcting the search fields formatting.
+**[Admin search for Activity gives 500 error](https://github.com/larevolucia/chaptr/issues/78)**  
+Admin search returned a 500 error. Resolved by correcting search field formatting.
 
-**[Internal Server Error](https://github.com/larevolucia/chaptr/issues/89)**
-Prod environment was returning 500 error due to missing variables after code refactoring. Resolved by adding `GOOGLE_BOOKS_SEARCH_URL`, `GOOGLE_BOOKS_VOLUME_URL` to variables to Heroku config var.
+**[Internal Server Error](https://github.com/larevolucia/chaptr/issues/89)**  
+Production returned a 500 error due to missing variables after refactoring. Resolved by adding `GOOGLE_BOOKS_SEARCH_URL` and `GOOGLE_BOOKS_VOLUME_URL` to Heroku config vars.
 
-**[Books tests_views failing after activity changes](https://github.com/larevolucia/chaptr/issues/79)**
-Book views crashed in tests because `RequestFactory` requests lack `request.user`, causing `AttributeError` in `book_search`/`book_detail`; fixed by defaulting to `AnonymousUser` (e.g. `user = getattr(request, "user", AnonymousUser())`) before any `is_authenticated` checks in `books/views.py`.
+**[Books tests_views failing after activity changes](https://github.com/larevolucia/chaptr/issues/79)**  
+Book views crashed in tests because `RequestFactory` requests lack `request.user`, causing `AttributeError` in `book_search`/`book_detail`. Fixed by defaulting to `AnonymousUser` (e.g., `user = getattr(request, "user", AnonymousUser())`) before any `is_authenticated` checks in `books/views.py`.
 
-**[API Response for totalItems is inconsistent](https://github.com/larevolucia/chaptr/issues/81)**
-Pagination was breaking due to Google Books API returning inflated `totalItems` (e.g., 1,000,000); fixed by capping results to the actual fetched items and adjusting pagination logic.
+**[API response for totalItems is inconsistent](https://github.com/larevolucia/chaptr/issues/81)**  
+Pagination broke due to Google Books API returning inflated `totalItems`. Fixed by capping results to the fetched items and adjusting pagination logic.
 
-**[Message "no reviews yet" after reviews](https://github.com/larevolucia/chaptr/issues/77)**
-Authenticated users saw “No reviews yet” after their own review due to template logic; fixed by refactoring the reviews partial to render the user’s review first and only show the empty-state when neither `my_review` nor any `reviews` exist.
+**[Message "No reviews yet" after reviews](https://github.com/larevolucia/chaptr/issues/77)**  
+Authenticated users saw “No reviews yet” after their own review due to template logic. Fixed by rendering the user’s review first and only showing the empty state when neither `my_review` nor any `reviews` exist.
 
-**[Cover Fallback not displaying](https://github.com/larevolucia/chaptr/issues/55)**
-Cover fallback was not working on production. Resolved by removing static files from `.gitignore` and adjusting directory and path for correct folder.
+**[Cover fallback not displaying](https://github.com/larevolucia/chaptr/issues/55)**  
+Cover fallback failed in production. Resolved by removing static files from `.gitignore` and correcting directory paths.
 
-**[Notifications make the screen jump down](https://github.com/larevolucia/chaptr/issues/70)**
-Notifications caused layout shift because alerts were statically positioned in the flow. Fixed by converting them to fixed-position overlay toasts (no layout margins, high z-index), so messages float without pushing page content.
+**[Notifications make the screen jump down](https://github.com/larevolucia/chaptr/issues/70)**  
+Alerts caused layout shift. Fixed by converting them to fixed-position toasts (high z-index), so messages float without pushing content.
 
-**[Log-in via search_results redirects to empty search](https://github.com/larevolucia/chaptr/issues/69)**
-Login from book search redirected users to an empty results page because the `next` parameter wasn’t preserved. Fixed by passing the original search query in the login redirect so users return to their search results.
+**[Login via search results redirects to empty search](https://github.com/larevolucia/chaptr/issues/69)**  
+Login from search redirected to an empty results page because the `next` parameter wasn’t preserved. Fixed by passing the original query in the login redirect.
 
-**[Models inconsistency](https://github.com/larevolucia/chaptr/issues/69)**
-Removing a book from the library only cleared its reading status, leaving review/rating behind. Fixed by cascading cleanup on status removal, archiving associated review and rating records to keep activity consistent.
+**[Models inconsistency](https://github.com/larevolucia/chaptr/issues/69)**  
+Removing a book only cleared its reading status, leaving review/rating behind. Fixed by cascading cleanup on status removal and archiving associated review and rating records.
 
-**[Search returns duplicated results](https://github.com/larevolucia/chaptr/issues/91)**
-Search results showing duplicates when query is too specific. Fixed by deduplicating the results before pagination.
+**[Search returns duplicated results](https://github.com/larevolucia/chaptr/issues/91)**  
+Search results showed duplicates when the query was too specific. Fixed by de-duplicating results before pagination.
 
 ---
 
 ### [Linters and Validation Fixes](https://github.com/larevolucia/chaptr/issues/87)
 
 **[HTML W3C Validator](https://validator.w3.org/)**
-| Page	                   | Warning	/ Error                                       | Fix                          	          |
-|:-------------------------|:-------------------------------------------------------|:----------------------------------------|
-| Home                     | Error: Parse Error. `</body>↩</html>↩`     | Removed empty space after `</html>` in `base.html` |
-| Home                     | The navigation role is unnecessary for element nav     | Removed from `base.html` |
-| Home                     | The region role is unnecessary for element section     | Removed from `home.html` |
-| Home                     | The region role is unnecessary for element section.    | Removed from `home.html` |
-| Home                     | The contentinfo role is unnecessary for element footer | Removed from `base.html` |
-| Search Results           | End tag h2 seen, but there were open elements. | Corrected `</h2>` to `</h1>` |
-| Search Results           | The sizes attribute must only be specified if the srcset attribute is also specified. | removed sizes |
-| Search Results           | End tag h5 seen, but there were open elements. | Corrected `</h5>` to `</h1>`|
-| Search Results           | Duplicated book id error. | Deduplicated book search output in `books/views.py` |
-| Book Detail              | Error: Unclosed element div.| Closed the `</div>` |
-| Book Detail              | Parse Error | wrapped {{ book.description|safe }} on a `<div>` |
-| Book Detail              | Duplicate ID confirmDeleteModal | remove include modal partial from `reviews.html` |
+
+| Page            | Warning / Error                                                           | Fix                                                     |
+|:----------------|:--------------------------------------------------------------------------|:--------------------------------------------------------|
+| Home            | Error: Parse Error. `</body>↩</html>↩`                                   | Removed extra whitespace after `</html>` in `base.html` |
+| Home            | The `navigation` role is unnecessary for `nav`                            | Removed from `base.html`                                |
+| Home            | The `region` role is unnecessary for `section`                            | Removed from `home.html`                                |
+| Home            | The `contentinfo` role is unnecessary for `footer`                        | Removed from `base.html`                                |
+| Search Results  | End tag `h2` seen, but there were open elements                           | Corrected `</h2>` to `</h1>`                            |
+| Search Results  | `sizes` must only be specified if `srcset` is specified                   | Removed `sizes`                                         |
+| Search Results  | End tag `h5` seen, but there were open elements                           | Corrected `</h5>` to `</h1>`                            |
+| Search Results  | Duplicated book id error                                                  | De-duplicated search output in `books/views.py`         |
+| Book Detail     | Error: Unclosed `div`                                                     | Closed the `div`                                        |
+| Book Detail     | Parse error                                                               | Wrapped `{{ book.description|safe }}` in a `<div>`      |
+| Book Detail     | Duplicate ID `confirmDeleteModal`                                         | Removed included modal partial from `reviews.html`      |
 
 <details>
 <summary>Home (auth)</summary>
 
-  ![HTML Valitador Home](documentation/images/validators/html/home_auth.png)
+![HTML Validator Home](documentation/images/validators/html/home_auth.png)
 </details>
 
 <details>
 <summary>Home (visitor)</summary>
 
-  ![HTML Valitador Home](documentation/images/validators/html/home_visitor.png)
+![HTML Validator Home](documentation/images/validators/html/home_visitor.png)
 </details>
 
 <details>
 <summary>Search Results (auth)</summary>
 
-  ![HTML Valitador Search Results](documentation/images/validators/html/genre_science_fiction_auth.png)
+![HTML Validator Search Results](documentation/images/validators/html/genre_science_fiction_auth.png)
 </details>
 
 <details>
 <summary>Search Results (visitor)</summary>
 
-  ![HTML Valitador Search Results](documentation/images/validators/html/search_jellyfish_visitor.png)
+![HTML Validator Search Results](documentation/images/validators/html/search_jellyfish_visitor.png)
 </details>
 
 <details>
 <summary>Book Detail (auth)</summary>
 
-  ![HTML Valitador Book Page- Insomnia (other user activity)](documentation/images/validators/html/insomnia_book_page_auth.png)
-  ![HTML Valitador Book Page - Jellyfish Age Backwards (same user activity)](documentation/images/validators/html/jellyfish_age_backwards_book_page_auth.png)
-  ![HTML Valitador Book Page - Time in Fiction (no activity)](documentation/images/validators/html/time_in_fiction_book_page_auth.png)
+![HTML Validator Book Page - Insomnia (other user activity)](documentation/images/validators/html/insomnia_book_page_auth.png)  
+![HTML Validator Book Page - Jellyfish Age Backwards (same user activity)](documentation/images/validators/html/jellyfish_age_backwards_book_page_auth.png)  
+![HTML Validator Book Page - Time in Fiction (no activity)](documentation/images/validators/html/time_in_fiction_book_page_auth.png)
 </details>
 
 <details>
 <summary>Book Detail (visitor)</summary>
 
-  ![HTML Valitador Book Page -  Runaway Jury](documentation/images/validators/html/runaway_jury_book_page_visitor.png)
-  ![HTML Valitador Book Page - Jellyfish Age Backwards](documentation/images/validators/html/jellyfish_age_backwards_book_page_visitor.png)
+![HTML Validator Book Page - Runaway Jury](documentation/images/validators/html/runaway_jury_book_page_visitor.png)  
+![HTML Validator Book Page - Jellyfish Age Backwards](documentation/images/validators/html/jellyfish_age_backwards_book_page_visitor.png)
 </details>
 
 <details>
 <summary>Library (auth)</summary>
 
-  ![HTML Valitador Library (with books)](documentation/images/validators/html/library.png)
-  ![HTML Valitador Library (empty state)](documentation/images/validators/html/library.png)
+![HTML Validator Library (with books)](documentation/images/validators/html/library.png)  
+![HTML Validator Library (empty state)](documentation/images/validators/html/library.png)
 </details>
 
 **[Jigsaw](https://jigsaw.w3.org/)**
-| Line	     | Warning	                                             | Fix                          	          |
-|------------|:------------------------------------------------------|:----------------------------------------|
-| 183        | Value Error : background-color none is not a background-color value : none     | changed to transparent |
-| 766        | Value Error : background-color color-mix is not a background-color    | changed to transparent |
-| 549, 564   | The property clip is deprecated    | Removed clip and kept clip-path |
+
+| Line | Warning                                                   | Fix                    |
+|-----:|:----------------------------------------------------------|:-----------------------|
+|  183 | `background-color: none` is not a valid value             | Changed to `transparent` |
+|  766 | `background-color: color-mix(...)` not valid here         | Changed to `transparent` |
+| 549, 564 | The `clip` property is deprecated                     | Removed `clip`; kept `clip-path` |
 
 <details>
 <summary>CSS</summary>
 
-  ![HTML Valitador Library (with books)](documentation/images/validators/css/jigsaw.png)
+![Jigsaw CSS](documentation/images/validators/css/jigsaw.png)
 </details>
 
 **Lighthouse**
-| Page	                   | Warning	                                             | Fix                          	          |
-|:-------------------------|:------------------------------------------------------|:----------------------------------------|
-|Home                      | Deprecation / Warning Source Heroku other 1st party Found an `<h1>` tag within an `<article>`, `<aside>`, `<nav>`, or `<section>` which does not have a specified font-size | Added specific font-sizes on CSS |
-| Search Results + Book Details | Mixed content, where some resources are loaded over HTTP despite the initial request being served over HTTPS | Google Books API returned the cover as http. Introduced a `ensure_https` to secure the urls from Google. |
-| Search Results + Book Details | Third Party Cookies      | Cover being render by google api was sending third-party cookies. To solve, a view and url with `cover_proxy` was created. |
+
+| Page                         | Warning / Issue                                                                                          | Fix                                                                                 |
+|:-----------------------------|:----------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------|
+| Home                         | Deprecation/Warning: `<h1>` inside an `article/aside/nav/section` without explicit font-size             | Added explicit font-sizes in CSS                                                    |
+| Search Results & Book Detail | Mixed content: some resources loaded over HTTP while the page is HTTPS                                   | Introduced `ensure_https` to secure Google Books cover URLs                         |
+| Search Results & Book Detail | Third-party cookies via Google cover images                                                              | Implemented a `/cover/` proxy view and URL to serve images first-party              |
 
 <details>
 <summary>Home</summary>
 
-  ![Home Desktop Auth](documentation/images/validators/lighthouse/home_desktop_auth.png)
-  ![Home Desktop Visitor](documentation/images/validators/lighthouse/home_desktop_visitor.png)
-  ![Home Mobile Auth](documentation/images/validators/lighthouse/home_mobile_auth.png)
-  ![Home Mobile Visitor](documentation/images/validators/lighthouse/home_mobile_visitor.png)
+![Home Desktop Auth](documentation/images/validators/lighthouse/home_desktop_auth.png)  
+![Home Desktop Visitor](documentation/images/validators/lighthouse/home_desktop_visitor.png)  
+![Home Mobile Auth](documentation/images/validators/lighthouse/home_mobile_auth.png)  
+![Home Mobile Visitor](documentation/images/validators/lighthouse/home_mobile_visitor.png)
 </details>
 
 <details>
-
 <summary>Search</summary>
 
-  ![Search Desktop Auth](documentation/images/validators/lighthouse/search_desktop_auth.png)
-  ![Search Desktop Visitor](documentation/images/validators/lighthouse/search_desktop_visitor.png)
-  ![Search Mobile Auth](documentation/images/validators/lighthouse/search_mobile_auth.png)
-  ![Search Mobile Visitor](documentation/images/validators/lighthouse/search_mobile_visitor.png)
+![Search Desktop Auth](documentation/images/validators/lighthouse/search_desktop_auth.png)  
+![Search Desktop Visitor](documentation/images/validators/lighthouse/search_desktop_visitor.png)  
+![Search Mobile Auth](documentation/images/validators/lighthouse/search_mobile_auth.png)  
+![Search Mobile Visitor](documentation/images/validators/lighthouse/search_mobile_visitor.png)
 </details>
 
+<details>
 <summary>Book Page</summary>
 
-  ![Book Detail Desktop Auth](documentation/images/validators/lighthouse/book_detail_desktop_auth.png)
-  ![SBook Detail Desktop Visitor](documentation/images/validators/lighthouse/book_detail_desktop_visitor.png)
-  ![Book Detail Mobile Auth](documentation/images/validators/lighthouse/book_detail_mobile_auth.png)
-  ![Book Detail Mobile Visitor](documentation/images/validators/lighthouse/book_detail_mobile_visitor.png)
+![Book Detail Desktop Auth](documentation/images/validators/lighthouse/book_detail_desktop_auth.png)  
+![Book Detail Desktop Visitor](documentation/images/validators/lighthouse/book_detail_desktop_visitor.png)  
+![Book Detail Mobile Auth](documentation/images/validators/lighthouse/book_detail_mobile_auth.png)  
+![Book Detail Mobile Visitor](documentation/images/validators/lighthouse/book_detail_mobile_visitor.png)
 </details>
 
+<details>
 <summary>Library</summary>
 
-  ![Empty Library Desktop](documentation/images/validators/lighthouse/library_desktop_empty.png)
-  ![Library Desktop](documentation/images/validators/lighthouse/library_desktop_full.png)
-  ![Empty Library Mobile](documentation/images/validators/lighthouse/library_mobile_empty.png)
-  ![Library Mobile](documentation/images/validators/lighthouse/library_mobile_full.png)
+![Empty Library Desktop](documentation/images/validators/lighthouse/library_desktop_empty.png)  
+![Library Desktop](documentation/images/validators/lighthouse/library_desktop_full.png)  
+![Empty Library Mobile](documentation/images/validators/lighthouse/library_mobile_empty.png)  
+![Library Mobile](documentation/images/validators/lighthouse/library_mobile_full.png)
 </details>
 
-### [Pep8](https://pep8ci.herokuapp.com/#)
-- All files passed PEP8 validation. Screenshots can be found at [Pep8 folder](documentation/images/validators/pep8/)
+### [PEP8](https://pep8ci.herokuapp.com/#)
+
+All files passed PEP8 validation. Screenshots can be found in the [PEP8 folder](documentation/images/validators/pep8/).
 
 ---
 
@@ -403,566 +347,567 @@ https://github.com/larevolucia/chaptr/projects/12
 
 ## Sprint Planning
 
-Sprints are organized to deliver features incrementally, with each sprint focusing on specific epics and user stories. The sprint timebox is set to 1 week.
+Sprints deliver features incrementally, each focusing on specific epics and user stories. The sprint timebox is one week.
 
 ### Sprint 0: Project Setup
-- [x] Create Epics, User Stories, and Tasks in GitHub
-- [x] Set up Django project and apps
-- [x] Configure Google Books API integration
-- [x] Deploy initial version to Heroku
-- [x] Set up Postgres database
+
+- [x] Create epics, user stories, and tasks in GitHub  
+- [x] Set up Django project and apps  
+- [x] Configure Google Books API integration  
+- [x] Deploy initial version to Heroku  
+- [x] Set up Postgres database  
 - [x] Set up basic templates and static files
 
 ### Sprint Breakdown
-Sprint 1:
-- Epic 1: Book Discovery and Browsing
-   - [x] [Search for books by title, author, genre](https://github.com/larevolucia/chaptr/issues/6)
-   - [x] [View book details](https://github.com/larevolucia/chaptr/issues/7)
-   - [x] [Homepage - MVP](https://github.com/larevolucia/chaptr/issues/56)
 
-- Epic 2: User Authentication and Permissions
-   - [x] [Register an account](https://github.com/larevolucia/chaptr/issues/10)
-   - [x] [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
+**Sprint 1**
 
-Sprint 2:
-- Epic 1: Book Discovery and Browsing
-   - [x] [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)
-   - [x] [Homepage - Stretch](https://github.com/larevolucia/chaptr/issues/56)
-- Epic 2: User Authentication and Permissions
-   - [x] [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
-- Epic 3: Book Interaction and Reading Progress
-   - [x] [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)
-   - [x] [Rate books](https://github.com/larevolucia/chaptr/issues/14)
-   - [x] [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
+- Epic 1: Book Discovery and Browsing  
+  - [x] [Search for books by title, author, genre](https://github.com/larevolucia/chaptr/issues/6)  
+  - [x] [View book details](https://github.com/larevolucia/chaptr/issues/7)  
+  - [x] [Homepage – MVP](https://github.com/larevolucia/chaptr/issues/56)
 
-Sprint 3:
-- Epic 1: Book Discovery and Browsing
-   - [x] [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
-- Epic 3: Book Interaction and Reading Progress
-   - [x] [Edit, and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
-- Epic 4: User Dashboard
-   - [x] [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)
-   - [x] [Update reading status directly from dashboard](https://github.com/larevolucia/chaptr/issues/18)
+- Epic 2: User Authentication and Permissions  
+  - [x] [Register an account](https://github.com/larevolucia/chaptr/issues/10)  
+  - [x] [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
 
-Sprint 4:
-- Testing and Bug Fixes
-   - [x] [Refactoring](https://github.com/larevolucia/chaptr/issues/85)
-   - [x] [Accessibility & Performance](https://github.com/larevolucia/chaptr/issues/87)
-   - [ ] [Documentation](https://github.com/larevolucia/chaptr/issues/88)
+**Sprint 2**
+
+- Epic 1: Book Discovery and Browsing  
+  - [x] [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)  
+  - [x] [Homepage – Stretch](https://github.com/larevolucia/chaptr/issues/56)
+- Epic 2: User Authentication and Permissions  
+  - [x] [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
+- Epic 3: Book Interaction and Reading Progress  
+  - [x] [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)  
+  - [x] [Rate books](https://github.com/larevolucia/chaptr/issues/14)  
+  - [x] [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
+
+**Sprint 3**
+
+- Epic 1: Book Discovery and Browsing  
+  - [x] [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
+- Epic 3: Book Interaction and Reading Progress  
+  - [x] [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
+- Epic 4: User Dashboard  
+  - [x] [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)  
+  - [x] [Update reading status directly from dashboard](https://github.com/larevolucia/chaptr/issues/18)
+
+**Sprint 4**
+
+- Testing and Bug Fixes  
+  - [x] [Refactoring](https://github.com/larevolucia/chaptr/issues/85)  
+  - [x] [Accessibility & Performance](https://github.com/larevolucia/chaptr/issues/87)  
+  - [ ] [Documentation](https://github.com/larevolucia/chaptr/issues/88)
 
 ---
-
 
 ## Features
 
 ### Homepage (Banner, Intro & Quick Browse)
 
-A welcoming, responsive landing experience that introduces CHAPTR and funnels visitors into core actions.
+A welcoming, responsive landing experience that introduces NextChaptr and funnels visitors into core actions.
 
-* **Responsive Hero Banner**: A full‑width banner at the top establishes brand tone and provides instant visual context.
-* **Clear Purpose Blurb**: A short, centered description directly beneath the banner explains what NextChaptr does and who it’s for.
-* **Primary Actions Up Front**: Prominent entry points to start searching books or sign up/log in, keeping the first‑run path obvious.
-* **Browse by Genre**: Category tiles allow users to jump straight to a filtered search view for a given genre.
+- **Responsive hero banner**: A full-width banner sets the brand tone and provides visual context.
+- **Clear purpose blurb**: A brief description explains what NextChaptr does and who it’s for.
+- **Primary actions up front**: Prominent entry points to search books or sign up/log in.
+- **Browse by genre**: Category tiles link directly to filtered search views.
 
 ![Home Page](documentation/images/home/home_visitor.png)
-
 
 ### Search & Browse (API First)
 
 Book discovery is powered by the Google Books API, allowing users to explore a vast catalog with flexible search options.
 
-* **Keyword or Field-Specific Search**: Search by general keywords or refine by title, author, or genre.
-* **Smart Query Handling**: The system applies the correct Google Books operators automatically.
-* **Clean Results**: Results display thumbnails, titles, and authors in a browsable layout.
-* **First-party cover images**: The app serves covers via a small `/cover/` proxy on our own domain to avoid third-party requests/cookies and improve Lighthouse privacy scores.
-* **Pagination**: Supports navigating through large result sets with ease.
-* **Resilient Design**: Handles API or network errors gracefully without breaking the user experience.
-* **Caching:** details are cached for \~1h to reduce API calls.
-* **Searh Bar Desing:** search forms uses an always visible select element for the search query fields. Design was inspired by [booking.com](https://www.booking.com/) and [Goodreads](https://www.goodreads.com/).
+- **Keyword or field-specific search**: Search by general keywords or refine by title, author, or genre.
+- **Smart query handling**: Automatically applies the correct Google Books operators.
+- **Clean results**: Thumbnails, titles, and authors in a browsable layout.
+- **First-party cover images**: A `/cover/` proxy serves covers from our own domain to avoid third-party requests/cookies and improve Lighthouse privacy scores.
+- **Pagination**: Navigate large result sets with ease.
+- **Resilient design**: Handles API/network errors gracefully.
+- **Caching**: Details are cached for ~1 hour to reduce API calls.
+- **Search bar design**: The search form uses a visible select element for query fields. Design inspired by [Booking.com](https://www.booking.com/) and [Goodreads](https://www.goodreads.com/).
 
 ![Search Page](documentation/images/search/search_visitor.png)
 
 <details>
 <summary>More images</summary>
 
-  ![Search Behavior](documentation/images/search/search_to_book_navigation.gif)
+![Search Behavior](documentation/images/search/search_to_book_navigation.gif)
 </details>
 
 ### Book Detail View
+
 Each book has a dedicated detail page with enriched information for readers.
 
-* **Comprehensive Metadata**: Includes title, subtitle, authors, publisher, publication date, page count, categories, description, and cover image.
-* **First-party cover images**: The app serves covers via a small `/cover/` proxy on our own domain to avoid third-party requests/cookies and improve Lighthouse privacy scores.
-* **Performance Boost**: Uses Django caching to store details for one hour, reducing API calls while keeping data fresh.
-* **Seamless Access**: Directly linked from search results for a smooth browsing experience
-* **Page Desing**: Page design follows hierarchy used in other content hubs, such as [imdb.com](https://www.imdb.com/), [letterboxd](https://letterboxd.com/), [goodreads](https://www.goodreads.com/), [amazon](https://www.amazon.com), etc. Image is displayed at the top left corner, with basic metadata (Title, Authors) at the top of the page. CTA and Ratings are right below the cover art, while reviews (long text interaction) are at the bottom of the page
+- **Comprehensive metadata**: Title, subtitle, authors, publisher, publication date, page count, categories, description, and cover image.
+- **First-party cover images**: Served via the `/cover/` proxy to avoid third-party cookies.
+- **Performance boost**: Uses Django caching to store details for one hour, reducing API calls while keeping data fresh.
+- **Seamless access**: Linked directly from search results for a smooth browsing experience.
+- **Page design**: Follows common hierarchies used in other content hubs (e.g., IMDb, Letterboxd, Goodreads, Amazon). The image appears in the top-left, core metadata at the top, primary actions and ratings below the cover, and longer-form reviews lower on the page.
 
 ![Book Details](documentation/images/book_detail/details_visitor.png)
 
-
 ### Reading Progress (Status Updates)
 
-Let users track where they are with any book using a simple three-state flow.
+Track progress with a simple three-state flow.
 
-* **Three statuses**: *To read*, *Reading*, *Read* (`TO_READ`, `READING`, `READ`). One status per `(user, book)`.
-* **Inline controls**: POSTing a valid status creates/updates a `ReadingStatus`; invalid choices show a friendly error and redirect back to the detail page.
-* **Remove from library**: Sending `status=NONE` deletes the status and **archives** any rating/review for that book (kept for analytics, hidden from UI).
-* **Book FK safety**: Status changes ensure a `Book` row exists via `fetch_or_refresh_book(...)`.
-* **Integrity & performance**: Unique constraint on `(user, book)` with helpful indexes for library queries.
-* **UX feedback**: Success/error messages confirm each action and return users to the originating page.
-* **Button Desing**: *To read* status is a primary action as saving a book they are interested in reading later is main use case. Other status are easily accessible via dropdown. Down arrow on dropdown signals to user additional settings, making it intuitive. 
-
+- **Three statuses**: *To Read*, *Reading*, *Read* (`TO_READ`, `READING`, `READ`). One status per `(user, book)`.
+- **Inline controls**: Posting a valid status creates/updates a `ReadingStatus`; invalid choices show a friendly error and redirect back to the detail page.
+- **Remove from library**: Sending `status=NONE` deletes the status and **archives** any rating/review for that book (kept for analytics, hidden from UI).
+- **Book FK safety**: Status changes ensure a `Book` row exists via `fetch_or_refresh_book(...)`.
+- **Integrity & performance**: Unique constraint on `(user, book)` with helpful indexes for library queries.
+- **UX feedback**: Success/error messages confirm actions and return users to the originating page.
+- **Button design**: *To Read* is emphasized as the primary action (a common first step). Other statuses are accessible via a dropdown (the arrow hints at additional options).
 
 ![Reading Status in Book Detail](documentation/images/book_detail/reading_status_details.gif)
 
 <details>
 <summary>More images</summary>
 
-  ![Reading Status in Search](documentation/images/search/status_change_search.gif)
+![Reading Status in Search](documentation/images/search/status_change_search.gif)
 </details>
-
 
 ### Rating System
 
-Provides a quick way for readers to rate books and share feedback with the community.
+Provide quick feedback and aggregate community sentiment.
 
-* **Star ratings (1–5)**: Authenticated users can create/update a rating; `rating=0` removes it. Values outside 1–5 show a validation message.
-* **Status invariant**: Posting a rating ensures a `ReadingStatus` exists (defaults to **READ** if missing). Existing statuses are respected.
-* **Archive on removal**: Removing a status archives the user’s rating (`is_archived=True`, timestamped) so they disappear from UI but stay available for analytics. Re-posting **unarchives** the most recent row.
-* **Averages & counts**: Helpers compute average rating and total ratings for display on the book detail.
-* **User Feedback**: Notifications confirm when a rating is saved or updated.
-* **Flexible Control**: Ratings can be removed at any time.
-* **Rating Buttons Desing:** star format and animation on hover was inpired by [letterboxd.com](https://letterboxd.com/) and [Goodreads](https://www.goodreads.com/), making intuitive for users of similar platforms.
+- **Star ratings (1–5)**: Authenticated users can create/update a rating; `rating=0` removes it. Values outside 1–5 display a validation message.
+- **Status invariant**: Posting a rating ensures a `ReadingStatus` exists (defaults to **READ** if missing). Existing statuses are respected.
+- **Archive on removal**: Removing a status archives the user’s rating (`is_archived=True`, timestamped) so it disappears from UI but remains for analytics. Re-posting unarchives the most recent row.
+- **Averages & counts**: Helpers compute average rating and total ratings for display on the book detail.
+- **User feedback**: Notifications confirm when a rating is saved or updated.
+- **Rating buttons design**: The star format and hover animation are inspired by Letterboxd and Goodreads for familiarity.
 
 ![Rating in Book Details](documentation/images/book_detail/rating_details.gif)
 
 <details>
 <summary>More images</summary>
 
-  ![Remove Rating](documentation/images/book_detail/remove_rating_details.gif)
+![Remove Rating](documentation/images/book_detail/remove_rating_details.gif)
 </details>
-
 
 ### Review System
 
-Lets readers share longer-form thoughts on a book, with a clear, edit-friendly flow on the detail page.
+Let readers share longer-form thoughts with an edit-friendly flow.
 
-* **Single, Text-Based Review**: Authenticated users can post one review per book.
-* **Inline Compose, Edit & Delete**: If you haven’t reviewed, a form appears. If you have, your review shows with an *Edit* and *Delete* buttons.
-* **One-Per-Book Guarantee**: A unique `(user, book)` constraint updates on re-submit (no duplicates).
-* **Status Invariant**: Posting a review ensures a status row exists (defaults to **Read** if missing).
-* **Archive on removal**: Removing a status archives the user’s review (`is_archived=True`, timestamped) so they disappear from UI but stay available for analytics. Re-posting **unarchives** the most recent row.
-* **No duplicates**: A unique active review per `(user, book)` prevents multiple comments; reposting updates the same record.
-* **Ownership guard**: Only the author can delete their comment; unauthorized deletes return `403`.
+- **Single, text-based review**: One review per user/book.
+- **Inline compose, edit & delete**: No review → a form appears. With a review → *Edit* and *Delete* buttons.
+- **One-per-book guarantee**: A unique `(user, book)` constraint updates on resubmission (no duplicates).
+- **Status invariant**: Posting a review ensures a status row exists (defaults to **READ** if missing).
+- **Archive on removal**: Removing a status archives the user’s review (`is_archived=True`, timestamped). Re-posting unarchives the most recent row.
+- **Ownership guard**: Only the author can delete their review; unauthorized deletes return `403`.
 
 ![Add and edit a Review](documentation/images/book_detail/add_edit_review_details.gif)
 
 ### Library
 
-A user’s personal library displays all books they are interested in, along with their reading status.
+A personal library displays all books a user is interested in, grouped by reading status.
 
-* **Grouped by Status**: Books are organized into sections for *To Read*, *Reading*, and *Read*.
-* **First-party cover images**: The app serves covers via a small `/cover/` proxy on our own domain to avoid third-party requests/cookies and improve Lighthouse privacy scores.
-* **UX Note**: The “Remove from Library” action opens a confirm dialog that also tells you your rating and review for the book will be removed from your profile (they’ll be archived, not permanently deleted).
-* **Dynamic Updates**: The library view updates in real-time as users change book statuses.
-* **Link to Book Details**: Each book links to its detail page for more information.
+- **Grouped by status**: *To Read*, *Reading*, and *Read*.
+- **First-party cover images**: Served via `/cover/` to avoid third-party cookies.
+- **UX note**: “Remove from Library” opens a confirmation dialog that explains rating/review will be removed from the profile (archived, not permanently deleted).
+- **Dynamic updates**: The library view reflects changes immediately.
+- **Links to details**: Each book links to its detail page.
 
 ![Responsive Library](documentation/images/library/responsive_library.gif)
 
 <details>
 <summary>More images</summary>
 
-  ![Reading Status in Library](documentation/images/library/status_change_library.gif)
+![Reading Status in Library](documentation/images/library/status_change_library.gif)
 
-  ![Status Filtering](documentation/images/library/status_filtering_library.gif)
+![Status Filtering](documentation/images/library/status_filtering_library.gif)
 
-  ![Status Sorting](documentation/images/library/status_sorting_library.gif)
+![Status Sorting](documentation/images/library/status_sorting_library.gif)
 </details>
-
 
 ### Confirmation Modals
 
-Critical actions, such as removing a book from the library or deleting a review, are protected by confirmation modals to prevent accidental loss of data.
+Critical actions (e.g., removing a book from the library or deleting a review) are protected by confirmation modals.
 
-* **Clear Messaging**: Modals clearly explain the consequences of the action.
-* **User Control**: Users can confirm or cancel the action, ensuring they have full control over their data.
-* **Reusable Component**: The modal is implemented as a reusable template partial for consistency across the site.
-* **Design Rationale**: App follows UX best practices by presenting a confirmation modal to avoid accidental critical actions.
+- **Clear messaging**: Modals explain consequences.
+- **User control**: Confirm or cancel to retain control.
+- **Reusable component**: Implemented as a template partial for consistency.
+- **Design rationale**: Follows UX best practices to prevent accidental destructive actions.
 
 ![Delete a Review](documentation/images/book_detail/delete_review_details.gif)
 
-### Authentication (Login, Logout & Sign-Up)
+### Authentication (Login, Logout & Sign Up)
 
-User authentication is powered by **Django Allauth**, providing a secure and reliable way to manage accounts.
+User authentication is powered by **Django Allauth** for a secure and reliable account experience.
 
-* **Sign-Up**: New users can easily create an account. The sign-up template has been customized to match the site’s brand style.
-* **Login / Logout**: Users can log in to access their personal features and log out securely when finished.
-* **Consistent UI**: Allauth templates have been adapted to the project’s design system, ensuring a seamless experience across authentication pages.
+- **Sign up**: New users can create an account. The template is customized to match the site’s brand.
+- **Login / Logout**: Access personal features and log out securely.
+- **Consistent UI**: Allauth templates are adapted to the project’s design system.
 
 ![Log in](documentation/images/auth/login.png)
+
 <details>
 <summary>More images</summary>
 
-  ![Sign Up](documentation/images/auth/signup.png)
+![Sign Up](documentation/images/auth/signup.png)
 </details>
 
 ### Custom Error Pages
 
-Custom error pages were created to keep the brand styles.
+Custom error pages maintain brand styling.
 
-* **Error**: Page informs user the type of error.
-* **Redirect**: Buttons are included for the user to go back to home or previous page.
-* **Incident number**: Incident numbers are included for communication with help center.
+- **Clear error**: Pages state the error type.
+- **Redirects**: Buttons return users to home or the previous page.
+- **Incident number**: Included for help-center communication.
 
-![Sign Up](documentation/images/error/404.png)
-
+![404 Page](documentation/images/error/404.png)
 
 ### Admin Panel
 
-* **Books** admin shows minimal cached metadata (id, title, authors, thumb, language, published date, fetch markers).
-* **Reading statuses** admin shows `(user, book_id, title, status)` with a link to the Google Books page.
-* **Rating** admin lists include denormalized book titles and quick links to Google Books and support searching by user, book ID and title.
-* **Review** admin lists support searching by user, book ID/title, and content, with date filters for moderation.
+- **Books** admin shows minimal cached metadata (id, title, authors, thumbnail, language, published date, fetch markers).
+- **Reading statuses** admin shows `(user, book_id, title, status)` with a link to the Google Books page.
+- **Rating** admin lists denormalized book titles with quick links to Google Books; supports searching by user, book ID, and title.
+- **Review** admin lists support searching by user, book ID/title, and content, with date filters for moderation.
 
+---
 
 ## Design
 
 ### Fonts
 
-The font pairing balances readability and personality. **Bitter** ensures a comfortable reading experience, **Roboto** adds modern clarity for the interface, and **Abril Fatface** brings a touch of elegance for emphasis.
+The pairing balances readability and personality. **Bitter** ensures a comfortable reading experience, **Roboto** adds modern clarity for interface text, and **Abril Fatface** adds emphasis.
 
-### Color Palete
+### Color Palette
 
-The color palette draws inspiration from nature, creating a cozy atmosphere with a calming effect, much like the feeling of reading.
-Green tones are used as primary color and blue as secondary. Terracota tone is used as an accent color. 
+The palette draws inspiration from nature for a cozy, calming atmosphere—akin to the feeling of reading.
+Green is the primary color, blue the secondary, and terracotta serves as an accent.
 
-![Color Palete](documentation/color_palette.png)
+![Color Palette](documentation/color_palette.png)
 
 ### Wireframes
 
-As a mobile-first approach, wireframes focused on the smaller screens. Tablets and desktop design kept the same design but making better use of wider screen, particularly for tables.
+Following a mobile-first approach, wireframes focus on smaller screens. Tablet and desktop designs use the same layout principles while making better use of wider screens, particularly for tables.
 
 ![Mobile Logged-In Wireframes](documentation/images/wireframes/Mobile_Logged-In.png)
 
-![Mobile Vistor Wireframes](documentation/images/wireframes/Mobile_Visitor.png)
+![Mobile Visitor Wireframes](documentation/images/wireframes/Mobile_Visitor.png)
 
 ---
 
 ## Models
 
-The data model balances **external metadata** (from Google Books) with **internal user interactions**.
+The data model balances **external metadata** (from Google Books) with **internal user interactions**.  
 Books are only stored locally if a user explicitly saves or interacts with them, keeping the database lightweight.
 
 ![Models ERD](documentation/images/ERD/models.jpg)
 
-### User 
+### User
+
 Uses Django’s built-in `User` model for authentication and ownership of records.
 
 ### Book
-Represents a book saved in the system (created only when a user adds it to a shelf or sets a reading status).
-Primary key is the Google Books `volumeId`.
 
-**Fields:**
+Represents a book saved in the system (created only when a user adds it to a shelf or sets a reading status).  
+The primary key is the Google Books `volumeId`.
 
-* `id`: `CharField`, `PK` (Google volumeId)
-* `title`: `CharField`
-* `authors`: `TextField` (list of author names)
-* `thumbnail_url`: `URLField`
-* `language`: `CharField`
-* `published_date_raw`: `CharField`
-* `etag`: `CharField`
-* `last_modified`: `DateTimeField` (HTTP cache header)
-* `last_fetched_at`: `DateTimeField` (defaults to now)
-* `created_at`: `DateTimeField` (record creation timestamp)
-* `updated_at`: `DateTimeField` (auto-updated timestamp)
+**Fields**
 
-**Meta:**
-* Index on `title` for faster search.
+- `id`: `CharField`, PK (Google `volumeId`)
+- `title`: `CharField`
+- `authors`: `TextField` (list of author names)
+- `thumbnail_url`: `URLField`
+- `language`: `CharField`
+- `published_date_raw`: `CharField`
+- `etag`: `CharField`
+- `last_modified`: `DateTimeField` (HTTP cache header)
+- `last_fetched_at`: `DateTimeField` (defaults to now)
+- `created_at`: `DateTimeField` (record creation timestamp)
+- `updated_at`: `DateTimeField` (auto-updated)
 
-**Methods:**
-* `needs_refresh(ttl_minutes=1440)`: checks if book metadata has expired, with a default time-to-live of 24 hours.
+**Meta**
+
+- Index on `title` for faster search.
+
+**Methods**
+
+- `needs_refresh(ttl_minutes=1440)`: checks if book metadata has expired (default TTL: 24 hours).
 
 **Cover storage vs. display**  
-* The database stores the *remote* `thumbnail_url` only; image bytes are **not** stored. 
-At render time, templates use a first-party **cover proxy** to fetch and serve the image from our own origin. 
-This keeps the DB lightweight and eliminates third-party cookies. 
+The database stores the *remote* `thumbnail_url` only; image bytes are **not** stored.  
+At render time, templates use a first-party **cover proxy** to fetch and serve the image from our origin.  
+This keeps the DB lightweight and eliminates third-party cookies.  
 (A future enhancement could add an `ImageField` to persist files if needed.)
 
-
 ### ReadingStatus
+
 Tracks a user's reading status for a specific book.
 
-**Fields:**
+**Fields**
 
-* `user`: `ForeignKey` → `User`
-* `book`: `ForeignKey` → `Book`
-* `status`: `CharField` with choices:
-  * `"TO_READ"` → "To read"
-  * `"READING"` → "Reading"
-  * `"READ"` → "Read"
-* `created_at`: `DateTimeField`
-* `updated_at`: `DateTimeField`
+- `user`: `ForeignKey` → `User`
+- `book`: `ForeignKey` → `Book`
+- `status`: `CharField` with choices:
+  - `"TO_READ"` → “To Read”
+  - `"READING"` → “Reading”
+  - `"READ"` → “Read”
+- `created_at`: `DateTimeField`
+- `updated_at`: `DateTimeField`
 
-**Meta:**
-* Unique constraint on `(user, book)` → one status per book per user.
-* Indexes on `(user, status)`, `(user, book)`, and `status`.
+**Meta**
+
+- Unique constraint on `(user, book)` → one status per book per user.
+- Indexes on `(user, status)`, `(user, book)`, and `status`.
 
 ### Rating
+
 Stores a user's rating for a book.
 
-**Fields:**
-* `user`: `ForeignKey` → `User`
-* `book`: `ForeignKey` → `Book`
-* `rating`: `PositiveSmallIntegerField` (0-5)
-* `created_at`: `DateTimeField`
-* `updated_at`: `DateTimeField` (auto_now=True)
-* `is_archived` `BooleanField` (default `False`) — hidden from profile/UI if `True`
-* `archived_at` `DateTimeField` (nullable)
+**Fields**
 
-**Meta:**
-* Unique constraint on `(user, book)` where `is_archived=False` guarantees at most one **active** rating per user/book while allowing archived history.
+- `user`: `ForeignKey` → `User`
+- `book`: `ForeignKey` → `Book`
+- `rating`: `PositiveSmallIntegerField` (0–5)
+- `created_at`: `DateTimeField`
+- `updated_at`: `DateTimeField` (auto_now=True)
+- `is_archived`: `BooleanField` (default `False`) — hidden from profile/UI if `True`
+- `archived_at`: `DateTimeField` (nullable)
 
- **Visibility:**
- * Archived ratings are hidden from the UI but retained for analytics.
+**Meta**
+
+- Unique constraint on `(user, book)` where `is_archived=False` guarantees at most one **active** rating per user/book while allowing archived history.
+
+**Visibility**
+
+- Archived ratings are hidden from the UI but retained for analytics.
 
 ### Review
- Represents a user's written review of a book.
 
- **Fields:**
- * `user` (FK): `User`
- * `book` (FK): `Book`
- * `content`: `TextField`
- * `created_at`: `DateTimeField`
- * `updated_at`: `DateTimeField` (auto_now=True)
- * `is_archived` `BooleanField` (default `False`)
- * `archived_at` `DateTimeField` (nullable)
+Represents a user's written review of a book.
 
- **Meta:** 
-* Unique constraint on `(user, book)` where `is_archived=False`.
+**Fields**
 
- **Visibility:**
- * Archived reviews are hidden from the UI but retained for analytics.
+- `user` (FK): `User`
+- `book` (FK): `Book`
+- `content`: `TextField`
+- `created_at`: `DateTimeField`
+- `updated_at`: `DateTimeField` (auto_now=True)
+- `is_archived`: `BooleanField` (default `False`)
+- `archived_at`: `DateTimeField` (nullable)
+
+**Meta**
+
+- Unique constraint on `(user, book)` where `is_archived=False`.
+
+**Visibility**
+
+- Archived reviews are hidden from the UI but retained for analytics.
 
 ---
 
 ## Django Project Structure
 
-The *NextChaptr* project is divided into focused Django applications to ensure clear separation of concerns and maintainable code architecture.
+The *NextChaptr* project is divided into focused Django applications to ensure clear separation of concerns and maintainable architecture.
 
 ### apps/
 
-| App Name         | Responsibility                                                                                      |
-|------------------|-----------------------------------------------------------------------------------------------------|
-| `accounts`       | Accounts app current only for authentication, but will hold profile in future                       |
-| `books`          | Google Books search/detail, minimal cached `Book`, admin, service,cover proxy endpoint (`/cover/`)  |
-| `activity`       | Per-user `ReadingStatus`, `Rating`, `Review` persistence + admin                                    |
-| `library`        | Displays user-specific reading activity grouped by status.                                          |
+| App Name   | Responsibility                                                                                         |
+|------------|---------------------------------------------------------------------------------------------------------|
+| `accounts` | Authentication for now; will hold profile features in the future                                        |
+| `books`    | Google Books search/detail, minimal cached `Book`, admin, services, cover proxy endpoint (`/cover/`)    |
+| `activity` | Per-user `ReadingStatus`, `Rating`, `Review` persistence + admin                                        |
+| `library`  | Displays user-specific reading activity grouped by status                                               |
 
 ### Image Delivery & Privacy
 
 To avoid third-party cookies flagged by Lighthouse, cover images are served **first-party**:
 
-- **Endpoint**: `GET /cover/?url=<encoded-remote-url>`  
-- **Behavior**: Server fetches the remote image (enforces HTTPS), whitelists Google hosts, and returns the bytes with long-lived caching headers.  
+- **Endpoint**: `GET /cover/?url=<encoded-remote-url>`
+- **Behavior**: Server fetches the remote image (enforces HTTPS), whitelists Google hosts, and returns bytes with long-lived caching headers.
 - **Templates**: Use `book.cover_url` or fall back to a local placeholder.
 
-This affects **Search Results**, **Book Detail**, and **Library** templates and the corresponding views that now compute `cover_url` for each book.
-
+This affects **Search Results**, **Book Detail**, and **Library** templates and the corresponding views that compute `cover_url` for each book.
 
 ### State Changes via Services
 
-Lifecycle rules (e.g. “rating implies a status exists”, or “removing status archives rating/review”) are implemented in a **service layer**s. This makes behavior explicit, testable, and easy to evolve.
+Lifecycle rules (e.g., “rating implies a status exists” or “removing status archives rating/review”) are implemented in a **service layer**. This makes behavior explicit, testable, and easy to evolve.
 
 Key functions:
-* `remove_from_library(user, book_id)` — deletes the status and **archives** the user’s rating/review for that book.
-* `upsert_active_rating(user, book_id, value)` — creates or **unarchives** the latest rating, ensuring a status exists.
-* `upsert_active_review(user, book_id, content)` — creates or **unarchives** the latest review, ensuring a status exists.
+
+- `remove_from_library(user, book_id)` — deletes the status and **archives** the user’s rating/review for that book.
+- `upsert_active_rating(user, book_id, value)` — creates or **unarchives** the latest rating, ensuring a status exists.
+- `upsert_active_review(user, book_id, content)` — creates or **unarchives** the latest review, ensuring a status exists.
 
 ### Design Rationale
 
 - **Modular design**: Each app reflects a distinct domain of the system and aligns with a major feature group (search, authentication, interaction, UI).
-- **Separation of concerns**: Each app encapsulates its own models, views, and templates, making it easier to manage and extend.
-- **Maintainability**: Clear boundaries between apps reduce complexity and improve code readability.
-- **Scalability**: Allows future extension, such as adding a social/friendship app, without disrupting the core architecture.
+- **Separation of concerns**: Each app encapsulates its own models, views, and templates.
+- **Maintainability**: Clear boundaries reduce complexity and improve readability.
+- **Scalability**: Supports future extensions (e.g., a social/friendship app) without disrupting core architecture.
 
 ---
 
 ## Testing
 
-***NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s TestCase** framework with mocking for external dependenciess, such as Google Books API.
+**NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s `TestCase`** framework with mocking for external dependencies such as the Google Books API.
 
-Detais testings documentation can be found at [TESTS.md](documentation/TESTS.md)
+Detailed testing documentation can be found in [TESTS.md](documentation/TESTS.md).
 
 ![Automated Test Results](documentation/images/validators/automated_tests.png)
 
 ### Automated Test Coverage
 
-* **Authentication Tests (Allauth)**
+- **Authentication Tests (Allauth)**
+  - **Sign-up flow**: page rendering, successful account creation, and validation errors (duplicate username, short passwords, mismatches).
+  - **Login flow**: correct credentials, invalid credentials, and required validation checks.
+  - **Logout flow**: proper behavior when logged in or out.
+  - **Password reset**: form rendering and email delivery.
 
-  * __Sign-up flow__: page rendering, successful account creation, and validation errors (duplicate username, short passwords, mismatches).
-  * __Login flow__: correct credentials, invalid credentials, and required validation checks.
-  * __Logout flow__: proper behavior when logged in or out.
-  * __Password reset__: form rendering and email delivery.
+- **Books App Tests**
+  - **Query building**: correct application of search operators (`intitle`, `inauthor`, `subject`).
+  - **Search view**: integration with `search_google_books`, correct rendering of results.
+  - **Google Books API integration**: parsing of valid responses; handling of failed requests.
+  - **Book detail view**: correct mapping of metadata fields, 404 behavior for missing books, and caching to reduce API calls.
+  - **Home page**: correct rendering of template, hero, about area, featured genres, and search functionality.
 
+- **Book Search Pagination**
+  - **Page size**: `PER_PAGE = 12` drives both the Google Books query (`max_results=12`) and Django paginator.
+  - **First page**: `?q=django&field=all&page=1` triggers `search_google_books("django", start_index=0, max_results=12)`; `page_obj.number == 1`, `start_index()==1`, `end_index()==12`.
+  - **Second page**: `?q=python&field=all&page=2` triggers `search_google_books("python", start_index=12, max_results=12)`; `page_obj.number == 2`, `start_index()==13`, `end_index()==24` when total is 30.
+  - **Template context**: view provides `page_obj`, `paginator`, `is_paginated`, and `page_range`; `paginator.count == total`, `paginator.per_page == 12`, `is_paginated` is `True`, and the rendered page’s `object_list` length equals `PER_PAGE`.
 
-* **Books App Tests**
+- **Genre Browsing & Search Integration**
+  - **Home genre links**: subject links formatted as `/book_search?field=subject&q=<urlencoded>`, with `class="stretched-link"` and accessible `aria-label`s (e.g., Sci-Fi, Mystery).
+  - **Subject filter mapping**: clicking a genre (e.g., “science fiction”) calls `search_google_books("subject:science fiction", start_index=0, max_results=12)`.
+  - **Pagination preserves filters**: page 2 for `subject=mystery` calls `search_google_books("subject:mystery", start_index=12, max_results=12)`; pagination links keep `field=subject&q=mystery`.
+  - **Active page semantics**: current page number renders as an active `<span>`; other page numbers remain links retaining subject params.
 
-  * __Query building__: correct application of search operators (`intitle`, `inauthor`, `subject`).
-  * __Search view__: integration with `search_google_books`, correct rendering of results.
-  * __Google Books API integration__: parsing of valid responses, handling of failed requests.
-  * __Book detail view__: correct mapping of metadata fields, 404 behavior for missing books, and caching to reduce API calls.
-  * __Home page__: correct rendering of template, hero, about area, featured genres and search functionality.
+- **ReadingStatus Tests**
+  - **Anonymous users see login CTA**: detail view renders “Log in to add” and links to the login page.
+  - **Valid choices can be set**: authenticated users can set `"TO_READ"`, `"READING"`, or `"READ"`.
+  - **Creating a status**: posting a valid status creates a `ReadingStatus` for the `(user, book)` pair.
+  - **Unauthenticated redirects**: posting without authentication redirects to login and does **not** create a status.
+  - **Removing a status with safe `next`**: `status=NONE` deletes the row and safely redirects to a same-site `next` URL.
+  - **Removing a status without `next`**: falls back to the book detail page.
+  - **Unsafe `next` is ignored**: off-site `next` URLs are rejected; falls back to the detail page.
 
+- **Rating Tests**
+  - **Unauthenticated redirects**: posting a rating without logging in redirects to login and does **not** create a record.
+  - **Creating a rating**: authenticated users can post a rating, which creates a `Rating` and redirects to the book detail.
+  - **Updating a rating**: posting a new value overwrites the existing `Rating` (no duplicates).
+  - **Removing a rating**: posting `rating=0` deletes the record and redirects back to the detail.
+  - **Auto-create status**: rating without an existing `ReadingStatus` creates `READ`.
+  - **Respect existing status**: existing `ReadingStatus` is not changed.
 
-* **Book Search Pagination**
+- **Review Tests**
+  - **Creating a review**: POST to `/books/<book_id>/review/` saves and redirects; one new `Review` for `(user, book)`.
+  - **Book detail displays reviews**: detail view lists reviews; content and author appear in “User Reviews.”
+  - **Anonymous users see login CTA**: “Log in to leave a review”; CTA present and no `<form>`.
+  - **Authenticated users see add review form**: no existing review → textarea rendered; form action targets `add_review`.
+  - **Editing a review (no duplicates)**: second POST updates existing row; still exactly one `Review`.
+  - **Creates READ status when missing**: posting a review with no status auto-creates `READ`.
+  - **Respects existing status**: does not override an existing status (e.g., **READING**).
+  - **Delete ownership check**: only the author can delete.
+  - **Delete confirmation**: modal confirmation before delete.
+  - **Delete success**: review removed; success message displayed.
 
-  * __Page size__: `PER_PAGE = 12` drives both the Google Books query (`max_results=12`) and Django paginator.
-  * __First page__: calling `?q=django&field=all&page=1` triggers `search_google_books("django", start_index=0, max_results=12)`; `page_obj.number == 1`, `start_index()==1`, `end_index()==12`.
-  * __Second page__: calling `?q=python&field=all&page=2` triggers `search_google_books("python", start_index=12, max_results=12)`; `page_obj.number == 2`, `start_index()==13`, `end_index()==24` when total is 30.
-  * __Template context__: view provides `page_obj`, `paginator`, `is_paginated`, and `page_range`; `paginator.count == total`, `paginator.per_page == 12`, `is_paginated` is `True`, and the rendered page’s `object_list` length equals `PER_PAGE`.
+- **Archive Flow**
+  - **Status removal**: removing a status archives rating and review (deletes only the status).
+  - **Status persistence**: posting a new rating/review unarchives the latest archived row and ensures a status exists.
+  - **UI behavior**: the UI ignores archived ratings; detail, search results, and library hide archived reviews.
 
-* **Genre Browsing & Search Integration**
+- **Library Tests**
+  - **Viewing the library**: users see all books organized by status.
+  - **Empty states**: appropriate messages when no books exist in a status.
+  - **Multiple statuses**: sections render correctly.
+  - **Book details**: links navigate to detail pages.
+  - **Access control**: only authenticated users can access their library; unauthenticated users are redirected to login.
 
-  * __Home genre links__: home page renders subject links formatted as `/book_search?field=subject&q=<urlencoded>`, with `class="stretched-link"` and accessible `aria-label`s (e.g. Sci-Fi, Mystery).
-  * __Subject filter mapping__: clicking a genre tile (e.g. “science fiction”) calls `search_google_books("subject:science fiction", start_index=0, max_results=12)` — note the `subject:` operator prefixing the query.
-  * __Pagination preserves filters__: on page 2 for `subject=mystery`, the view calls `search_google_books("subject:mystery", start_index=12, max_results=12)` and renders pagination links that keep `field=subject&q=mystery` for First/Prev/Next/Last and numbered pages.
-  * __Active page semantics__: current page number is rendered as an active `<span>`, ensuring proper UX semantics; other page numbers remain links that retain the subject params.
+### Automated Test Approach
 
-* **ReadingStatus Tests**
+- **Isolation**: external API calls are mocked for speed and determinism.
+- **Resilience**: cache is cleared between tests to avoid cross-test interference.
+- **Realism**: sample JSON payloads (e.g., `REALISTIC_DETAIL_JSON`) simulate Google Books responses for reliable field mapping tests.
 
-  * __Anonymous users see login CTA__: detail view renders a “Log in to add” prompt and links to the login page when not authenticated.
-  * __Valid choices can be set__: authenticated users can set any of `"TO_READ"`, `"READING"`, or `"READ"` and the value is persisted.
-  * __Creating a status__: posting a valid status while authenticated creates a `ReadingStatus` row for the `(user, book)` pair.
-  * __Unauthenticated redirects__: posting without authentication redirects to the login page and does **not** create a status.
-  * __Removing a status with safe `next`__: sending `status=NONE` deletes the row and safely redirects to a same‑site `next` URL (book remains).
-  * __Removing a status without `next`__: falls back to redirecting to the book detail page (book remains).
-  * __Unsafe `next` is ignored__: off‑site `next` URLs are rejected; redirect falls back to the detail page.
-
-* **Rating Tests**
-
-  * __Unauthenticated redirects__: posting a rating without logging in redirects to the login page and does **not** create a record.
-  * __Creating a rating__: authenticated users can post a rating, which creates a `Rating` row and redirects to the book detail view.
-  * __Updating a rating__: posting a new value overwrites the existing `Rating` (no duplicates).
-  * __Removing a rating__: posting `rating=0` deletes the existing row and redirects back to the book detail page.
-  * __Auto-create status__: if a user rates a book without an existing `ReadingStatus`, a new `READ` status is created.
-  * __Respect existing status__: if the user already has a `ReadingStatus` (`TO_READ`, `READING`, `READ`), rating succeeds without changing it.
-
-
-* **Review Tests**
-
-  * __Creating a review__: POST to `/books/<book_id>/review/` saves and redirects; assert redirect and one new `Review` for `(user, book)`.
-  * __Book detail displays reviews__: detail view lists reviews; assert content and author appear in “User Reviews”.
-  * __Anonymous users see login CTA__: shows “Log in to leave a review”; assert CTA present and no `<form>`.
-  * __Authenticated users see add review form__: no existing review → textarea rendered; assert form action targets `add_review`.
-  * __Editing a review (no duplicates)__: second POST updates existing row; assert updated content and still exactly one `Review`.
-  * __Creates READ status when missing__: Posting a review with no existing `ReadingStatus` auto-creates one with status **READ**, then redirects back to the book detail.
-  * __Respects existing status__: If a `ReadingStatus` already exists (e.g. **READING**), saving/posting a review **does not** override it to READ; the original status remains unchanged.
-  * __Delete ownership check__: Only the user who created a review can delete it. Delete button is not visible to others.
-  * __Delete confirmation__: The book detail page renders a modal for delete confirmation, allowing the user to confirm or cancel the deletion.
-  * __Delete success__: The review is removed from the database after confirmation, displaying a success message to user.
-
-* **Archive Flow**
-  * __Status Removal__: Removing a status archives the user’s rating and review (and deletes only the status).
-  * __Status Persistence__: Posting a new rating/review **unarchives** the latest archived row and ensures a status exists.
-  * __UI behavior__: UI ignore archived ratings; detail page, search_results and library hides archived reviews.
-
-
-* **Library Tests**
-
-   * __Viewing the library page__: Users can view their library page with all books organized by status.
-   * __Empty states__: Appropriate messages are displayed when a user has no books in a particular status.
-   * __Multiple statuses__: Users with books in multiple statuses see each section correctly.
-   * __Book details__: Users can click on a book to view its details.
-   * __Access control__: Only authenticated users can access their library; unauthenticated users are redirected to the login page.
-
-### Autoamted Test Approach
-
-* **Isolation**: External API calls are mocked to ensure tests run quickly and deterministically.
-* **Resilience**: Cache is cleared between tests to avoid cross-test interference.
-* **Realism**: Sample JSON payloads (e.g.`REALISTIC_DETAIL_JSON`) simulate real Google Books responses for reliable field mapping tests.
-
-These tests run automatically with:
+Run tests with:
 
 ```bash
 python manage.py test --settings=chaptr.settings_test
 ```
 
-and provide confidence that both authentication flows and book-related features behave as expected under different conditions.
+These tests provide confidence that authentication flows and book-related features behave as expected.
 
-
-----
+---
 
 ### Manual Testing
 
 **Book Discovery & Search**
-| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
-|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
-| Navigate Genre tile 	| Click on "Classics"	tile                        | Search `/search/?field=subject&q=classics`	          |   ✅   |
-| Search by Title	      | Select "title" and type "Little Women"          | Search `/search/?field=title&q=Little+Women`	        |   ✅   |
-| Search by Author     	| Select "author" and type "John Grishman	        | Search `/search/?field=author&q=John+Grisham`	        |   ✅   |
-| Search by Genre	      | Select "genre" and type "political"            	| Search `/search/?field=subject&q=political`         	|   ✅   |
-| General Search	      | Select "all" and type "Fellowship of the Ring"	| Search `/search/?field=all&q=Fellowship+of+the+ring`	|   ✅   |
-| View Book Detail	    | Click on "The Fellowship of the Ring"         	| Page renders with basic metadata (author, description, publisher, pages, categories, pablishing date)	|   ✅   |
-| Login to add book   	| Click on 'Login to add'	| Redirects to `accounts/login` with `/?next=/search` data |   ✅    |
-| Login to rate book	  | Click on stars to add a rating	| Redirects to `accounts/login` with `/?next=/search/` data |   ✅    |
-| Login to review book	  | Click on 'Log in' hyperlink | Redirects to `accounts/login` with `?next=/books/` data |   ✅    |
 
+| Test Case            | Input                                          | Expected Outcome                                                                     | Status |
+| :------------------- | :--------------------------------------------- | :----------------------------------------------------------------------------------- | :----: |
+| Navigate genre tile  | Click on "Classics" tile                       | Search `/search/?field=subject&q=classics`                                           |    ✅   |
+| Search by title      | Select "title" and type "Little Women"         | Search `/search/?field=title&q=Little+Women`                                         |    ✅   |
+| Search by author     | Select "author" and type "John Grisham"        | Search `/search/?field=author&q=John+Grisham`                                        |    ✅   |
+| Search by genre      | Select "genre" and type "political"            | Search `/search/?field=subject&q=political`                                          |    ✅   |
+| General search       | Select "all" and type "Fellowship of the Ring" | Search `/search/?field=all&q=Fellowship+of+the+Ring`                                 |    ✅   |
+| View book detail     | Click on "The Fellowship of the Ring"          | Page renders with author, description, publisher, pages, categories, publishing date |    ✅   |
+| Login to add book    | Click on "Log in to add"                       | Redirects to `accounts/login` with `/?next=/search`                                  |    ✅   |
+| Login to rate book   | Click on stars to add a rating                 | Redirects to `accounts/login` with `/?next=/search/`                                 |    ✅   |
+| Login to review book | Click on "Log in" hyperlink                    | Redirects to `accounts/login` with `?next=/books/`                                   |    ✅   |
 
 **Authentication**
-| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
-|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
-| Sign-up              	| Added temp-email, username & password           | Redirect to `/accounts/confirm-email/` and receive e-mail  |   ✅   |
-| Email verification    | Click on verify your e-mail link, redirect to `/accounts/confirm-email/` and click confirm       | Alert  `You have confirmed {account}`, redirects to login        |   ✅   |
-| Log-in                | Enter username and password                     | Display success message and redirects to  `/library/`	        |   ✅   |
-| Log-out               | Click on header icon, open menu and click on Sign-out          | Redirects to `/accounts/logout/`	        |   ✅   |
-| Log-out button        | On `/accounts/logout` click on `sign out` button               | Successfully signs out and alert user    |   ✅   |
 
+| Test Case          | Input                                                                 | Expected Outcome                                             | Status |
+| :----------------- | :-------------------------------------------------------------------- | :----------------------------------------------------------- | :----: |
+| Sign up            | Add temp email, username & password                                   | Redirect to `/accounts/confirm-email/` and receive email     |    ✅   |
+| Email verification | Click "verify your email" link → `/accounts/confirm-email/` → confirm | Alert `You have confirmed {account}`, then redirect to login |    ✅   |
+| Log in             | Enter username and password                                           | Display success message; redirect to `/library/`             |    ✅   |
+| Log out (menu)     | Header icon → open menu → "Sign out"                                  | Redirect to `/accounts/logout/`                              |    ✅   |
+| Log out (button)   | On `/accounts/logout/` click "Sign out"                               | Successfully signs out and shows alert                       |    ✅   |
 
 **Library**
-| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
-|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
-| First Log-in        	| Enter username and password                     | Redirects to  `/library/` and show empty library message |   ✅   |
-| Sort Titles        	  | On a library with multiple books with various status, click on the Status header                     | Reorganizes the book by status (desc: to-read/reading/read ) |   ✅   |
-| Filter Titles        	| On a library with multiple books with various status, click "Read" filter                      | Shows only books with status "Read". |   ✅   |
-| Change Status        	| On Library, navigate to a book with status "To Read", click on arrow down next to "view"> Change Status > Select "Reading"  | Updates status and send a confirmation to user |   ✅   |
-| Review Book         	| On Library, navigate to a book, click on arrow down next to "view"> Write a Review                     | Redirects to  book page #reviews |   ✅   |
-| Rate Book           	| On Library, navigate to a book, click on arrow down next to "view"> Rate                     | Redirects to  book page |   ✅   |
-| Remove Book         	|  On Library, navigate to a book, click on arrow down next to "view"> Change Status > Remove from Library                     | Confirmation modal is shown with correct content |   ✅   |
 
+| Test Case     | Input                                                                                        | Expected Outcome                                                 | Status |
+| :------------ | :------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- | :----: |
+| First login   | Enter username and password                                                                  | Redirect to `/library/` and show empty library message           |    ✅   |
+| Sort titles   | Library with multiple books/statuses → click "Status" header                                 | Re-orders books by status (descending: To Read / Reading / Read) |    ✅   |
+| Filter titles | Library with multiple statuses → click "Read" filter                                         | Shows only books with status "Read"                              |    ✅   |
+| Change status | Library → book with "To Read" → dropdown next to "View" → "Change Status" → select "Reading" | Updates status and shows confirmation                            |    ✅   |
+| Review book   | Library → dropdown next to "View" → "Write a Review"                                         | Redirects to book page `#reviews`                                |    ✅   |
+| Rate book     | Library → dropdown next to "View" → "Rate"                                                   | Redirects to book page                                           |    ✅   |
+| Remove book   | Library → dropdown next to "View" → "Change Status" → "Remove from Library"                  | Confirmation modal shows with correct content                    |    ✅   |
 
 **Review**
-| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
-|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
-| Review Form  | Search "title:jellyfish age backwards" and navigate to first item  `/books/wYswEAAAQBAJ/`	| Sees reviews and form.	|   ✅   |
-| Leave Review (no status)| At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` write and submit review "awesome"	| Pages updates, alert is sent and status is READ.	|   ✅   |
-| Edit Review  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` click on edit button, write "not so awesome" and save	| Review is updated, alert is sent	|   ✅   |
-| Delete Review  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/` click on delete button	| Confirmation modal is shown	with correct messaging |   ✅   |
-| Cancel Delete Confirmation  | Click on 'Cancel' | Review is not deleted 	|   ✅   |
-| Confirm Delete   | Click on 'Yes, proceed' | Review is deleted and success alert is sent. |   ✅   |
+
+| Test Case                | Input                                                                      | Expected Outcome                                | Status |
+| :----------------------- | :------------------------------------------------------------------------- | :---------------------------------------------- | :----: |
+| Review form              | Search `title:jellyfish age backwards` → first item `/books/wYswEAAAQBAJ/` | Sees reviews and form                           |    ✅   |
+| Leave review (no status) | On `/books/wYswEAAAQBAJ/` write and submit “awesome”                       | Page updates, alert shown, status becomes READ  |    ✅   |
+| Edit review              | On `/books/wYswEAAAQBAJ/` click edit, change to “not so awesome”, save     | Review updated; alert shown                     |    ✅   |
+| Delete review            | On `/books/wYswEAAAQBAJ/` click delete                                     | Confirmation modal shown with correct messaging |    ✅   |
+| Cancel delete            | Click "Cancel"                                                             | Review is not deleted                           |    ✅   |
+| Confirm delete           | Click "Yes, proceed"                                                       | Review deleted; success alert shown             |    ✅   |
 
 **Rating**
-| Test Case	            | Input	                                          | Expected Outcome                          	          | Status |
-|:----------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
-| See Rating Avg  | Search "title:jellyfish age backwards" and navigate to first item  `/books/wYswEAAAQBAJ/`	| Rating Average displayed	|   ✅   |
-| Rate Book  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/`, click on starts to give rating	(4) | Avg rating, number of ratings updates. Starts change to yellow according to rating. Success alert sent.	|   ✅   |
-| Update Rating  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/`, give a different rating (3)	| Avg rating updates, number of ratings remains the same. Starts change to yellow according to rating. Success alert sent.	|   ✅   |
-| Delete Rating  | At Details from Jellyfish age backwards `/books/wYswEAAAQBAJ/`, click on the x button	| Avg rating updates, number of ratings updates. Starts change gray-out version. Info alert sent.	|   ✅   |
+
+| Test Case          | Input                                              | Expected Outcome                                                                     | Status |
+| :----------------- | :------------------------------------------------- | :----------------------------------------------------------------------------------- | :----: |
+| See rating average | `/books/wYswEAAAQBAJ/`                             | Rating average displayed                                                             |    ✅   |
+| Rate book          | `/books/wYswEAAAQBAJ/` → click stars to rate **4** | Average and count update; stars change to filled for the given rating; success alert |    ✅   |
+| Update rating      | `/books/wYswEAAAQBAJ/` → change to **3**           | Average updates; count remains; stars reflect new rating; success alert              |    ✅   |
+| Delete rating      | `/books/wYswEAAAQBAJ/` → click the **x**           | Average and count update; stars change to the gray state; info alert                 |    ✅   |
 
 **Status Update**
-| Test Case	                   | Input	                                  | Expected Outcome                          	          | Status |
-|:-----------------------------|:------------------------------------------------|:------------------------------------------------------|:-------|
-| Set Status on Search         | Search "old man and the see, click on "To Read" button on result item      | Status updated, success alert sent.                          	          |   ✅   |
-| Change Status on Search      | On previous item, change from "To Read" to "Reading"      | Status updated, success alert sent.                          	          |   ✅   |
-| Remove Status on Search      | On previous item, remove from library         | Confirmation modal is shown with correct content  |   ✅   |
-| Cancel Status Removal        | On confirmation modal, click on 'Cancel'      | Item maintain their status  |   ✅   |
-| Confirm Status Removal       | On confirmation modal, click on 'Yes, proceed'          | Confirmation modal closes and status is cleared   |   ✅   |
 
+| Test Case               | Input                                                                  | Expected Outcome                              | Status |
+| :---------------------- | :--------------------------------------------------------------------- | :-------------------------------------------- | :----: |
+| Set status on search    | Search “old man and the sea” → click “To Read” button on a result item | Status updated; success alert shown           |    ✅   |
+| Change status on search | On the same item, change from “To Read” to “Reading”                   | Status updated; success alert shown           |    ✅   |
+| Remove status on search | On the same item, remove from library                                  | Confirmation modal shown with correct content |    ✅   |
+| Cancel status removal   | In the confirmation modal, click “Cancel”                              | Item retains its status                       |    ✅   |
+| Confirm status removal  | In the confirmation modal, click “Yes, proceed”                        | Modal closes; status cleared                  |    ✅   |
+
+---
 
 ## Deployment
 
 ### 1. Clone the Repository
-
-Clone the project locally:
 
 ```bash
 git clone https://github.com/larevolucia/chaptr.git
@@ -975,13 +920,11 @@ Verify your Python version:
 python3 --version
 ```
 
-> **Note:** This project requires Python 3.12+  (check `.python-version`).
+> **Note:** This project requires Python 3.12+ (see `.python-version`).
 
 ---
 
 ### 2. Set Up a Virtual Environment
-
-It’s recommended to use a virtual environment:
 
 ```bash
 python3 -m venv venv
@@ -996,8 +939,6 @@ source venv/bin/activate
 
 ### 3. Install Dependencies
 
-Install project requirements:
-
 ```bash
 pip install -r requirements.txt
 ```
@@ -1010,12 +951,10 @@ Create a `.env` file in the project root with the following variables:
 
 #### Google Books API
 
-The app integrates with the **Google Books API**.
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/).
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
 2. Create a new project ([guide](https://developers.google.com/workspace/guides/create-project)).
 3. Enable the **Google Books API** (`APIs & Services > Library`).
-4. Generate an **API Key** (`APIs & Services > Credentials`).
+4. Generate an **API key** (`APIs & Services > Credentials`).
 
 Add the key and URLs to `.env`:
 
@@ -1027,8 +966,6 @@ GOOGLE_BOOKS_VOLUME_URL=https://www.googleapis.com/books/v1/volumes/{}
 
 #### Django Secrets
 
-Also include your Django secrets:
-
 ```bash
 SECRET_KEY=<YOUR_DJANGO_SECRET_KEY>
 DATABASE_URL=<YOUR_DATABASE_URL>
@@ -1036,7 +973,7 @@ DATABASE_URL=<YOUR_DATABASE_URL>
 
 #### Email Settings (Optional)
 
-For local testing you can disable email confirmation by editing `settings.py`:
+For local testing you can disable email confirmation in `settings.py`:
 
 ```python
 ACCOUNT_EMAIL_VERIFICATION = "none"
@@ -1058,7 +995,7 @@ DEFAULT_FROM_EMAIL=<YOUR_EMAIL_ADDRESS>
 
 ### 5. Collect Static Files
 
-Before deploying, make sure static files are collected (using [WhiteNoise](https://whitenoise.readthedocs.io/)):
+Before deploying (using [WhiteNoise](https://whitenoise.readthedocs.io/)):
 
 ```bash
 python manage.py collectstatic --noinput
@@ -1068,10 +1005,10 @@ python manage.py collectstatic --noinput
 
 ### 6. Deploy to Heroku
 
-1. Create a new Heroku app
+1. Create a new Heroku app.
 2. Add the **Heroku Python buildpack** under **Settings > Buildpacks**.
-3. Add environment variables from `.env` to **Heroku Config Vars**:
-4. Deploy
+3. Add environment variables from `.env` to **Heroku Config Vars**.
+4. Deploy.
 
 ---
 
@@ -1081,15 +1018,16 @@ That’s it! The app should now be live on Heroku.
 
 ## Credits & References
 
-- Homepage banner image: [Unsplash](https://unsplash.com/photos/iyKVGRu79G4) Photo by [Lilly Rum](https://unsplash.com/@rumandraisin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
-- Google Books API: [Google Developers](https://developers.google.com/books/docs/v1/getting_started)
-- Color palette: [Material Palette](https://www.materialpalette.com/teal/deep-orange)
-- Favicon: [Favicon.io](https://favicon.io/favicon-converter/)
-- Favicon art by [Good Ware](https://www.flaticon.com/authors/good-ware)
-- ChatGPT: [OpenAI](https://openai.com/chatgpt) for documentation improvement
-- Copilot: [GitHub Copilot](https://github.com/features/copilot) for code completion and docstring generation
-- Django Allauth: [Django Allauth](https://django-allauth.readthedocs.io/en/latest/)
-- Conditional Requests: [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Conditional_requests)
-- Session Objects: [Requests Documentation](https://requests.readthedocs.io/en/latest/user/advanced/#conditional-requests)
-- Third-party Cookies: [Privacy Sandbox](https://privacysandbox.google.com/cookies/prepare/audit-cookies)
-- Custom error handling [StackOverflow](https://stackoverflow.com/questions/40758711/how-to-set-a-default-handler-for-csrf-verification-failed-in-django)
+* Homepage banner image: [Unsplash](https://unsplash.com/photos/iyKVGRu79G4) — Photo by [Lilly Rum](https://unsplash.com/@rumandraisin?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
+* Google Books API: [Google Developers](https://developers.google.com/books/docs/v1/getting_started)
+* Color palette: [Material Palette](https://www.materialpalette.com/teal/deep-orange)
+* Favicon: [Favicon.io](https://favicon.io/favicon-converter/)
+* Favicon art by [Good Ware](https://www.flaticon.com/authors/good-ware)
+* ChatGPT: [OpenAI](https://openai.com/chatgpt) for documentation improvement
+* Copilot: [GitHub Copilot](https://github.com/features/copilot) for code completion and docstring generation
+* Django Allauth: [Django Allauth](https://django-allauth.readthedocs.io/en/latest/)
+* Conditional Requests: [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Conditional_requests)
+* Session Objects: [Requests Documentation](https://requests.readthedocs.io/en/latest/user/advanced/#conditional-requests)
+* Third-party Cookies: [Privacy Sandbox](https://privacysandbox.google.com/cookies/prepare/audit-cookies)
+* Custom error handling: [Stack Overflow](https://stackoverflow.com/questions/40758711/how-to-set-a-default-handler-for-csrf-verification-failed-in-django)
+
