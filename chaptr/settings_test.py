@@ -1,5 +1,5 @@
 """Test setting"""
-from .settings import STORAGES
+from .settings import *
 
 
 STORAGES["staticfiles"]["BACKEND"] = (
