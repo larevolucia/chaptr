@@ -475,6 +475,7 @@ Book discovery is powered by the Google Books API, allowing users to explore a v
 * **Pagination**: Supports navigating through large result sets with ease.
 * **Resilient Design**: Handles API or network errors gracefully without breaking the user experience.
 * **Caching:** details are cached for \~1h to reduce API calls.
+* **Searh Bar Desing:** search forms uses an always visible select element for the search query fields. Design was inspired by [booking.com](https://www.booking.com/) and [Goodreads](https://www.goodreads.com/).
 
 ![Search Page](documentation/images/search/search_visitor.png)
 
@@ -491,6 +492,7 @@ Each book has a dedicated detail page with enriched information for readers.
 * **First-party cover images**: The app serves covers via a small `/cover/` proxy on our own domain to avoid third-party requests/cookies and improve Lighthouse privacy scores.
 * **Performance Boost**: Uses Django caching to store details for one hour, reducing API calls while keeping data fresh.
 * **Seamless Access**: Directly linked from search results for a smooth browsing experience
+* **Page Desing**: Page design follows hierarchy used in other content hubs, such as [imdb.com](https://www.imdb.com/), [letterboxd](https://letterboxd.com/), [goodreads](https://www.goodreads.com/), [amazon](https://www.amazon.com), etc. Image is displayed at the top left corner, with basic metadata (Title, Authors) at the top of the page. CTA and Ratings are right below the cover art, while reviews (long text interaction) are at the bottom of the page
 
 ![Book Details](documentation/images/book_detail/details_visitor.png)
 
@@ -505,6 +507,7 @@ Let users track where they are with any book using a simple three-state flow.
 * **Book FK safety**: Status changes ensure a `Book` row exists via `fetch_or_refresh_book(...)`.
 * **Integrity & performance**: Unique constraint on `(user, book)` with helpful indexes for library queries.
 * **UX feedback**: Success/error messages confirm each action and return users to the originating page.
+* **Button Desing**: *To read* status is a primary action as saving a book they are interested in reading later is main use case. Other status are easily accessible via dropdown. Down arrow on dropdown signals to user additional settings, making it intuitive. 
 
 
 ![Reading Status in Book Detail](documentation/images/book_detail/reading_status_details.gif)
@@ -526,7 +529,7 @@ Provides a quick way for readers to rate books and share feedback with the commu
 * **Averages & counts**: Helpers compute average rating and total ratings for display on the book detail.
 * **User Feedback**: Notifications confirm when a rating is saved or updated.
 * **Flexible Control**: Ratings can be removed at any time.
-
+* **Rating Buttons Desing:** star format and animation on hover was inpired by [letterboxd.com](https://letterboxd.com/) and [Goodreads](https://www.goodreads.com/), making intuitive for users of similar platforms.
 
 ![Rating in Book Details](documentation/images/book_detail/rating_details.gif)
 
@@ -581,6 +584,7 @@ Critical actions, such as removing a book from the library or deleting a review,
 * **Clear Messaging**: Modals clearly explain the consequences of the action.
 * **User Control**: Users can confirm or cancel the action, ensuring they have full control over their data.
 * **Reusable Component**: The modal is implemented as a reusable template partial for consistency across the site.
+* **Design Rationale**: App follows UX best practices by presenting a confirmation modal to avoid accidental critical actions.
 
 ![Delete a Review](documentation/images/book_detail/delete_review_details.gif)
 
@@ -645,6 +649,8 @@ As a mobile-first approach, wireframes focused on the smaller screens. Tablets a
 
 The data model balances **external metadata** (from Google Books) with **internal user interactions**.
 Books are only stored locally if a user explicitly saves or interacts with them, keeping the database lightweight.
+
+[!Models ERD](documentation/images/ERD/models.jpg)
 
 ### User 
 Uses Django’s built-in `User` model for authentication and ownership of records.
@@ -783,6 +789,8 @@ Key functions:
 ***NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s TestCase** framework with mocking for external dependenciess, such as Google Books API.
 
 Detais testings documentation can be found at [TESTS.md](documentation/TESTS.md)
+
+[!Automated Test Results](documentation/images/validators/automated_tests.png)
 
 ### Automated Test Coverage
 
