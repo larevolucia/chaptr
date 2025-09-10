@@ -267,6 +267,127 @@ Login from book search redirected users to an empty results page because the `ne
 **[Models inconsistency](https://github.com/larevolucia/chaptr/issues/69)**
 Removing a book from the library only cleared its reading status, leaving review/rating behind. Fixed by cascading cleanup on status removal, archiving associated review and rating records to keep activity consistent.
 
+**[Search returns duplicated results](https://github.com/larevolucia/chaptr/issues/91)**
+Search results showing duplicates when query is too specific. Fixed by deduplicating the results before pagination.
+
+---
+
+### [Linters and Validation Fixes](https://github.com/larevolucia/chaptr/issues/87)
+
+**[HTML W3C Validator](https://validator.w3.org/)**
+| Page	                   | Warning	/ Error                                       | Fix                          	          |
+|:-------------------------|:-------------------------------------------------------|:----------------------------------------|
+| Home                     | Error: Parse Error. `</body>↩</html>↩`     | Removed empty space after `</html>` in `base.html` |
+| Home                     | The navigation role is unnecessary for element nav     | Removed from `base.html` |
+| Home                     | The region role is unnecessary for element section     | Removed from `home.html` |
+| Home                     | The region role is unnecessary for element section.    | Removed from `home.html` |
+| Home                     | The contentinfo role is unnecessary for element footer | Removed from `base.html` |
+| Search Results           | End tag h2 seen, but there were open elements. | Corrected `</h2>` to `</h1>` |
+| Search Results           | The sizes attribute must only be specified if the srcset attribute is also specified. | removed sizes |
+| Search Results           | End tag h5 seen, but there were open elements. | Corrected `</h5>` to `</h1>`|
+| Search Results           | Duplicated book id error. | Deduplicated book search output in `books/views.py` |
+| Book Detail              | Error: Unclosed element div.| Closed the `</div>` |
+| Book Detail              | Parse Error | wrapped {{ book.description|safe }} on a `<div>` |
+| Book Detail              | Duplicate ID confirmDeleteModal | remove include modal partial from `reviews.html` |
+
+<details>
+<summary>**Home (auth)**</summary>
+
+  [!HTML Valitador Home](documentation/images/validators/html/home_auth.png)
+</details>
+
+<details>
+<summary>**Home (visitor)**</summary>
+
+  [!HTML Valitador Home](documentation/images/validators/html/home_visitor.png)
+</details>
+<details>
+<summary>**Search Results (auth)**</summary>
+
+  [!HTML Valitador Search Results](documentation/images/validators/html/genre_science_fiction_auth.png)
+</details>
+
+<details>
+<summary>**Search Results (visitor)**</summary>
+
+  [!HTML Valitador Search Results](documentation/images/validators/html/search_jellyfish_visitor.png)
+</details>
+
+<details>
+<summary>**Book Detail (auth)**</summary>
+
+  [!HTML Valitador Book Page- Insomnia (other user activity)](documentation/images/validators/html/insomnia_book_page_auth.png)
+  [!HTML Valitador Book Page - Jellyfish Age Backwards (same user activity)](documentation/images/validators/html/jellyfish_age_backwards_book_page_auth.png)
+  [!HTML Valitador Book Page - Time in Fiction (no activity)](documentation/images/validators/html/time_in_fiction_book_page_auth.png)
+</details>
+<summary>**Book Detail (visitor)**</summary>
+
+  [!HTML Valitador Book Page -  Runaway Jury](documentation/images/validators/html/runaway_jury_book_page_visitor.png)
+  [!HTML Valitador Book Page - Jellyfish Age Backwards](documentation/images/validators/html/jellyfish_age_backwards_book_page_visitor.png)
+</details>
+
+<details>
+<summary>**Library (auth)**</summary>
+
+  [!HTML Valitador Library (with books)](documentation/images/validators/html/library.png)
+  [!HTML Valitador Library (empty state)](documentation/images/validators/html/library.png)
+</details>
+
+**[Jigsaw](https://jigsaw.w3.org/)**
+| Line	     | Warning	                                             | Fix                          	          |
+|------------|:------------------------------------------------------|:----------------------------------------|
+| 183        | Value Error : background-color none is not a background-color value : none     | changed to transparent |
+| 766        | Value Error : background-color color-mix is not a background-color    | changed to transparent |
+| 549, 564   | The property clip is deprecated    | Removed clip and kept clip-path |
+
+<details>
+<summary>CSS</summary>
+
+  [!HTML Valitador Library (with books)](documentation/images/validators/css/jigsaw.png)
+</details>
+
+**Lighthouse**
+| Page	                   | Warning	                                             | Fix                          	          |
+|:-------------------------|:------------------------------------------------------|:----------------------------------------|
+|Home                      | Deprecation / Warning Source Heroku other 1st party Found an `<h1>` tag within an `<article>`, `<aside>`, `<nav>`, or `<section>` which does not have a specified font-size | Added specific font-sizes on CSS |
+| Search Results + Book Details | Mixed content, where some resources are loaded over HTTP despite the initial request being served over HTTPS | Google Books API returned the cover as http. Introduced a `ensure_https` to secure the urls from Google. |
+| Search Results + Book Details | Third Party Cookies      | Cover being render by google api was sending third-party cookies. To solve, a view and url with `cover_proxy` was created. |
+
+<details>
+<summary>Home</summary>
+
+  ![Home Desktop Auth](documentation/images/validators/lighthouse/home_desktop_auth.png)
+  ![Home Desktop Visitor](documentation/images/validators/lighthouse/home_desktop_visitor.png)
+  ![Home Mobile Auth](documentation/images/validators/lighthouse/home_mobile_auth.png)
+  ![Home Mobile Visitor](documentation/images/validators/lighthouse/home_mobile_visitor.png)
+</details>
+
+<details>
+
+<summary>Search</summary>
+
+  ![Search Desktop Auth](documentation/images/validators/lighthouse/search_desktop_auth.png)
+  ![Search Desktop Visitor](documentation/images/validators/lighthouse/search_desktop_visitor.png)
+  ![Search Mobile Auth](documentation/images/validators/lighthouse/search_mobile_auth.png)
+  ![Search Mobile Visitor](documentation/images/validators/lighthouse/search_mobile_visitor.png)
+</details>
+
+<summary>Book Page</summary>
+
+  ![Book Detail Desktop Auth](documentation/images/validators/lighthouse/book_detail_desktop_auth.png)
+  ![SBook Detail Desktop Visitor](documentation/images/validators/lighthouse/book_detail_desktop_visitor.png)
+  ![Book Detail Mobile Auth](documentation/images/validators/lighthouse/book_detail_mobile_auth.png)
+  ![Book Detail Mobile Visitor](documentation/images/validators/lighthouse/book_detail_mobile_visitor.png)
+</details>
+
+<summary>Library</summary>
+
+  ![Empty Library Desktop](documentation/images/validators/lighthouse/library_desktop_empty.png)
+  ![Library Desktop](documentation/images/validators/lighthouse/library_desktop_full.png)
+  ![Empty Library Mobile](documentation/images/validators/lighthouse/library_mobile_empty.png)
+  ![Library Mobile](documentation/images/validators/lighthouse/library_mobile_full.png)
+</details>
+
 ---
 
 ## Project Board
@@ -354,7 +475,11 @@ Book discovery is powered by the Google Books API, allowing users to explore a v
 
 ![Search Page](documentation/images/search/search_visitor.png)
 
-![Search Behavior](documentation/images/search/search_to_book_navigation.gif)
+<details>
+<summary>More images</summary>
+
+  ![Search Behavior](documentation/images/search/search_to_book_navigation.gif)
+</details>
 
 ### Book Detail View
 Each book has a dedicated detail page with enriched information for readers.
@@ -381,7 +506,11 @@ Let users track where they are with any book using a simple three-state flow.
 
 ![Reading Status in Book Detail](documentation/images/book_detail/reading_status_details.gif)
 
-![Reading Status in Search](documentation/images/search/status_change_search.gif)
+<details>
+<summary>More images</summary>
+
+  ![Reading Status in Search](documentation/images/search/status_change_search.gif)
+</details>
 
 
 ### Rating System
@@ -398,7 +527,11 @@ Provides a quick way for readers to rate books and share feedback with the commu
 
 ![Rating in Book Details](documentation/images/book_detail/rating_details.gif)
 
-![Remove Rating](documentation/images/book_detail/remove_rating_details.gif)
+<details>
+<summary>More images</summary>
+
+  ![Remove Rating](documentation/images/book_detail/remove_rating_details.gif)
+</details>
 
 
 ### Review System
@@ -427,11 +560,15 @@ A user’s personal library displays all books they are interested in, along wit
 
 ![Responsive Library](documentation/images/library/responsive_library.gif)
 
-![Reading Status in Library](documentation/images/library/status_change_library.gif)
+<details>
+<summary>More images</summary>
 
-![Status Filtering](documentation/images/library/status_filtering_library.gif)
+  ![Reading Status in Library](documentation/images/library/status_change_library.gif)
 
-![Status Sorting](documentation/images/library/status_sorting_library.gif)
+  ![Status Filtering](documentation/images/library/status_filtering_library.gif)
+
+  ![Status Sorting](documentation/images/library/status_sorting_library.gif)
+</details>
 
 
 ### Confirmation Modals
@@ -453,7 +590,11 @@ User authentication is powered by **Django Allauth**, providing a secure and rel
 * **Consistent UI**: Allauth templates have been adapted to the project’s design system, ensuring a seamless experience across authentication pages.
 
 ![Log in](documentation/images/auth/login.png)
-![Sign Up](documentation/images/auth/signup.png)
+<details>
+<summary>More images</summary>
+
+  ![Sign Up](documentation/images/auth/signup.png)
+</details>
 
 ### Custom Error Pages
 
@@ -638,7 +779,7 @@ Key functions:
 
 ***NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s TestCase** framework with mocking for external dependenciess, such as Google Books API.
 
-Detais testings documentation can be found at [tests.md](documentation/TESTS.md)
+Detais testings documentation can be found at [TESTS.md](documentation/TESTS.md)
 
 ### Automated Test Coverage
 
@@ -802,40 +943,6 @@ and provide confidence that both authentication flows and book-related features 
 | Cancel Status Removal        | On confirmation modal, click on 'Cancel'      | Item maintain their status  |   ✅   |
 | Confirm Status Removal       | On confirmation modal, click on 'Yes, proceed'          | Confirmation modal closes and status is cleared   |   ✅   |
 
-
----
-
-### Linters and Validation
-
-**[HTML W3C Validator](https://validator.w3.org/)**
-| Page	                   | Warning	                                             | Fix                          	          |
-|:-------------------------|:------------------------------------------------------|:----------------------------------------|
-| Home                     |Error: Parse Error. `</body>↩</html>↩`     | Removed empty space after `</html>` in `base.html` |
-| Home                     |The navigation role is unnecessary for element nav     | Removed from `base.html` |
-| Home                     |The region role is unnecessary for element section     | Removed from `home.html` |
-| Home                     |The region role is unnecessary for element section.    | Removed from `home.html` |
-| Home                     |The contentinfo role is unnecessary for element footer | Removed from `base.html` |
-| Search Results           |End tag h2 seen, but there were open elements. | Corrected </h2> to </h1> |
-| Search Results           |The sizes attribute must only be specified if the srcset attribute is also specified. | removed sizes |
-| Search Results           | End tag h5 seen, but there were open elements. | Corrected </h5> to </h1> |
-| Book Detail              | Error: Unclosed element div.| Closed the </div> |
-| Book Detail              | Parse Error | wrapped {{ book.description|safe }} on a <div> |
-
-**[Jigsaw](https://jigsaw.w3.org/)**
-| Line	     | Warning	                                             | Fix                          	          |
-|------------|:------------------------------------------------------|:----------------------------------------|
-| 183        | Value Error : background-color none is not a background-color value : none     | changed to transparent |
-| 766        | Value Error : background-color color-mix is not a background-color    | changed to transparent |
-| 549, 564   | The property clip is deprecated    | Removed clip and kept clip-path |
-
-**Lighthouse**
-| Page	                   | Warning	                                             | Fix                          	          |
-|:-------------------------|:------------------------------------------------------|:----------------------------------------|
-|Home                      | Deprecation / Warning Source Heroku other 1st party Found an `<h1>` tag within an `<article>`, `<aside>`, `<nav>`, or `<section>` which does not have a specified font-size | Added specific font-sizes on CSS |
-| Search Results + Book Details | Mixed content, where some resources are loaded over HTTP despite the initial request being served over HTTPS | Google Books API returned the cover as http. Introduced a `ensure_https` to secure the urls from Google. |
-| Search Results + Book Details | Third Party Cookies      | Cover being render by google api was sending third-party cookies. To solve, a view and url with `cover_proxy` was created. |
-
----
 
 ## Deployment
 
