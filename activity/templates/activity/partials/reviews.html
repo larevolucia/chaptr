@@ -135,7 +135,6 @@
         {% endfor %}
       </ul>
     </div>
-  {% include 'activity/partials/confirm_delete_modal.html' %}
   {% else %}
     <p class="text-muted text-center mt-4" data-testid="review-login-prompt">
       <a href="{{ login_url }}?next={{ request.get_full_path|urlencode }}">Log in</a>
