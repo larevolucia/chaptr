@@ -573,13 +573,14 @@ Each story also includes **acceptance criteria**, documented directly in its cor
 
 ## Testing
 
-### Automated Test 
+### Python Automated Tests
 
 **NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s `TestCase`** framework with mocking for external dependencies such as the Google Books API.
 
 - **Isolation**: external API calls are mocked for speed and determinism.
 - **Resilience**: cache is cleared between tests to avoid cross-test interference.
 - **Realism**: sample JSON payloads (e.g., `REALISTIC_DETAIL_JSON`) simulate Google Books responses for reliable field mapping tests.
+- **Coverage:** Using `coverage.py`, the test suite reports **92% overall line coverage** across 94 test functions in 11 files. Core apps (`accounts`, `books`, `activity`, `library`) are fully exercised, ensuring authentication, search, interactions, and library logic are reliable. Only minor admin and utility paths remain uncovered.
 
 Detailed testing documentation can be found in [TESTS.md](documentation/TESTS.md).
 
@@ -620,6 +621,15 @@ python manage.py test --settings=chaptr.settings_test
 These tests provide confidence that authentication flows and book-related features behave as expected.
 
 ---
+
+### JS Automated Tests
+
+A minimal Jest suite validates critical UI scripts, including **debounced rating submissions**, `removeRating()`, and **delete confirmation modal** behavior. Coverage reports show **68% statements, 46% branches, 75% functions, and 74% lines**. These tests target the most important interactive features for user experience.
+
+Tests are run with `npm run test:js` using jsdom.  
+
+![JS Test Results](documentation/images/validators/js_tests.png)
+
 
 ### Manual Testing
 
@@ -1109,10 +1119,15 @@ That’s it! The app should now be live on Heroku.
 * ChatGPT: [OpenAI](https://openai.com/chatgpt) for documentation improvement
 * Copilot: [GitHub Copilot](https://github.com/features/copilot) for code completion and docstring generation
 * Django Allauth: [Django Allauth](https://django-allauth.readthedocs.io/en/latest/)
+* Django Forum: [Django Project](https://forum.djangoproject.com/)
 * Conditional Requests: [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Conditional_requests)
 * Session Objects: [Requests Documentation](https://requests.readthedocs.io/en/latest/user/advanced/#conditional-requests)
 * Third-party Cookies: [Privacy Sandbox](https://privacysandbox.google.com/cookies/prepare/audit-cookies)
 * Custom error handling: [Stack Overflow](https://stackoverflow.com/questions/40758711/how-to-set-a-default-handler-for-csrf-verification-failed-in-django)
+* Coverage: [Coverage]()
+* Jest: [Jest](https://jestjs.io/docs/getting-started)
+* Geeks For Geeks : [Jest Testing](https://www.geeksforgeeks.org/javascript/testing-with-jest/)
+* Mozilla Org: [Testing and More](https://developer.mozilla.org/en-US/docs/Web/API/Event/Event)
 
 ## Acknoledgements
 

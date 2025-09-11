@@ -1,0 +1,16 @@
+{
+  "name": "chaptr",
+  "version": "1.0.0",
+  "description": "**NextChaptr** is a minimalist book-tracking web app that helps readers organize and reflect on their reading journey. Developed as a full-stack project, it highlights key features such as book categorization, rating, and reviewing with modern web technologies.",
+  "main": "index.js",
+  "devDependencies": {
+    "jest": "^30.1.3",
+    "jest-environment-jsdom": "^30.1.2"
+  },
+  "scripts": {
+    "test:js": "jest --env=jsdom --coverage --coverageReporters=text"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

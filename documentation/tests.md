@@ -171,3 +171,78 @@ python manage.py test --settings=chaptr.settings_test
 | library      | LibraryPageActionsTests | test_change_status_to_reading_from_library                  | Change status to READING from library.                                                                                                   |
 | library      | LibraryPageActionsTests | test_change_status_to_read_from_library                     | Change status to READ from library.                                                                                                      |
 | library      | LibraryPageActionsTests | test_library_actions_render_review_and_rating_links         | Verify the Library HTML contains the correct hrefs for the rows actions: - Write a review -> book detail #reviews - Rate -> book detail |
+
+# Coverage Report
+
+
+```
+(.venv) PS C:\Users\reisl\OneDrive\Documents\GitHub\chaptr> coverage report -m
+Name                                                                                       Stmts   Miss  Cover   Missing
+------------------------------------------------------------------------------------------------------------------------
+accounts\Tests\__init__.py                                                                     0      0   100%
+accounts\Tests\tests_allauth.py                                                              171      0   100%
+accounts\__init__.py                                                                           0      0   100%
+accounts\admin.py                                                                              1      0   100%
+accounts\apps.py                                                                               4      0   100%
+accounts\migrations\__init__.py                                                                0      0   100%
+accounts\models.py                                                                             1      0   100%
+activity\Tests\__init__.py                                                                     0      0   100%
+activity\Tests\tests_archive_flow.py                                                          62      0   100%
+activity\Tests\tests_delete_action.py                                                         37      0   100%
+activity\Tests\tests_rating.py                                                                57      0   100%
+activity\Tests\tests_reading_status.py                                                        72      0   100%
+activity\Tests\tests_reviews.py                                                              154      0   100%
+activity\__init__.py                                                                           0      0   100%
+activity\admin.py                                                                             69     21    70%   32-33, 37, 44, 73-74, 78, 85, 94-103, 127-128, 132, 139-148      
+activity\apps.py                                                                               4      0   100%
+activity\forms.py                                                                             24     10    58%   30-39
+activity\migrations\0001_initial.py                                                            8      0   100%
+activity\migrations\0002_alter_readingstatus_options.py                                        4      0   100%
+activity\migrations\0003_remove_readingstatus_activity_re_book_id_67f5aa_idx_and_more.py       6      0   100%
+activity\migrations\0004_rating.py                                                             7      0   100%
+activity\migrations\0005_alter_rating_unique_together_and_more.py                              5      0   100%
+activity\migrations\0006_review.py                                                             7      0   100%
+activity\migrations\0007_remove_rating_uniq_user_book_rating_and_more.py                       5      0   100%
+activity\migrations\__init__.py                                                                0      0   100%
+activity\models.py                                                                            46      0   100%
+activity\services.py                                                                          42      5    88%   15-20, 27-32, 40
+activity\urls.py                                                                               3      0   100%
+activity\views.py                                                                             79     13    84%   50-51, 78-79, 85-87, 101-102, 166-173, 189
+books\Tests\__init__.py                                                                        0      0   100%
+books\Tests\tests_book_detail.py                                                              55      0   100%
+books\Tests\tests_home.py                                                                     69      0   100%
+books\Tests\tests_search_books.py                                                             96      0   100%
+books\Tests\tests_search_pagination.py                                                       101      0   100%
+books\__init__.py                                                                              0      0   100%
+books\admin.py                                                                                28      7    75%   88, 93, 98-100, 108, 113
+books\apps.py                                                                                  4      0   100%
+books\exceptions.py                                                                           10      1    90%   21
+books\migrations\0001_initial.py                                                               6      0   100%
+books\migrations\0002_book_etag_book_last_fetched_at_book_last_modified.py                     5      0   100%
+books\migrations\0003_add_missing_book_timestamps.py                                           4      0   100%
+books\migrations\__init__.py                                                                   0      0   100%
+books\models.py                                                                               21      1    95%   39
+books\services.py                                                                            100     35    65%   25, 66-116, 137, 162-165, 230-236
+books\templatetags\seo_extras.py                                                              10      2    80%   13-14
+books\urls.py                                                                                  3      0   100%
+books\utils.py                                                                                41      7    83%   40-46, 105
+books\views.py                                                                               127     24    81%   46, 83-85, 92-93, 174-179, 255-261, 269-271, 299-315
+chaptr\__init__.py                                                                             0      0   100%
+chaptr\errorviews.py                                                                          15      7    53%   6, 11, 16, 21, 26, 31-32
+chaptr\settings.py                                                                            61      2    97%   113, 162
+chaptr\settings_test.py                                                                        2      0   100%
+chaptr\urls.py                                                                                 7      0   100%
+env.py                                                                                         0      0   100%
+library\Tests\__init__.py                                                                      0      0   100%
+library\Tests\tests.py                                                                       135      0   100%
+library\__init__.py                                                                            0      0   100%
+library\admin.py                                                                               1      0   100%
+library\apps.py                                                                                4      0   100%
+library\migrations\__init__.py                                                                 0      0   100%
+library\models.py                                                                              1      0   100%
+library\urls.py                                                                                3      0   100%
+library\views.py                                                                              38      5    87%   35, 37-44, 47, 51
+manage.py                                                                                     11      2    82%   12-13
+------------------------------------------------------------------------------------------------------------------------
+TOTAL                                                                                       1826    142    92%
+```
