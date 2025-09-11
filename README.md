@@ -4,6 +4,8 @@
 
 Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users to manage reading lists (*To Read*, *Reading*, *Read*), rate completed books, and engage through reviews in a clean, distraction-free interface.
 
+🔗 **Live App**: [https://nextchaptr-f17e381cb655.herokuapp.com/](https://nextchaptr-f17e381cb655.herokuapp.com/)
+
 ---
 
 ## Table of Contents
@@ -15,10 +17,6 @@ Unlike feature-heavy platforms, NextChaptr focuses on simplicity, allowing users
 - [Models](#models)
 - [Django Project Structure](#django-project-structure)
 - [Requirements Overview](#requirements-overview)
-  - [Epic 1: Book Discovery and Browsing](#epic-1-book-discovery-and-browsing)
-  - [Epic 2: User Authentication and Permissions](#epic-2-user-authentication-and-permissions)
-  - [Epic 3: Book Interaction and Reading Progress](#epic-3-book-interaction-and-reading-progress)
-  - [Epic 4: User Library](#epic-4-user-library)
 - [Testing](#testing)
 - [Bug Fixes](#bug-fixes)
 - [Sprint Planning](#sprint-planning)
@@ -117,11 +115,6 @@ Track progress with a simple three-state flow.
 
 ![Reading Status in Book Detail](documentation/images/book_detail/reading_status_details.gif)
 
-<details>
-<summary>More images</summary>
-
-![Reading Status in Search](documentation/images/search/status_change_search.gif)
-</details>
 
 ### Rating System
 
@@ -153,13 +146,16 @@ Let readers share longer-form thoughts with an edit-friendly flow.
 - **Archive on removal**: Removing a status archives the user’s review (`is_archived=True`, timestamped). Re-posting unarchives the most recent row.
 - **Ownership guard**: Only the author can delete their review; unauthorized deletes return `403`.
 
+
 ![Add and edit a Review](documentation/images/book_detail/add_edit_review_details.gif)
+
 
 ### Library
 
-A personal library displays all books a user is interested in, grouped by reading status.
+A personal library displays all books a user is interested in, with their respective reading status.
 
-- **Grouped by status**: *To Read*, *Reading*, and *Read*.
+- **Filter by status**: Filter tags at the top of the table allows user to filter by status: *All* (default), *To Read*, *Reading*, and *Read*.
+- **Sorting**:  Table default sorting is by updated timestamp. Optional sorting by **Status (asc/desc)** available by clicking on column header.
 - **First-party cover images**: Served via `/cover/` to avoid third-party cookies.
 - **UX note**: “Remove from Library” opens a confirmation dialog that explains rating/review will be removed from the profile (archived, not permanently deleted).
 - **Dynamic updates**: The library view reflects changes immediately.
@@ -195,6 +191,21 @@ User authentication is powered by **Django Allauth** for a secure and reliable a
 - **Sign up**: New users can create an account. The template is customized to match the site’s brand.
 - **Login / Logout**: Access personal features and log out securely.
 - **Consistent UI**: Allauth templates are adapted to the project’s design system.
+- **Actions require authentication**: While browsing and discovery is allowed to all, only authenticated users can add a book to their library, rate or review books. 
+
+
+  > **Permissions Matrix**
+  >
+  > | Action         | Guest | Authenticated |
+  > | -------------- | ----- | ------------- |
+  > | Add to Library | ✖     | ✔             |
+  > | Change  Status | ✖     | ✔             |
+  > | Rate Book      | ✖     | ✔             |
+  > | Write Review   | ✖     | ✔             |
+  > | Delete Review  | ✖     | ✔ (own only)  |
+
+
+
 
 ![Log in](documentation/images/auth/login.png)
 
@@ -202,6 +213,9 @@ User authentication is powered by **Django Allauth** for a secure and reliable a
 <summary>More images</summary>
 
 ![Sign Up](documentation/images/auth/signup.png)
+
+![Reading Status in Search](documentation/images/search/status_change_search.gif)
+
 </details>
 
 ### Custom Error Pages
@@ -231,10 +245,20 @@ The pairing balances readability and personality. **Bitter** ensures a comfortab
 
 ### Color Palette
 
-The palette draws inspiration from nature for a cozy, calming atmosphere—akin to the feeling of reading.
+The palette draws inspiration from nature for a cozy, calming atmosphere, akin to the feeling of reading.
 Green is the primary color, blue the secondary, and terracotta serves as an accent.
 
 ![Color Palette](documentation/color_palette.png)
+
+### Accessibility & WCAG Compliance
+
+Accessibility has been verified with W3C, Lighthouse, Accessibility Checker and manual checks:
+
+- **Color contrast**: Verified against WCAG 2.1 AA using [Accessibility Checker](documentation/images/validators/accessibility_checker/) and [Lighthouse](documentation/images/validators/lighthouse/)
+- **Keyboard navigation**: All interactive elements are reachable in a logical order; skip links added to jump to main content.
+- **ARIA roles**: Removed redundant roles flagged by W3C validator; only essential ARIA attributes remain.
+- **Error feedback**: Forms and destructive actions provide clear feedback and confirmations.
+
 
 ### Wireframes
 
@@ -259,7 +283,7 @@ Uses Django’s built-in `User` model for authentication and ownership of record
 
 ### Book
 
-Represents a book saved in the system (created only when a user adds it to a shelf or sets a reading status).  
+Represents a book saved in the system (created only when a user sets a reading status, rates or reviews it).  
 The primary key is the Google Books `volumeId`.
 
 **Fields**
@@ -362,18 +386,18 @@ The *NextChaptr* project is divided into focused Django applications to ensure c
 
 ### apps/
 
-| App Name   | Responsibility                                                                                         |
+| App Name   | Responsibility                                                                                          |
 |------------|---------------------------------------------------------------------------------------------------------|
 | `accounts` | Authentication for now; will hold profile features in the future                                        |
 | `books`    | Google Books search/detail, minimal cached `Book`, admin, services, cover proxy endpoint (`/cover/`)    |
 | `activity` | Per-user `ReadingStatus`, `Rating`, `Review` persistence + admin                                        |
-| `library`  | Displays user-specific reading activity grouped by status                                               |
+| `library`  | Displays user-specific reading activity with status information                                         |
 
 ### Image Delivery & Privacy
 
 To avoid third-party cookies flagged by Lighthouse, cover images are served **first-party**:
 
-- **Endpoint**: `GET /cover/?url=<encoded-remote-url>`
+- **Endpoint**: `GET /cover/<str:book_id>`
 - **Behavior**: Server fetches the remote image (enforces HTTPS), whitelists Google hosts, and returns bytes with long-lived caching headers.
 - **Templates**: Use `book.cover_url` or fall back to a local placeholder.
 
@@ -381,7 +405,7 @@ This affects **Search Results**, **Book Detail**, and **Library** templates and 
 
 ### State Changes via Services
 
-Lifecycle rules (e.g., “rating implies a status exists” or “removing status archives rating/review”) are implemented in a **service layer**. This makes behavior explicit, testable, and easy to evolve.
+Lifecycle rules (e.g. “rating implies a status exists” or “removing status archives rating/review”) are implemented in a **service layer**. This makes behavior explicit, testable, and easy to evolve.
 
 Key functions:
 
@@ -391,10 +415,10 @@ Key functions:
 
 ### Design Rationale
 
-- **Modular design**: Each app reflects a distinct domain of the system and aligns with a major feature group (search, authentication, interaction, UI).
+- **Modular design**: Each app reflects a distinct domain of the system and aligns with a major feature group (search, authentication, interaction, monitoring).
 - **Separation of concerns**: Each app encapsulates its own models, views, and templates.
 - **Maintainability**: Clear boundaries reduce complexity and improve readability.
-- **Scalability**: Supports future extensions (e.g., a social/friendship app) without disrupting core architecture.
+- **Scalability**: Supports future extensions (e.g. a social/friendship app) without disrupting core architecture.
 
 ---
 
@@ -414,6 +438,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Implement search form and view](https://github.com/larevolucia/chaptr/issues/19)
 - [Integrate Google Books API](https://github.com/larevolucia/chaptr/issues/20)
 - [Display search results](https://github.com/larevolucia/chaptr/issues/21)
+- [Search automated tests](https://github.com/larevolucia/chaptr/issues/62)
 
 #### [View book details](https://github.com/larevolucia/chaptr/issues/7)
 
@@ -421,6 +446,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Create book detail view](https://github.com/larevolucia/chaptr/issues/22)
 - [Style Book Detail Page](https://github.com/larevolucia/chaptr/issues/23)
 - [Populate data from API or local cache](https://github.com/larevolucia/chaptr/issues/24)
+- [Book Detail Automated tests](https://github.com/larevolucia/chaptr/issues/63)
 
 #### [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
 
@@ -434,6 +460,16 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Add login checks to views](https://github.com/larevolucia/chaptr/issues/25)
 - [Add login prompt messaging](https://github.com/larevolucia/chaptr/issues/26)
 
+#### [Homepage](https://github.com/larevolucia/chaptr/issues/56)
+
+**Technical Tasks**
+- [Implement homepage template and layout structure](https://github.com/larevolucia/chaptr/issues/57)
+- [Add banner image placeholder and styling](https://github.com/larevolucia/chaptr/issues/58)
+- [Implement short description section]( https://github.com/larevolucia/chaptr/issues/59)
+- [Display genre list with links to browse pages](https://github.com/larevolucia/chaptr/issues/60)
+- [Apply responsive styling](https://github.com/larevolucia/chaptr/issues/61)
+- [Home automated tests](https://github.com/larevolucia/chaptr/issues/66)
+
 ---
 
 ### Epic 2: [User Authentication and Permissions](https://github.com/larevolucia/chaptr/issues/2)
@@ -446,6 +482,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Create registration form and view](https://github.com/larevolucia/chaptr/issues/29)
 - [Handle form validation and feedback](https://github.com/larevolucia/chaptr/issues/30)
 - [Link registration in navbar](https://github.com/larevolucia/chaptr/issues/31)
+- [Account register automated tests](https://github.com/larevolucia/chaptr/issues/64)
 
 #### [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
 
@@ -453,6 +490,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Create login and logout views](https://github.com/larevolucia/chaptr/issues/32)
 - [Update navbar based on auth status](https://github.com/larevolucia/chaptr/issues/33)
 - [Handle redirection after login/logout](https://github.com/larevolucia/chaptr/issues/34)
+- [Log-in/Log-out automated tests](https://github.com/larevolucia/chaptr/issues/65)
 
 #### [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
 
@@ -472,19 +510,26 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Create reading status and review models](https://github.com/larevolucia/chaptr/issues/37)
 - [Add forms for status, rating, and reviewing](https://github.com/larevolucia/chaptr/issues/38)
 - [Display and update user content](https://github.com/larevolucia/chaptr/issues/39)
+- [Remove book Confirmation](https://github.com/larevolucia/chaptr/issues/82)
+- [Reading Status Automated Tests](https://github.com/larevolucia/chaptr/issues/68)
 
 #### [Rate books](https://github.com/larevolucia/chaptr/issues/14)
 
 **Technical Tasks**
 - [Add rating field to reading model or separate model](https://github.com/larevolucia/chaptr/issues/40)
-- [Create form and view logic for adding/updating rating](https://github.com/larevolucia/chaptr/issues/41)
-- [Show rating summary on book detail](https://github.com/larevolucia/chaptr/issues/42)
+- [Create Rating Form or UI Control](https://github.com/larevolucia/chaptr/issues/41)
+- [Show Average Book Rating](https://github.com/larevolucia/chaptr/issues/42)
+- [Ensure rated books have reading status](https://github.com/larevolucia/chaptr/issues/71)
+- [Remove rating](https://github.com/larevolucia/chaptr/issues/73)
+- [Rate book automated tests](https://github.com/larevolucia/chaptr/issues/72)
 
 #### [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
 
 **Technical Tasks**
 - [Create review model and form](https://github.com/larevolucia/chaptr/issues/43)
 - [Display reviews in template](https://github.com/larevolucia/chaptr/issues/44)
+- [Review books always have status](https://github.com/larevolucia/chaptr/issues/76)
+- [Automates Tests for leaving a review](https://github.com/larevolucia/chaptr/issues/74)
 
 #### [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
 
@@ -493,6 +538,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Implement update and delete views for reviews](https://github.com/larevolucia/chaptr/issues/46)
 - [Add conditional logic in templates for ownership](https://github.com/larevolucia/chaptr/issues/47)
 - [Add messaging and UI confirmation for deletion](https://github.com/larevolucia/chaptr/issues/48)
+- [Automated tests for editing and removing a review](https://github.com/larevolucia/chaptr/issues/75)
 
 ---
 
@@ -506,6 +552,7 @@ Below is a summary of the planned development scope using Agile epics, user stor
 - [Create library view with user authentication](https://github.com/larevolucia/chaptr/issues/49)
 - [Build styled library template](https://github.com/larevolucia/chaptr/issues/50)
 - [Query and display grouped book data](https://github.com/larevolucia/chaptr/issues/51)
+- [Automated tests for Library View](https://github.com/larevolucia/chaptr/issues/80)
 
 #### [Update reading status directly from library](https://github.com/larevolucia/chaptr/issues/18)
 
@@ -518,85 +565,43 @@ Below is a summary of the planned development scope using Agile epics, user stor
 
 ## Testing
 
+### Automated Test 
+
 **NextChaptr** includes a comprehensive suite of automated tests to ensure reliability and maintainability across core features. Tests are written using **Django’s `TestCase`** framework with mocking for external dependencies such as the Google Books API.
+
+- **Isolation**: external API calls are mocked for speed and determinism.
+- **Resilience**: cache is cleared between tests to avoid cross-test interference.
+- **Realism**: sample JSON payloads (e.g., `REALISTIC_DETAIL_JSON`) simulate Google Books responses for reliable field mapping tests.
 
 Detailed testing documentation can be found in [TESTS.md](documentation/TESTS.md).
 
 ![Automated Test Results](documentation/images/validators/automated_tests.png)
 
-### Automated Test Coverage
+---
 
-- **Authentication Tests (Allauth)**
-  - **Sign-up flow**: page rendering, successful account creation, and validation errors (duplicate username, short passwords, mismatches).
-  - **Login flow**: correct credentials, invalid credentials, and required validation checks.
-  - **Logout flow**: proper behavior when logged in or out.
-  - **Password reset**: form rendering and email delivery.
+#### **Accounts (Allauth)**
 
-- **Books App Tests**
-  - **Query building**: correct application of search operators (`intitle`, `inauthor`, `subject`).
-  - **Search view**: integration with `search_google_books`, correct rendering of results.
-  - **Google Books API integration**: parsing of valid responses; handling of failed requests.
-  - **Book detail view**: correct mapping of metadata fields, 404 behavior for missing books, and caching to reduce API calls.
-  - **Home page**: correct rendering of template, hero, about area, featured genres, and search functionality.
+The `accounts` app tests focus on the complete authentication flow, including signup, login, logout, and password reset. Tests validate correct page rendering, exclusion of unrelated UI elements (such as the search form), handling of validation errors (e.g. short passwords, mismatches, duplicate usernames), and successful account actions like login and confirmation email delivery. This ensures a reliable and secure authentication system for users.
 
-- **Book Search Pagination**
-  - **Page size**: `PER_PAGE = 12` drives both the Google Books query (`max_results=12`) and Django paginator.
-  - **First page**: `?q=django&field=all&page=1` triggers `search_google_books("django", start_index=0, max_results=12)`; `page_obj.number == 1`, `start_index()==1`, `end_index()==12`.
-  - **Second page**: `?q=python&field=all&page=2` triggers `search_google_books("python", start_index=12, max_results=12)`; `page_obj.number == 2`, `start_index()==13`, `end_index()==24` when total is 30.
-  - **Template context**: view provides `page_obj`, `paginator`, `is_paginated`, and `page_range`; `paginator.count == total`, `paginator.per_page == 12`, `is_paginated` is `True`, and the rendered page’s `object_list` length equals `PER_PAGE`.
+---
 
-- **Genre Browsing & Search Integration**
-  - **Home genre links**: subject links formatted as `/book_search?field=subject&q=<urlencoded>`, with `class="stretched-link"` and accessible `aria-label`s (e.g., Sci-Fi, Mystery).
-  - **Subject filter mapping**: clicking a genre (e.g., “science fiction”) calls `search_google_books("subject:science fiction", start_index=0, max_results=12)`.
-  - **Pagination preserves filters**: page 2 for `subject=mystery` calls `search_google_books("subject:mystery", start_index=12, max_results=12)`; pagination links keep `field=subject&q=mystery`.
-  - **Active page semantics**: current page number renders as an active `<span>`; other page numbers remain links retaining subject params.
+#### **Activity**
 
-- **ReadingStatus Tests**
-  - **Anonymous users see login CTA**: detail view renders “Log in to add” and links to the login page.
-  - **Valid choices can be set**: authenticated users can set `"TO_READ"`, `"READING"`, or `"READ"`.
-  - **Creating a status**: posting a valid status creates a `ReadingStatus` for the `(user, book)` pair.
-  - **Unauthenticated redirects**: posting without authentication redirects to login and does **not** create a status.
-  - **Removing a status with safe `next`**: `status=NONE` deletes the row and safely redirects to a same-site `next` URL.
-  - **Removing a status without `next`**: falls back to the book detail page.
-  - **Unsafe `next` is ignored**: off-site `next` URLs are rejected; falls back to the detail page.
+The `activity` app has comprehensive tests around user interactions with books. **Reading status tests** confirm that only valid choices are allowed, redirects are handled securely, and unauthenticated users are properly blocked. **Rating tests** check that authenticated users can add, update, or remove ratings while ensuring statuses are created or respected. **Review tests** verify the full review lifecycle—creation, editing, deletion with ownership checks, and UI rendering. **Archive flow tests** ensure ratings and reviews are archived rather than lost when statuses are removed, and can be restored when new activity occurs. **Delete action tests** add coverage for safe deletion of reviews and library items from detail pages.
 
-- **Rating Tests**
-  - **Unauthenticated redirects**: posting a rating without logging in redirects to login and does **not** create a record.
-  - **Creating a rating**: authenticated users can post a rating, which creates a `Rating` and redirects to the book detail.
-  - **Updating a rating**: posting a new value overwrites the existing `Rating` (no duplicates).
-  - **Removing a rating**: posting `rating=0` deletes the record and redirects back to the detail.
-  - **Auto-create status**: rating without an existing `ReadingStatus` creates `READ`.
-  - **Respect existing status**: existing `ReadingStatus` is not changed.
+---
 
-- **Review Tests**
-  - **Creating a review**: POST to `/books/<book_id>/review/` saves and redirects; one new `Review` for `(user, book)`.
-  - **Book detail displays reviews**: detail view lists reviews; content and author appear in “User Reviews.”
-  - **Anonymous users see login CTA**: “Log in to leave a review”; CTA present and no `<form>`.
-  - **Authenticated users see add review form**: no existing review → textarea rendered; form action targets `add_review`.
-  - **Editing a review (no duplicates)**: second POST updates existing row; still exactly one `Review`.
-  - **Creates READ status when missing**: posting a review with no status auto-creates `READ`.
-  - **Respects existing status**: does not override an existing status (e.g., **READING**).
-  - **Delete ownership check**: only the author can delete.
-  - **Delete confirmation**: modal confirmation before delete.
-  - **Delete success**: review removed; success message displayed.
+#### **Books**
 
-- **Archive Flow**
-  - **Status removal**: removing a status archives rating and review (deletes only the status).
-  - **Status persistence**: posting a new rating/review unarchives the latest archived row and ensures a status exists.
-  - **UI behavior**: the UI ignores archived ratings; detail, search results, and library hide archived reviews.
+The `books` app tests cover all aspects of book discovery and display. **Book detail tests** ensure that metadata is rendered properly, pages include search functionality, and volumes are cached. **Home view tests** validate correct rendering of hero, about, and genre sections, template inheritance, and conditional UI for anonymous versus authenticated users. **Search tests** confirm that queries are built correctly with operators, API calls return expected results, errors are handled gracefully, and book fetching maps fields correctly. **Pagination and genre browsing tests** check that paging logic is consistent, filters are preserved, and genre links use correct URL structures, ensuring smooth navigation and discoverability.
 
-- **Library Tests**
-  - **Viewing the library**: users see all books organized by status.
-  - **Empty states**: appropriate messages when no books exist in a status.
-  - **Multiple statuses**: sections render correctly.
-  - **Book details**: links navigate to detail pages.
-  - **Access control**: only authenticated users can access their library; unauthenticated users are redirected to login.
+---
 
-### Automated Test Approach
+#### **Library**
 
-- **Isolation**: external API calls are mocked for speed and determinism.
-- **Resilience**: cache is cleared between tests to avoid cross-test interference.
-- **Realism**: sample JSON payloads (e.g., `REALISTIC_DETAIL_JSON`) simulate Google Books responses for reliable field mapping tests.
+The `library` app tests confirm that the personal library behaves consistently across different user states. For **view tests**, they ensure access control (login required), proper empty state messages, correct section rendering when books exist in specific statuses, and navigation links to book details. **Action tests** cover the ability to remove books, change statuses directly from the library, and display the correct links for writing reviews or ratings. Together, these tests validate both the backend logic and user-facing presentation of the personal library feature.
+
+
 
 Run tests with:
 
@@ -690,7 +695,7 @@ Admin search returned a 500 error. Resolved by correcting search field formattin
 Production returned a 500 error due to missing variables after refactoring. Resolved by adding `GOOGLE_BOOKS_SEARCH_URL` and `GOOGLE_BOOKS_VOLUME_URL` to Heroku config vars.
 
 **[Books tests_views failing after activity changes](https://github.com/larevolucia/chaptr/issues/79)**  
-Book views crashed in tests because `RequestFactory` requests lack `request.user`, causing `AttributeError` in `book_search`/`book_detail`. Fixed by defaulting to `AnonymousUser` (e.g., `user = getattr(request, "user", AnonymousUser())`) before any `is_authenticated` checks in `books/views.py`.
+Book views crashed in tests because `RequestFactory` requests lack `request.user`, causing `AttributeError` in `book_search`/`book_detail`. Fixed by defaulting to `AnonymousUser` (e.g. `user = getattr(request, "user", AnonymousUser())`) before any `is_authenticated` checks in `books/views.py`.
 
 **[API response for totalItems is inconsistent](https://github.com/larevolucia/chaptr/issues/81)**  
 Pagination broke due to Google Books API returning inflated `totalItems`. Fixed by capping results to the fetched items and adjusting pagination logic.
@@ -841,6 +846,52 @@ Search results showed duplicates when the query was too specific. Fixed by de-du
 
 All files passed PEP8 validation. Screenshots can be found in the [PEP8 folder](documentation/images/validators/pep8/).
 
+### [Accessibility Checker](https://www.accessibilitychecker.org/)
+
+| Page                  | Warning / Issue                                         |                                                        |
+|:----------------------|:--------------------------------------------------------|:-------------------------------------------------------|
+| Home                  | Genre tiles aren't highlighted on keyboard navigation   | Added outline on `.genre-card` and removed from `.streched-link`             |
+| All                   | Font icons present accessibility limitations            | Replaced font-awesome icons with SVG icons    |
+| Search                | `for` and `id` values on search form didn't match       | Ensure the values matched    |
+| Search                | Too low contrast on button with accent color            | Changed accent color to a deeper orange tone              |
+| Search                | Links need a visual indication other than color         | Added `text-decoration: underline` to titles on search results   |
+| Search                | Heading missing levels                                  | Applied headings according to hierarchy and used bootstrap classes to keep style according to desired design   |
+| Log-in/Sign-up        | Too low contrast on links using secondary color         | Added a secondary-color-dark to use as links `font-color`   |
+| Book Details & Search | Rating component doesn't work via keyboard              | Grouped radio buttons in `<fieldset>`, ensured `addEventListener("change")` and `removeRating()` could be triggered by keyboard in `rating.js`                |
+| Book Details & Search | Emtpy ratings constrast ratio too low              | Changed the stars color to darker shade of gray               |
+| Book Details          | Review buttons have no labels                           | Added `title` and `aria-label`              |
+| Book Details          | Missing aria-label on form, design uses only placeholder| Added `aria-label` to form             |
+
+<details>
+<summary>Home</summary>
+
+![Home](documentation/images/validators/accessibility_checker/home.png)  
+</details>
+
+<details>
+<summary>Search</summary>
+
+![Home](documentation/images/validators/accessibility_checker/search.png)  
+</details>
+
+<details>
+<summary>Book Page</summary>
+
+![Home](documentation/images/validators/accessibility_checker/book_detail.png)  
+</details>
+
+<details>
+<summary>Login</summary>
+
+![Home](documentation/images/validators/accessibility_checker/login.png)  
+</details>
+
+<details>
+<summary>Signup</summary>
+
+![Home](documentation/images/validators/accessibility_checker/signup.png)  
+</details>
+
 ---
 
 ## Sprint Planning
@@ -899,7 +950,7 @@ https://github.com/larevolucia/chaptr/projects/12
 - Testing and Bug Fixes  
   - [x] [Refactoring](https://github.com/larevolucia/chaptr/issues/85)  
   - [x] [Accessibility & Performance](https://github.com/larevolucia/chaptr/issues/87)  
-  - [ ] [Documentation](https://github.com/larevolucia/chaptr/issues/88)
+  - [x] [Documentation](https://github.com/larevolucia/chaptr/issues/88)
 
 ---
 
@@ -1001,7 +1052,19 @@ python manage.py collectstatic --noinput
 
 ---
 
-### 6. Deploy to Heroku
+### 6. Production Security Checklist
+
+Deployment follows Django’s recommended production hardening:
+
+- `DEBUG = False`
+- `ALLOWED_HOSTS` set to production domains
+- `CSRF_COOKIE_SECURE = True`
+- `SESSION_COOKIE_SECURE = True`
+- `SECURE_HSTS_SECONDS = 31536000` (HSTS enabled for HTTPS only)
+- All secrets stored in environment variables (`.env` / Heroku Config Vars)
+- No secrets or passwords committed to GitHub
+
+### 7. Deploy to Heroku
 
 1. Create a new Heroku app.
 2. Add the **Heroku Python buildpack** under **Settings > Buildpacks**.
