@@ -259,6 +259,11 @@ Accessibility has been verified with W3C, Lighthouse, Accessibility Checker and 
 - **ARIA roles**: Removed redundant roles flagged by W3C validator; only essential ARIA attributes remain.
 - **Error feedback**: Forms and destructive actions provide clear feedback and confirmations.
 
+<details>
+<summary>Keyboard Accessibility</summary>
+
+![Keyboard Accessibility](documentation/images/keyboard_accessibility.gif)  
+</details>
 
 ### Wireframes
 
