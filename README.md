@@ -424,7 +424,15 @@ Key functions:
 
 ## Requirements Overview
 
-Below is a summary of the planned development scope using Agile epics, user stories, and tasks.
+Below is a summary of the planned development scope, organized into Agile epics, user stories, and technical tasks.
+
+To maintain consistency and quality, dedicated templates were created for **Epics, User Stories, Technical Tasks, and Bugs**. These can be found in the [Issue Template Folder](https://github.com/larevolucia/chaptr/tree/main/.github/ISSUE_TEMPLATE).
+
+All user stories follow the standard format:
+
+> As a **user**, I want **action**, so that I **goal**.
+
+Each story also includes **acceptance criteria**, documented directly in its corresponding GitHub issue (linked under each Epic below). This ensures requirements are clear, testable, and traceable without duplicating content in the README
 
 ---
 
@@ -896,7 +904,15 @@ All files passed PEP8 validation. Screenshots can be found in the [PEP8 folder](
 
 ## Sprint Planning
 
-Sprints deliver features incrementally, each focusing on specific epics and user stories. The sprint timebox is one week.
+Sprints deliver features incrementally, each focusing on user stories. The sprint timebox is one week.
+
+Planning was done based on User Story level, using Fibonacci sequence scale (1, 2, 3, 5, 8, 13…) to measure effort.
+
+> 1 → trivial, small fix or UI tweak
+> 2 → simple story, one component or view, limited logic
+> 3 → moderate story, some backend + template work, maybe 1–2 test cases
+> 5 → complex story, multiple moving parts, integration with API or model changes
+> 8 → large/uncertain story, touching multiple apps, several acceptance criteria
 
 All issues are tracked on the GitHub project board:  
 https://github.com/larevolucia/chaptr/projects/12
@@ -912,45 +928,51 @@ https://github.com/larevolucia/chaptr/projects/12
 
 ### Sprint Breakdown
 
-**Sprint 1**
+**Sprint 1** — **Total: 16 points** · **Should-have: 3 points (19%)** 
 
-- Epic 1: Book Discovery and Browsing  
-  - [x] [Search for books by title, author, genre](https://github.com/larevolucia/chaptr/issues/6)  
-  - [x] [View book details](https://github.com/larevolucia/chaptr/issues/7)  
-  - [x] [Homepage – MVP](https://github.com/larevolucia/chaptr/issues/56)
+* **Epic 1: Book Discovery and Browsing**
 
-- Epic 2: User Authentication and Permissions  
-  - [x] [Register an account](https://github.com/larevolucia/chaptr/issues/10)  
-  - [x] [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11)
+  * [x] **\[MUST]** [Search for books by title, author, genre](https://github.com/larevolucia/chaptr/issues/6) — **5 pts**
+  * [x] **\[MUST]** [View book details](https://github.com/larevolucia/chaptr/issues/7) — **3 pts**
+  * [x] **\[SHOULD]** [Homepage – MVP](https://github.com/larevolucia/chaptr/issues/56) — **3 pts**
+* **Epic 2: User Authentication and Permissions**
 
-**Sprint 2**
+  * [x] **\[MUST]** [Register an account](https://github.com/larevolucia/chaptr/issues/10) — **3 pts**
+  * [x] **\[MUST]** [Log in and log out securely](https://github.com/larevolucia/chaptr/issues/11) — **2 pts**
 
-- Epic 1: Book Discovery and Browsing  
-  - [x] [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9)  
-  - [x] [Homepage – Stretch](https://github.com/larevolucia/chaptr/issues/56)
-- Epic 2: User Authentication and Permissions  
-  - [x] [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12)
-- Epic 3: Book Interaction and Reading Progress  
-  - [x] [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13)  
-  - [x] [Rate books](https://github.com/larevolucia/chaptr/issues/14)  
-  - [x] [Leave a review](https://github.com/larevolucia/chaptr/issues/15)
+**Sprint 2** — **Total: 18 points** · **Should-have: 3 points (17%)** 
 
-**Sprint 3**
+* **Epic 1: Book Discovery and Browsing**
 
-- Epic 1: Book Discovery and Browsing  
-  - [x] [View reviews on books](https://github.com/larevolucia/chaptr/issues/8)
-- Epic 3: Book Interaction and Reading Progress  
-  - [x] [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16)
-- Epic 4: User Dashboard  
-  - [x] [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17)  
-  - [x] [Update reading status directly from dashboard](https://github.com/larevolucia/chaptr/issues/18)
+  * [x] **\[SHOULD]** [Prompt login when guests try to interact](https://github.com/larevolucia/chaptr/issues/9) — **1 pt**
+  * [x] **\[SHOULD]** [Homepage – Stretch](https://github.com/larevolucia/chaptr/issues/56) — **1 pt**
+* **Epic 2: User Authentication and Permissions**
 
-**Sprint 4**
+  * [x] **\[SHOULD]** [Restrict book interactions to authenticated users](https://github.com/larevolucia/chaptr/issues/12) — **1 pt**
+* **Epic 3: Book Interaction and Reading Progress**
 
-- Testing and Bug Fixes  
-  - [x] [Refactoring](https://github.com/larevolucia/chaptr/issues/85)  
-  - [x] [Accessibility & Performance](https://github.com/larevolucia/chaptr/issues/87)  
-  - [x] [Documentation](https://github.com/larevolucia/chaptr/issues/88)
+  * [x] **\[MUST]** [Mark books as To Read, Reading, or Read](https://github.com/larevolucia/chaptr/issues/13) — **5 pts**
+  * [x] **\[MUST]** [Rate books](https://github.com/larevolucia/chaptr/issues/14) — **5 pts**
+  * [x] **\[MUST]** [Leave a review](https://github.com/larevolucia/chaptr/issues/15) — **5 pts**
+
+**Sprint 3** — **Total: 13 points** · **Should-have: 2 points (15%)** 
+
+* **Epic 1: Book Discovery and Browsing**
+
+  * [x] **\[SHOULD]** [View reviews on books](https://github.com/larevolucia/chaptr/issues/8) — **2 pts**
+* **Epic 3: Book Interaction and Reading Progress**
+
+  * [x] **\[MUST]** [Edit and delete reviews](https://github.com/larevolucia/chaptr/issues/16) — **3 pts**
+* **Epic 4: User Dashboard/Library**
+
+  * [x] **\[MUST]** [View books grouped by reading status](https://github.com/larevolucia/chaptr/issues/17) — **5 pts**
+  * [x] **\[MUST]** [Update reading status directly from dashboard](https://github.com/larevolucia/chaptr/issues/18) — **3 pts**
+
+**Sprint 4** — Testing & Documentation (no points assigned)
+
+* [x] **\[MUST]** [Accessibility & Performance](https://github.com/larevolucia/chaptr/issues/87)
+* [x] **\[MUST]** [Documentation](https://github.com/larevolucia/chaptr/issues/88)
+* [x] **\[COULD]** [Refactoring](https://github.com/larevolucia/chaptr/issues/85) 
 
 ---
 
