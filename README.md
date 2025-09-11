@@ -743,7 +743,7 @@ Search results showed duplicates when the query was too specific. Fixed by de-du
 
 **[Rating info in Search Results but not in Book Page](https://github.com/larevolucia/chaptr/issues/91)**  
 Rating average and number of ratings were being passed on `book_search` view, but not on `book_detail`. That was causing an inconsistent behavior. Fixed by fetching the average and total number of ratings and passing in `book_detail`.
- 
+
 ---
 
 ### [Linters and Validation Fixes](https://github.com/larevolucia/chaptr/issues/92)
@@ -926,11 +926,11 @@ Sprints deliver features incrementally, each focusing on user stories. The sprin
 
 Planning was done based on User Story level, using Fibonacci sequence scale (1, 2, 3, 5, 8, 13…) to measure effort.
 
-> 1 → trivial, small fix or UI tweak
-> 2 → simple story, one component or view, limited logic
-> 3 → moderate story, some backend + template work, maybe 1–2 test cases
-> 5 → complex story, multiple moving parts, integration with API or model changes
-> 8 → large/uncertain story, touching multiple apps, several acceptance criteria
+> - 1 → trivial, small fix or UI tweak
+>- 2 → simple story, one component or view, limited logic
+>- 3 → moderate story, some backend + template work, maybe 1–2 test cases
+>- 5 → complex story, multiple moving parts, integration with API or model changes
+>- 8 → large/uncertain story, touching multiple apps, several acceptance criteria
 
 All issues are tracked on the GitHub project board:  
 https://github.com/larevolucia/chaptr/projects/12
