@@ -587,7 +587,7 @@ Each story also includes **acceptance criteria**, documented directly in its cor
 - **Realism**: sample JSON payloads (e.g., `REALISTIC_DETAIL_JSON`) simulate Google Books responses for reliable field mapping tests.
 - **Coverage:** Using `coverage.py`, the test suite reports **92% overall line coverage** across 94 test functions in 11 files. Core apps (`accounts`, `books`, `activity`, `library`) are fully exercised, ensuring authentication, search, interactions, and library logic are reliable. Only minor admin and utility paths remain uncovered.
 
-Detailed testing documentation can be found in [TESTS.md](documentation/TESTS.md).
+Detailed testing documentation can be found in [TEST.md](documentation/TEST.md).
 
 ![Automated Test Results](documentation/images/validators/automated_tests.png)
 
