@@ -189,6 +189,9 @@ def book_detail(request, book_id):
     book["user_status"] = None
     book["user_status_label"] = None
     book["user_rating"] = 0
+    # avg rating
+    book["avg_rating"] = get_average_rating(book_id)
+    book["num_ratings"] = get_number_of_ratings(book_id)
 
     form = None
     reviews = []

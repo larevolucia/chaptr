@@ -741,9 +741,12 @@ Removing a book only cleared its reading status, leaving review/rating behind. F
 **[Search returns duplicated results](https://github.com/larevolucia/chaptr/issues/91)**  
 Search results showed duplicates when the query was too specific. Fixed by de-duplicating results before pagination.
 
+**[Rating info in Search Results but not in Book Page](https://github.com/larevolucia/chaptr/issues/91)**  
+Rating average and number of ratings were being passed on `book_search` view, but not on `book_detail`. That was causing an inconsistent behavior. Fixed by fetching the average and total number of ratings and passing in `book_detail`.
+ 
 ---
 
-### [Linters and Validation Fixes](https://github.com/larevolucia/chaptr/issues/87)
+### [Linters and Validation Fixes](https://github.com/larevolucia/chaptr/issues/92)
 
 **[HTML W3C Validator](https://validator.w3.org/)**
 
